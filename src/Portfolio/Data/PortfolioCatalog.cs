@@ -16,7 +16,7 @@ public static class PortfolioCatalog
         Email = "contato@example.com",
         LinkedInUrl = "https://www.linkedin.com/in/danton-galasse",
         GitHubUrl = "https://github.com/dangalasse",
-        SiteUrl = "https://github.com/dangalasse/portfolio",
+        SiteUrl = "https://portfolio.galasse.dev",
         CvPdfPath = "/files/cv.pdf",
     };
 
