@@ -2,6 +2,8 @@
  * Subtle motion and live lab indicators for the portfolio.
  */
 
+import { initArchitectureFlows } from "./architecture";
+
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -157,5 +159,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initYear();
   initMobileNav();
   initReveal();
+  initArchitectureFlows();
   void initLabIndicators();
 });

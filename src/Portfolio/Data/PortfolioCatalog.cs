@@ -29,11 +29,11 @@ public static class PortfolioCatalog
             Summary = "Plataforma de património com whitelabel, setup wizard e deploy zero-touch.",
             Description =
                 "Sistema full-stack com bounded contexts, identidade visual configurável e operação em containers. Demonstra Nest/Next no produto e disciplina de domínio (SDD).",
-            Stack = ["TypeScript", "Next.js", "NestJS", "PostgreSQL", "Docker"],
+            Stack = ["TypeScript", "Next.js", "NestJS", "PostgreSQL", "Docker", "Caddy", "AWS EC2"],
             Accent = "#3dd6c6",
-            LiveUrl = null,
-            RepoUrl = null,
-            DemoNote = "Demo privada / screenshot + arquitectura no detalhe.",
+            LiveUrl = "https://tote.galasse.dev",
+            RepoUrl = "https://github.com/dangalasse/TOTE",
+            DemoNote = "Live em tote.galasse.dev — fluxo de arquitectura no detalhe.",
             Featured = true,
         },
         new ProjectItem
@@ -70,12 +70,12 @@ public static class PortfolioCatalog
             Title = "Este portfólio",
             Summary = "ASP.NET Core Razor Pages + TypeScript + Tailwind — simples, rápido, demonstrável.",
             Description =
-                "Site de CV com projectos, labs Cloudflare/AWS e links LinkedIn/GitHub. Build de assets via npm (esbuild + Tailwind v4), hospedagem preparada para Cloudflare.",
-            Stack = ["ASP.NET Core 8", "TypeScript", "Tailwind CSS"],
+                "Site de CV com projectos, labs Cloudflare/AWS e links LinkedIn/GitHub. Build de assets via npm (esbuild + Tailwind v4), hospedado na EC2 atrás do Caddy com DNS Cloudflare.",
+            Stack = ["ASP.NET Core 8", "TypeScript", "Tailwind CSS", "Caddy", "ECR"],
             Accent = "#9db0bb",
-            LiveUrl = "/",
+            LiveUrl = "https://portfolio.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/portfolio",
-            DemoNote = "Você está a ver a demo.",
+            DemoNote = "Você está a ver a demo — ver fluxo de arquitectura abaixo.",
             Featured = false,
         },
     ];

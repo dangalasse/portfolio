@@ -93,4 +93,90 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  .arch-flow {
+    @apply border border-line bg-ink-soft/60 p-5 md:p-8;
+  }
+
+  .arch-canvas {
+    @apply relative overflow-x-auto;
+  }
+
+  .arch-wires {
+    @apply pointer-events-none absolute inset-0 z-0 h-full w-full overflow-visible;
+  }
+
+  .arch-wire {
+    fill: none;
+    stroke: var(--wire-color, var(--color-signal));
+    stroke-width: 1.5;
+    stroke-opacity: 0.35;
+    transition: stroke-opacity 200ms ease, stroke-width 200ms ease;
+  }
+
+  .arch-wire.is-drawn {
+    transition: stroke-dashoffset 900ms ease, stroke-opacity 200ms ease, stroke-width 200ms ease;
+  }
+
+  .arch-wire.is-hot {
+    stroke-opacity: 1;
+    stroke-width: 2.25;
+    filter: drop-shadow(0 0 4px color-mix(in oklab, var(--wire-color) 50%, transparent));
+  }
+
+  .arch-layers {
+    @apply relative z-10 flex flex-col gap-8 md:gap-10;
+  }
+
+  .arch-layer-label {
+    @apply mb-3 font-mono text-[10px] uppercase tracking-[0.22em] text-mist/60;
+  }
+
+  .arch-layer-nodes {
+    @apply flex flex-wrap gap-3;
+  }
+
+  .arch-node {
+    @apply flex min-w-[11rem] max-w-[15rem] flex-1 items-center gap-3 border border-line bg-panel px-3.5 py-3 transition duration-300;
+    border-left: 3px solid var(--node-accent, var(--color-signal));
+  }
+
+  .arch-node:hover,
+  .arch-node.is-hot {
+    border-color: color-mix(in oklab, var(--node-accent) 70%, var(--color-line));
+    background: color-mix(in oklab, var(--node-accent) 10%, var(--color-panel));
+    transform: translateY(-2px);
+  }
+
+  .arch-node.is-dim {
+    opacity: 0.35;
+  }
+
+  .arch-node-icon {
+    @apply flex size-10 shrink-0 items-center justify-center border border-line bg-ink-soft;
+  }
+
+  .arch-node-title {
+    @apply truncate font-display text-sm font-semibold text-paper;
+  }
+
+  .arch-node-sub {
+    @apply truncate font-mono text-[10px] text-mist;
+  }
+
+  .arch-legend {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .arch-legend-item {
+    @apply inline-flex items-center gap-2 border border-line bg-panel/70 px-2.5 py-1.5 text-xs text-mist transition hover:border-signal/50 hover:text-paper;
+  }
+
+  .arch-legend-item.is-hot {
+    @apply border-signal/60 text-paper;
+  }
+
+  .arch-legend-dot {
+    @apply size-1.5 rounded-full;
+  }
 }

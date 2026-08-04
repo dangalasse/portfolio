@@ -1,0 +1,85 @@
+@using Portfolio.Models
+@model ArchitectureFlow
+@{
+    var flow = Model;
+    var layers = flow.LayerOrder
+        .Select(layerId => new
+        {
+            Id = layerId,
+            Nodes = flow.Nodes.Where(n => n.Layer == layerId).ToList(),
+        })
+        .Where(l => l.Nodes.Count > 0)
+        .ToList();
+
+    var edgesJson = System.Text.Json.JsonSerializer.Serialize(
+        flow.Edges.Select(e => new { from = e.From, to = e.To, label = e.Label }));
+}
+
+<section class="arch-flow reveal" data-arch-flow aria-label="@flow.Title">
+    <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+        <div>
+            <h2 class="font-display text-2xl font-semibold text-paper">@flow.Title</h2>
+            <p class="mt-2 max-w-2xl text-sm text-mist leading-relaxed">@flow.Caption</p>
+        </div>
+        <p class="font-mono text-[10px] uppercase tracking-wider text-mist/70">Fluxo por plataforma</p>
+    </div>
+
+    <div class="arch-canvas mt-8" data-arch-canvas>
+        <svg class="arch-wires" data-arch-wires aria-hidden="true"></svg>
+
+        <div class="arch-layers">
+            @foreach (var layer in layers)
+            {
+                <div class="arch-layer" data-arch-layer="@layer.Id">
+                    <p class="arch-layer-label">@layer.Id</p>
+                    <div class="arch-layer-nodes">
+                        @foreach (var node in layer.Nodes)
+                        {
+                            var hex = node.Color.TrimStart('#');
+                            <article
+                                class="arch-node"
+                                data-arch-node="@node.Id"
+                                data-arch-color="@node.Color"
+                                style="--node-accent: @node.Color">
+                                <div class="arch-node-icon" aria-hidden="true">
+                                    <img
+                                        class="arch-icon-img"
+                                        src="https://cdn.simpleicons.org/@node.Icon/@hex"
+                                        alt=""
+                                        width="28"
+                                        height="28"
+                                        loading="lazy"
+                                        decoding="async" />
+                                    <span class="arch-node-fallback font-mono text-xs" style="color: @node.Color; display: none;">@(node.Label[0])</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3 class="arch-node-title">@node.Label</h3>
+                                    <p class="arch-node-sub">@node.Subtitle</p>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <ul class="arch-legend mt-6" data-arch-legend>
+        @foreach (var edge in flow.Edges.Where(e => !string.IsNullOrWhiteSpace(e.Label)))
+        {
+            var from = flow.Nodes.First(n => n.Id == edge.From);
+            var to = flow.Nodes.First(n => n.Id == edge.To);
+            <li>
+                <button type="button" class="arch-legend-item" data-arch-edge-from="@edge.From" data-arch-edge-to="@edge.To">
+                    <span class="arch-legend-dot" style="background: @from.Color"></span>
+                    <span>@from.Label</span>
+                    <span class="text-mist/50">→</span>
+                    <span>@to.Label</span>
+                    <span class="font-mono text-[10px] text-signal">@edge.Label</span>
+                </button>
+            </li>
+        }
+    </ul>
+
+    <script type="application/json" data-arch-edges>@Html.Raw(edgesJson)</script>
+</section>

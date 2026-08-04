@@ -3,19 +3,20 @@
 @{
     ViewData["Title"] = Model.Project.Title;
     var project = Model.Project;
+    var flow = Model.Architecture;
 }
 
-<article class="mx-auto max-w-3xl px-4 py-16 md:px-6">
+<article class="mx-auto max-w-5xl px-4 py-16 md:px-6">
     <p class="reveal font-mono text-xs uppercase tracking-[0.2em] text-signal">
         <a href="/Projects" class="hover:text-paper">Projectos</a> / @project.Slug
     </p>
     <h1 class="reveal mt-4 font-display text-4xl font-bold tracking-tight md:text-5xl" style="transition-delay: 60ms">@project.Title</h1>
-    <p class="reveal mt-5 text-lg text-mist leading-relaxed" style="transition-delay: 100ms">@project.Summary</p>
+    <p class="reveal mt-5 max-w-3xl text-lg text-mist leading-relaxed" style="transition-delay: 100ms">@project.Summary</p>
 
     <div class="reveal mt-8 flex flex-wrap gap-3" style="transition-delay: 140ms">
         @if (!string.IsNullOrWhiteSpace(project.LiveUrl))
         {
-            <a class="btn-primary" href="@project.LiveUrl">Live demo</a>
+            <a class="btn-primary" href="@project.LiveUrl" target="@(project.LiveUrl.StartsWith("http") ? "_blank" : null)" rel="noopener noreferrer">Live demo</a>
         }
         @if (!string.IsNullOrWhiteSpace(project.RepoUrl))
         {
@@ -26,7 +27,7 @@
 
     <div class="reveal mt-12 border-t border-line pt-10 space-y-6" style="transition-delay: 180ms">
         <h2 class="font-display text-2xl font-semibold">Contexto</h2>
-        <p class="text-mist leading-relaxed">@project.Description</p>
+        <p class="max-w-3xl text-mist leading-relaxed">@project.Description</p>
         @if (!string.IsNullOrWhiteSpace(project.DemoNote))
         {
             <p class="border border-line bg-panel/60 px-4 py-3 font-mono text-sm text-paper">@project.DemoNote</p>
@@ -43,11 +44,10 @@
         </ul>
     </div>
 
-    @if (project.Slug is "aws-static-demo" or "edge-status")
+    @if (flow is not null)
     {
-        <div class="reveal mt-12 border-t border-line pt-10" style="transition-delay: 260ms">
-            <h2 class="font-display text-2xl font-semibold">Arquitectura</h2>
-            <pre class="mt-4 overflow-x-auto border border-line bg-ink-soft p-4 font-mono text-xs leading-relaxed text-mist">@Model.ArchitectureDiagram</pre>
+        <div class="mt-12 border-t border-line pt-10">
+            <partial name="_ArchitectureFlow" model="flow" />
         </div>
     }
 </article>
