@@ -1,24 +1,26 @@
 @page
 @model Portfolio.Pages.AboutModel
 @using Portfolio.Data
+@using Portfolio.I18n
 @{
-    ViewData["Title"] = "Sobre";
-    var profile = PortfolioCatalog.Profile;
+    var locale = Locale.Current(ViewContext.HttpContext);
+    var profile = PortfolioCatalog.For(locale).Profile;
+    ViewData["Title"] = UiCopy.AboutTitle.Resolve(locale);
+    var aboutBody = AppLocales.IsEnglish(locale)
+        ? "I work on full-stack and cloud products: ASP.NET Core, TypeScript, Cloudflare, and AWS. This site is deliberately simple — Razor Pages on the server, Tailwind and TypeScript on the client — to show clean delivery and live proofs in Labs."
+        : "Trabalho com produtos full-stack e cloud: ASP.NET Core, TypeScript, Cloudflare e AWS. Este site é deliberadamente simples — Razor Pages no servidor, Tailwind e TypeScript no cliente — para demonstrar entrega limpa e provas ao vivo nos Labs.";
 }
 
 <section class="mx-auto max-w-3xl px-4 py-16 md:px-6">
     <div class="reveal">
-        <h1 class="section-title">Sobre</h1>
+        <h1 class="section-title">@UiCopy.AboutTitle.Resolve(locale)</h1>
         <p class="section-lead">@profile.Tagline</p>
     </div>
     <div class="reveal mt-10 space-y-4 text-mist leading-relaxed" style="transition-delay: 80ms">
+        <p>@aboutBody</p>
         <p>
-            Trabalho com produtos full-stack e cloud: ASP.NET Core, TypeScript, Cloudflare e AWS.
-            Este site é deliberadamente simples — Razor Pages no servidor, Tailwind e TypeScript no cliente —
-            para demonstrar entrega limpa e provas ao vivo nos Labs.
-        </p>
-        <p>
-            Localização: @profile.Location. Contacto: <a class="text-signal hover:underline" href="mailto:@profile.Email">@profile.Email</a>.
+            @UiCopy.Location.Resolve(locale): @profile.Location.
+            @UiCopy.Contact.Resolve(locale): <a class="text-signal hover:underline" href="mailto:@profile.Email">@profile.Email</a>.
         </p>
     </div>
     <div class="reveal mt-10 flex flex-wrap gap-3" style="transition-delay: 140ms">

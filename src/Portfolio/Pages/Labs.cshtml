@@ -1,25 +1,40 @@
 @page
 @model Portfolio.Pages.LabsModel
 @using Portfolio.Data
+@using Portfolio.I18n
 @{
-    ViewData["Title"] = "Labs";
-    var labs = PortfolioCatalog.Labs;
+    var locale = Locale.Current(ViewContext.HttpContext);
+    var labs = PortfolioCatalog.For(locale).Labs;
+    ViewData["Title"] = UiCopy.LabsTitle.Resolve(locale);
+    var howTitle = AppLocales.IsEnglish(locale)
+        ? "How to enable the Cloudflare Worker"
+        : "Como ativar o Worker Cloudflare";
+    var steps = AppLocales.IsEnglish(locale)
+        ? new[]
+        {
+            "Create a Worker that returns JSON with region and ray.",
+            "Set the URL in the layout via ViewData[\"EdgeStatusUrl\"] or an environment variable.",
+            "The frontend automatically switches from “ASP.NET probe” to “Cloudflare”.",
+        }
+        : new[]
+        {
+            "Criar um Worker que retorne JSON com region e ray.",
+            "Definir a URL no layout via ViewData[\"EdgeStatusUrl\"] ou variável de ambiente.",
+            "O frontend troca automaticamente de “ASP.NET probe” para “Cloudflare”.",
+        };
 }
 
 <section class="mx-auto max-w-6xl px-4 py-16 md:px-6">
     <div class="reveal">
-        <h1 class="section-title">Labs</h1>
-        <p class="section-lead">
-            Indicadores reais de preview — Cloudflare edge, superfície AWS e ligações GitHub.
-            O probe TypeScript actualiza o estado abaixo.
-        </p>
+        <h1 class="section-title">@UiCopy.LabsTitle.Resolve(locale)</h1>
+        <p class="section-lead">@UiCopy.LabsLead.Resolve(locale)</p>
     </div>
 
     <div class="reveal mt-8 status-pill w-fit" data-lab-status style="transition-delay: 80ms">
         <span class="status-dot" data-status-dot></span>
-        <span data-status-label>Checking</span>
+        <span data-status-label>@UiCopy.Checking.Resolve(locale)</span>
         <span class="text-line">|</span>
-        <span data-status-meta>a consultar /api/status…</span>
+        <span data-status-meta>…</span>
     </div>
 
     <div class="mt-12 grid gap-4 md:grid-cols-3">
@@ -44,11 +59,12 @@
     </div>
 
     <div class="reveal mt-14 border border-line bg-panel/50 p-6 md:p-8">
-        <h2 class="font-display text-2xl font-semibold">Como activar o Worker Cloudflare</h2>
+        <h2 class="font-display text-2xl font-semibold">@howTitle</h2>
         <ol class="mt-4 list-decimal space-y-2 pl-5 text-sm text-mist leading-relaxed">
-            <li>Criar um Worker que devolva JSON com <code class="text-paper">region</code> e <code class="text-paper">ray</code>.</li>
-            <li>Definir a URL no layout via <code class="text-paper">ViewData["EdgeStatusUrl"]</code> ou variável de ambiente.</li>
-            <li>O frontend troca automaticamente de “ASP.NET probe” para “Cloudflare”.</li>
+            @foreach (var step in steps)
+            {
+                <li>@step</li>
+            }
         </ol>
     </div>
 </section>

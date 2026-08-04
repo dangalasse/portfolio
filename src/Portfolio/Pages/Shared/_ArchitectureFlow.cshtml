@@ -1,7 +1,10 @@
 @using Portfolio.Models
+@using Portfolio.Data
+@using Portfolio.I18n
 @model ArchitectureFlow
 @{
     var flow = Model;
+    var locale = Locale.Current(ViewContext.HttpContext);
     var layers = flow.LayerOrder
         .Select(layerId => new
         {
@@ -21,7 +24,7 @@
             <h2 class="font-display text-2xl font-semibold text-paper">@flow.Title</h2>
             <p class="mt-2 max-w-2xl text-sm text-mist leading-relaxed">@flow.Caption</p>
         </div>
-        <p class="font-mono text-[10px] uppercase tracking-wider text-mist/70">Fluxo por plataforma</p>
+        <p class="font-mono text-[10px] uppercase tracking-wider text-mist/70">@UiCopy.FlowByPlatform.Resolve(locale)</p>
     </div>
 
     <div class="arch-canvas mt-8" data-arch-canvas>

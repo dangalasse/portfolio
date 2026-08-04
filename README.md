@@ -5,7 +5,7 @@ Portfólio pessoal (CV) com **ASP.NET Core 8**, **TypeScript** e **Tailwind CSS*
 Inclui:
 
 - Home com hero e indicador de status ao vivo
-- Projectos (lista + detalhe)
+- Projetos (lista + detalhe)
 - Labs (Cloudflare / AWS / GitHub) com probe TypeScript
 - Links LinkedIn, GitHub, site e CV PDF
 - API `GET /api/status` para prova local até ligar um Worker Cloudflare

@@ -1,10 +1,14 @@
 ﻿@page
 @model Portfolio.Pages.IndexModel
 @using Portfolio.Data
+@using Portfolio.I18n
 @{
     ViewData["Title"] = null;
-    var profile = PortfolioCatalog.Profile;
-    var featured = PortfolioCatalog.Projects.Where(p => p.Featured).ToList();
+    var locale = Locale.Current(ViewContext.HttpContext);
+    var catalog = PortfolioCatalog.For(locale);
+    var profile = catalog.Profile;
+    var featured = catalog.Projects.Where(p => p.Featured).ToList();
+    string T(L text) => text.Resolve(locale);
 }
 
 <section class="relative overflow-hidden">
@@ -18,11 +22,11 @@
                 @profile.Tagline
             </p>
             <div class="mt-8 flex flex-wrap gap-3">
-                <a class="btn-primary" href="/Projects">Ver projectos</a>
-                <a class="btn-ghost" href="/Labs">Labs ao vivo</a>
+                <a class="btn-primary" href="/Projects">@T(UiCopy.SeeProjects)</a>
+                <a class="btn-ghost" href="/Labs">@T(UiCopy.LiveLabs)</a>
                 @if (!string.IsNullOrWhiteSpace(profile.CvPdfPath))
                 {
-                    <a class="btn-ghost" href="@profile.CvPdfPath">Download CV</a>
+                    <a class="btn-ghost" href="@profile.CvPdfPath">@T(UiCopy.DownloadCv)</a>
                 }
             </div>
         </div>
@@ -33,7 +37,7 @@
                 repeating-linear-gradient(0deg, transparent, transparent 24px, color-mix(in oklab, #2a3a44 70%, transparent) 25px);"></div>
             <div class="relative flex h-full flex-col justify-between gap-8">
                 <div>
-                    <p class="font-mono text-xs uppercase tracking-wider text-mist">Stack em uso</p>
+                    <p class="font-mono text-xs uppercase tracking-wider text-mist">@T(UiCopy.StackInUse)</p>
                     <ul class="mt-4 space-y-2 font-mono text-sm text-paper">
                         <li>ASP.NET Core 8</li>
                         <li>TypeScript + Tailwind</li>
@@ -42,7 +46,7 @@
                 </div>
                 <div class="status-pill" data-lab-status>
                     <span class="status-dot" data-status-dot></span>
-                    <span data-status-label>Checking</span>
+                    <span data-status-label>@T(UiCopy.Checking)</span>
                     <span class="text-line">|</span>
                     <span data-status-meta>probe…</span>
                 </div>
@@ -55,10 +59,10 @@
     <div class="mx-auto max-w-6xl px-4 py-16 md:px-6">
         <div class="reveal flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-                <h2 class="section-title">Projectos em destaque</h2>
-                <p class="section-lead">Demos com prova técnica — não só screenshots.</p>
+                <h2 class="section-title">@T(UiCopy.FeaturedProjects)</h2>
+                <p class="section-lead">@T(UiCopy.FeaturedLead)</p>
             </div>
-            <a class="nav-link text-signal" href="/Projects">Todos os projectos →</a>
+            <a class="nav-link text-signal" href="/Projects">@T(UiCopy.AllProjects)</a>
         </div>
         <div class="mt-10 grid gap-4 md:grid-cols-3">
             @foreach (var project in featured)
@@ -77,8 +81,8 @@
 <section class="border-t border-line bg-ink-soft/50">
     <div class="mx-auto max-w-6xl px-4 py-16 md:px-6">
         <div class="reveal">
-            <h2 class="section-title">Presença</h2>
-            <p class="section-lead">CV · LinkedIn · GitHub · este site.</p>
+            <h2 class="section-title">@T(UiCopy.Presence)</h2>
+            <p class="section-lead">@T(UiCopy.PresenceLead)</p>
         </div>
         <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <a class="lab-card reveal hover:border-signal/40 transition" href="@(profile.CvPdfPath ?? "/About")">CV PDF</a>

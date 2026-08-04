@@ -97,6 +97,8 @@ async function fetchEdgeStatus(): Promise<EdgeStatusPayload> {
 }
 
 function renderStatus(target: HTMLElement, payload: EdgeStatusPayload): void {
+  const locale = document.body.dataset.locale ?? "pt-BR";
+  const isEn = locale.toLowerCase().startsWith("en");
   const dot = target.querySelector<HTMLElement>("[data-status-dot]");
   const label = target.querySelector<HTMLElement>("[data-status-label]");
   const meta = target.querySelector<HTMLElement>("[data-status-meta]");
@@ -118,7 +120,13 @@ function renderStatus(target: HTMLElement, payload: EdgeStatusPayload): void {
     if (typeof payload.latencyMs === "number") {
       parts.push(`${payload.latencyMs} ms`);
     }
-    parts.push(payload.source === "live" ? "Cloudflare" : "ASP.NET probe");
+    parts.push(
+      payload.source === "live"
+        ? "Cloudflare"
+        : isEn
+          ? "ASP.NET probe"
+          : "Probe ASP.NET",
+    );
     meta.textContent = parts.join(" · ");
   }
 }

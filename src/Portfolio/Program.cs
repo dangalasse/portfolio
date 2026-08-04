@@ -1,4 +1,5 @@
 using Portfolio.Data;
+using Portfolio.I18n;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,9 +27,10 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
-app.MapGet("/api/status", () =>
+app.MapGet("/api/status", (HttpContext http) =>
 {
-    var profile = PortfolioCatalog.Profile;
+    var locale = Locale.Current(http);
+    var profile = PortfolioCatalog.For(locale).Profile;
     return Results.Json(new
     {
         ok = true,
@@ -36,8 +38,34 @@ app.MapGet("/api/status", () =>
         runtime = $".NET {Environment.Version}",
         service = "portfolio-status",
         profile = profile.Name,
+        locale,
         checkedAt = DateTimeOffset.UtcNow,
     });
+});
+
+app.MapPost("/api/locale", async (HttpContext http) =>
+{
+    var form = await http.Request.ReadFormAsync();
+    var locale = AppLocales.Normalize(form["locale"].ToString());
+    var returnUrl = form["returnUrl"].ToString();
+    if (string.IsNullOrWhiteSpace(returnUrl) || !returnUrl.StartsWith('/'))
+    {
+        returnUrl = "/";
+    }
+
+    http.Response.Cookies.Append(
+        AppLocales.CookieName,
+        locale,
+        new CookieOptions
+        {
+            Path = "/",
+            MaxAge = TimeSpan.FromDays(365),
+            SameSite = SameSiteMode.Lax,
+            IsEssential = true,
+            HttpOnly = false,
+        });
+
+    return Results.Redirect(returnUrl);
 });
 
 app.MapRazorPages();

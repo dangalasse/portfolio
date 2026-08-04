@@ -1,32 +1,111 @@
+using Portfolio.I18n;
 using Portfolio.Models;
 
 namespace Portfolio.Data;
 
-/// <summary>One architecture flow per project / platform surface.</summary>
+/// <summary>One architecture flow per project / platform surface (pt-BR + en-US).</summary>
 public static class ArchitectureCatalog
 {
-    public static ArchitectureFlow? ForProject(string slug) =>
-        Flows.TryGetValue(slug, out var flow) ? flow : null;
-
-    private static readonly Dictionary<string, ArchitectureFlow> Flows = new(StringComparer.OrdinalIgnoreCase)
+    public static ArchitectureFlow? ForProject(string slug, string? locale = null)
     {
-        ["tote"] = new ArchitectureFlow
+        if (!Flows.TryGetValue(slug, out var flow))
+        {
+            return null;
+        }
+
+        var en = AppLocales.IsEnglish(locale);
+        return new ArchitectureFlow
+        {
+            ProjectSlug = flow.ProjectSlug,
+            Title = en ? flow.TitleEn : flow.TitlePt,
+            Caption = en ? flow.CaptionEn : flow.CaptionPt,
+            LayerOrder = flow.LayerOrder,
+            Nodes = flow.Nodes
+                .Select(n => new ArchNode
+                {
+                    Id = n.Id,
+                    Label = n.Label,
+                    Subtitle = en ? n.SubtitleEn : n.SubtitlePt,
+                    Icon = n.Icon,
+                    Color = n.Color,
+                    Layer = n.Layer,
+                })
+                .ToList(),
+            Edges = flow.Edges,
+        };
+    }
+
+    private sealed class FlowDef
+    {
+        public required string ProjectSlug { get; init; }
+        public required string TitlePt { get; init; }
+        public required string TitleEn { get; init; }
+        public required string CaptionPt { get; init; }
+        public required string CaptionEn { get; init; }
+        public required IReadOnlyList<string> LayerOrder { get; init; }
+        public required IReadOnlyList<NodeDef> Nodes { get; init; }
+        public required IReadOnlyList<ArchEdge> Edges { get; init; }
+    }
+
+    private sealed class NodeDef
+    {
+        public required string Id { get; init; }
+        public required string Label { get; init; }
+        public required string SubtitlePt { get; init; }
+        public required string SubtitleEn { get; init; }
+        public required string Icon { get; init; }
+        public required string Color { get; init; }
+        public required string Layer { get; init; }
+    }
+
+    private static NodeDef N(
+        string id,
+        string label,
+        string subtitlePt,
+        string subtitleEn,
+        string icon,
+        string color,
+        string layer) =>
+        new()
+        {
+            Id = id,
+            Label = label,
+            SubtitlePt = subtitlePt,
+            SubtitleEn = subtitleEn,
+            Icon = icon,
+            Color = color,
+            Layer = layer,
+        };
+
+    private static ArchEdge E(string from, string to, string? label) =>
+        new()
+        {
+            From = from,
+            To = to,
+            Label = label,
+        };
+
+    private static readonly Dictionary<string, FlowDef> Flows = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["tote"] = new FlowDef
         {
             ProjectSlug = "tote",
-            Title = "Fluxo TOTE",
-            Caption = "Browser → Cloudflare DNS → EC2 / Caddy → Next.js ↔ NestJS → Postgres + Redis",
+            TitlePt = "Fluxo TOTE",
+            TitleEn = "TOTE flow",
+            CaptionPt = "Browser → Cloudflare DNS → EC2 / Caddy → Next.js ↔ NestJS → Postgres + Redis",
+            CaptionEn = "Browser → Cloudflare DNS → EC2 / Caddy → Next.js ↔ NestJS → Postgres + Redis",
             LayerOrder = ["client", "edge", "gateway", "app", "data"],
             Nodes =
             [
-                N("browser", "Browser", "Utilizador", "googlechrome", "#e8eef1", "client"),
-                N("cf", "Cloudflare DNS", "tote.galasse.dev", "cloudflare", "#f6821f", "edge"),
-                N("ec2", "AWS EC2", "Elastic IP · Compose", "amazonec2", "#ff9900", "gateway"),
-                N("caddy", "Caddy", "TLS Let's Encrypt", "nginx", "#3dd6c6", "gateway"),
-                N("next", "Next.js", "Frontend :3000", "nextdotjs", "#e8eef1", "app"),
-                N("nest", "NestJS", "API /v1 :3001", "nestjs", "#e0234e", "app"),
-                N("pg", "PostgreSQL", "Prisma ORM", "postgresql", "#4169e1", "data"),
-                N("redis", "Redis", "Cache / filas", "redis", "#dc382d", "data"),
-                N("docker", "Docker", "Compose full", "docker", "#2496ed", "gateway"),
+                N("browser", "Browser", "Usuário", "User", "googlechrome", "#e8eef1", "client"),
+                N("cf", "Cloudflare DNS", "tote.galasse.dev", "tote.galasse.dev", "cloudflare", "#f6821f", "edge"),
+                N("ec2", "AWS EC2", "Elastic IP · Compose", "Elastic IP · Compose", "amazonec2", "#ff9900", "gateway"),
+                N("caddy", "Caddy", "TLS Let's Encrypt", "TLS Let's Encrypt", "nginx", "#3dd6c6", "gateway"),
+                N("next", "Next.js", "Frontend :3000", "Frontend :3000", "nextdotjs", "#e8eef1", "app"),
+                N("nest", "NestJS", "API /v1 :3001", "API /v1 :3001", "nestjs", "#e0234e", "app"),
+                N("pg", "PostgreSQL", "Prisma ORM", "Prisma ORM", "postgresql", "#4169e1", "data"),
+                N("redis", "Redis", "Cache / filas", "Cache / queues", "redis", "#dc382d", "data"),
+                N("docker", "Docker", "Compose full", "Compose full", "docker", "#2496ed", "gateway"),
             ],
             Edges =
             [
@@ -44,22 +123,24 @@ public static class ArchitectureCatalog
                 E("docker", "redis", null),
             ],
         },
-        ["portfolio"] = new ArchitectureFlow
+        ["portfolio"] = new FlowDef
         {
             ProjectSlug = "portfolio",
-            Title = "Fluxo Portfólio",
-            Caption = "Browser → Cloudflare → Caddy → ASP.NET Core · assets TypeScript + Tailwind",
+            TitlePt = "Fluxo Portfólio",
+            TitleEn = "Portfolio flow",
+            CaptionPt = "Browser → Cloudflare → Caddy → ASP.NET Core · assets TypeScript + Tailwind",
+            CaptionEn = "Browser → Cloudflare → Caddy → ASP.NET Core · TypeScript + Tailwind assets",
             LayerOrder = ["client", "edge", "gateway", "app", "build"],
             Nodes =
             [
-                N("browser", "Browser", "CV / demos", "googlechrome", "#e8eef1", "client"),
-                N("cf", "Cloudflare DNS", "portfolio.galasse.dev", "cloudflare", "#f6821f", "edge"),
-                N("apex", "galasse.dev", "301 redirect", "cloudflare", "#f6821f", "edge"),
-                N("caddy", "Caddy", "TLS LE", "nginx", "#3dd6c6", "gateway"),
-                N("aspnet", "ASP.NET Core", "Razor Pages", "dotnet", "#512bd4", "app"),
-                N("ts", "TypeScript", "esbuild bundle", "typescript", "#3178c6", "build"),
-                N("tw", "Tailwind CSS", "v4 CLI", "tailwindcss", "#38bdf8", "build"),
-                N("ecr", "Amazon ECR", "Container image", "amazonwebservices", "#ff9900", "gateway"),
+                N("browser", "Browser", "CV / demos", "Resume / demos", "googlechrome", "#e8eef1", "client"),
+                N("cf", "Cloudflare DNS", "portfolio.galasse.dev", "portfolio.galasse.dev", "cloudflare", "#f6821f", "edge"),
+                N("apex", "galasse.dev", "301 redirect", "301 redirect", "cloudflare", "#f6821f", "edge"),
+                N("caddy", "Caddy", "TLS LE", "TLS LE", "nginx", "#3dd6c6", "gateway"),
+                N("aspnet", "ASP.NET Core", "Razor Pages", "Razor Pages", "dotnet", "#512bd4", "app"),
+                N("ts", "TypeScript", "esbuild bundle", "esbuild bundle", "typescript", "#3178c6", "build"),
+                N("tw", "Tailwind CSS", "v4 CLI", "v4 CLI", "tailwindcss", "#38bdf8", "build"),
+                N("ecr", "Amazon ECR", "Container image", "Container image", "amazonwebservices", "#ff9900", "gateway"),
             ],
             Edges =
             [
@@ -73,17 +154,19 @@ public static class ArchitectureCatalog
                 E("tw", "aspnet", "wwwroot/css"),
             ],
         },
-        ["edge-status"] = new ArchitectureFlow
+        ["edge-status"] = new FlowDef
         {
             ProjectSlug = "edge-status",
-            Title = "Fluxo Edge Status",
-            Caption = "TypeScript no browser consulta probe ASP.NET ou Worker Cloudflare",
+            TitlePt = "Fluxo Edge Status",
+            TitleEn = "Edge Status flow",
+            CaptionPt = "TypeScript no browser consulta probe ASP.NET ou Worker Cloudflare",
+            CaptionEn = "Browser TypeScript hits the ASP.NET probe or Cloudflare Worker",
             LayerOrder = ["client", "origin", "edge"],
             Nodes =
             [
-                N("browser", "Browser TS", "Labs indicators", "typescript", "#3178c6", "client"),
-                N("aspnet", "ASP.NET /api/status", "Probe local", "dotnet", "#512bd4", "origin"),
-                N("worker", "CF Worker", "region · cf-ray", "cloudflareworkers", "#f6821f", "edge"),
+                N("browser", "Browser TS", "Indicadores Labs", "Labs indicators", "typescript", "#3178c6", "client"),
+                N("aspnet", "ASP.NET /api/status", "Probe local", "Local probe", "dotnet", "#512bd4", "origin"),
+                N("worker", "CF Worker", "region · cf-ray", "region · cf-ray", "cloudflareworkers", "#f6821f", "edge"),
             ],
             Edges =
             [
@@ -91,18 +174,20 @@ public static class ArchitectureCatalog
                 E("browser", "worker", "live"),
             ],
         },
-        ["aws-static-demo"] = new ArchitectureFlow
+        ["aws-static-demo"] = new FlowDef
         {
             ProjectSlug = "aws-static-demo",
-            Title = "Fluxo AWS Static",
-            Caption = "Utilizador → CloudFront → S3 privado (read-only via CDN)",
+            TitlePt = "Fluxo AWS Static",
+            TitleEn = "AWS Static flow",
+            CaptionPt = "Usuário → CloudFront → S3 privado (read-only via CDN)",
+            CaptionEn = "User → CloudFront → private S3 (read-only via CDN)",
             LayerOrder = ["client", "cdn", "storage", "iac"],
             Nodes =
             [
-                N("user", "Utilizador", "HTTPS", "googlechrome", "#e8eef1", "client"),
-                N("cfdist", "CloudFront", "CDN edge", "amazoncloudfront", "#ff9900", "cdn"),
-                N("s3", "Amazon S3", "Bucket privado", "amazons3", "#569a31", "storage"),
-                N("cdk", "AWS CDK", "IaC TypeScript", "amazonwebservices", "#ff9900", "iac"),
+                N("user", "Usuário", "HTTPS", "HTTPS", "googlechrome", "#e8eef1", "client"),
+                N("cfdist", "CloudFront", "CDN edge", "CDN edge", "amazoncloudfront", "#ff9900", "cdn"),
+                N("s3", "Amazon S3", "Bucket privado", "Private bucket", "amazons3", "#569a31", "storage"),
+                N("cdk", "AWS CDK", "IaC TypeScript", "IaC TypeScript", "amazonwebservices", "#ff9900", "iac"),
             ],
             Edges =
             [
@@ -113,29 +198,4 @@ public static class ArchitectureCatalog
             ],
         },
     };
-
-    private static ArchNode N(
-        string id,
-        string label,
-        string subtitle,
-        string icon,
-        string color,
-        string layer) =>
-        new()
-        {
-            Id = id,
-            Label = label,
-            Subtitle = subtitle,
-            Icon = icon,
-            Color = color,
-            Layer = layer,
-        };
-
-    private static ArchEdge E(string from, string to, string? label) =>
-        new()
-        {
-            From = from,
-            To = to,
-            Label = label,
-        };
 }

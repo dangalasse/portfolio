@@ -1,10 +1,15 @@
 ﻿@using Portfolio.Data
+@using Portfolio.I18n
 @{
-    var profile = PortfolioCatalog.Profile;
+    var locale = Locale.Current(ViewContext.HttpContext);
+    var catalog = PortfolioCatalog.For(locale);
+    var profile = catalog.Profile;
     var path = ViewContext.HttpContext.Request.Path.Value ?? "/";
+    string T(L text) => text.Resolve(locale);
+    var otherLocale = AppLocales.IsEnglish(locale) ? AppLocales.PtBr : AppLocales.EnUs;
 }
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="@locale">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,31 +20,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="site-shell grain" data-edge-status-url="@(ViewData["EdgeStatusUrl"])">
+<body class="site-shell grain" data-edge-status-url="@(ViewData["EdgeStatusUrl"])" data-locale="@locale">
     <header class="border-b border-line/80 backdrop-blur-sm sticky top-0 z-40 bg-ink/80">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
             <a href="/" class="font-display text-lg font-bold tracking-tight text-paper hover:text-signal transition-colors">
                 @profile.Name
             </a>
-            <nav class="hidden md:flex items-center gap-6" aria-label="Principal">
-                <a class="nav-link" href="/" aria-current="@(path == "/" ? "page" : null)">Início</a>
-                <a class="nav-link" href="/Projects" aria-current="@(path.StartsWith("/Projects", StringComparison.OrdinalIgnoreCase) ? "page" : null)">Projectos</a>
-                <a class="nav-link" href="/Labs" aria-current="@(path.StartsWith("/Labs", StringComparison.OrdinalIgnoreCase) ? "page" : null)">Labs</a>
-                <a class="nav-link" href="/About" aria-current="@(path.StartsWith("/About", StringComparison.OrdinalIgnoreCase) ? "page" : null)">Sobre</a>
+            <nav class="hidden md:flex items-center gap-6" aria-label="@T(UiCopy.NavMainAria)">
+                <a class="nav-link" href="/" aria-current="@(path == "/" ? "page" : null)">@T(UiCopy.NavHome)</a>
+                <a class="nav-link" href="/Projects" aria-current="@(path.StartsWith("/Projects", StringComparison.OrdinalIgnoreCase) ? "page" : null)">@T(UiCopy.NavProjects)</a>
+                <a class="nav-link" href="/Labs" aria-current="@(path.StartsWith("/Labs", StringComparison.OrdinalIgnoreCase) ? "page" : null)">@T(UiCopy.NavLabs)</a>
+                <a class="nav-link" href="/About" aria-current="@(path.StartsWith("/About", StringComparison.OrdinalIgnoreCase) ? "page" : null)">@T(UiCopy.NavAbout)</a>
             </nav>
             <div class="hidden md:flex items-center gap-3">
+                <partial name="_LocaleToggle" model="locale" />
                 <a class="btn-ghost !px-3 !py-1.5 text-xs" href="@profile.GitHubUrl" rel="noopener noreferrer" target="_blank">GitHub</a>
                 <a class="btn-primary !px-3 !py-1.5 text-xs" href="@profile.LinkedInUrl" rel="noopener noreferrer" target="_blank">LinkedIn</a>
             </div>
-            <button type="button" class="md:hidden btn-ghost !px-3 !py-1.5" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+            <button type="button" class="md:hidden btn-ghost !px-3 !py-1.5" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav">@T(UiCopy.NavMenu)</button>
         </div>
         <div id="mobile-nav" class="hidden border-t border-line md:hidden" data-nav-panel data-open="false">
             <nav class="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4" aria-label="Mobile">
-                <a class="nav-link" href="/">Início</a>
-                <a class="nav-link" href="/Projects">Projectos</a>
-                <a class="nav-link" href="/Labs">Labs</a>
-                <a class="nav-link" href="/About">Sobre</a>
-                <div class="flex gap-3 pt-2">
+                <a class="nav-link" href="/">@T(UiCopy.NavHome)</a>
+                <a class="nav-link" href="/Projects">@T(UiCopy.NavProjects)</a>
+                <a class="nav-link" href="/Labs">@T(UiCopy.NavLabs)</a>
+                <a class="nav-link" href="/About">@T(UiCopy.NavAbout)</a>
+                <div class="flex flex-wrap items-center gap-3 pt-2">
+                    <partial name="_LocaleToggle" model="locale" />
                     <a class="btn-ghost !px-3 !py-1.5 text-xs" href="@profile.GitHubUrl" target="_blank" rel="noopener noreferrer">GitHub</a>
                     <a class="btn-primary !px-3 !py-1.5 text-xs" href="@profile.LinkedInUrl" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                 </div>

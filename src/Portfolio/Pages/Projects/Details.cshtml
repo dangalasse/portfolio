@@ -1,14 +1,18 @@
 @page "/Projects/{slug}"
 @model Portfolio.Pages.Projects.DetailsModel
+@using Portfolio.Data
+@using Portfolio.I18n
 @{
+    var locale = Locale.Current(ViewContext.HttpContext);
     ViewData["Title"] = Model.Project.Title;
     var project = Model.Project;
     var flow = Model.Architecture;
+    string T(L text) => text.Resolve(locale);
 }
 
 <article class="mx-auto max-w-5xl px-4 py-16 md:px-6">
     <p class="reveal font-mono text-xs uppercase tracking-[0.2em] text-signal">
-        <a href="/Projects" class="hover:text-paper">Projectos</a> / @project.Slug
+        <a href="/Projects" class="hover:text-paper">@T(UiCopy.NavProjects)</a> / @project.Slug
     </p>
     <h1 class="reveal mt-4 font-display text-4xl font-bold tracking-tight md:text-5xl" style="transition-delay: 60ms">@project.Title</h1>
     <p class="reveal mt-5 max-w-3xl text-lg text-mist leading-relaxed" style="transition-delay: 100ms">@project.Summary</p>
@@ -16,17 +20,17 @@
     <div class="reveal mt-8 flex flex-wrap gap-3" style="transition-delay: 140ms">
         @if (!string.IsNullOrWhiteSpace(project.LiveUrl))
         {
-            <a class="btn-primary" href="@project.LiveUrl" target="@(project.LiveUrl.StartsWith("http") ? "_blank" : null)" rel="noopener noreferrer">Live demo</a>
+            <a class="btn-primary" href="@project.LiveUrl" target="@(project.LiveUrl.StartsWith("http") ? "_blank" : null)" rel="noopener noreferrer">@T(UiCopy.LiveDemo)</a>
         }
         @if (!string.IsNullOrWhiteSpace(project.RepoUrl))
         {
-            <a class="btn-ghost" href="@project.RepoUrl" target="_blank" rel="noopener noreferrer">View source</a>
+            <a class="btn-ghost" href="@project.RepoUrl" target="_blank" rel="noopener noreferrer">@T(UiCopy.ViewSource)</a>
         }
         <a class="btn-ghost" href="/Labs">Labs</a>
     </div>
 
     <div class="reveal mt-12 border-t border-line pt-10 space-y-6" style="transition-delay: 180ms">
-        <h2 class="font-display text-2xl font-semibold">Contexto</h2>
+        <h2 class="font-display text-2xl font-semibold">@T(UiCopy.Context)</h2>
         <p class="max-w-3xl text-mist leading-relaxed">@project.Description</p>
         @if (!string.IsNullOrWhiteSpace(project.DemoNote))
         {
@@ -35,7 +39,7 @@
     </div>
 
     <div class="reveal mt-10" style="transition-delay: 220ms">
-        <h2 class="font-display text-2xl font-semibold">Stack</h2>
+        <h2 class="font-display text-2xl font-semibold">@T(UiCopy.Stack)</h2>
         <ul class="mt-4 flex flex-wrap gap-2">
             @foreach (var tech in project.Stack)
             {
