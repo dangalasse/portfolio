@@ -31,9 +31,9 @@ public static class PortfolioCatalog
                 "Sistema full-stack com bounded contexts, identidade visual configurável e operação em containers. Demonstra Nest/Next no produto e disciplina de domínio (SDD).",
             Stack = ["TypeScript", "Next.js", "NestJS", "PostgreSQL", "Docker", "Caddy", "AWS EC2"],
             Accent = "#3dd6c6",
-            LiveUrl = "https://tote.galasse.dev",
+            LiveUrl = "https://demo.tote.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/TOTE",
-            DemoNote = "Live em tote.galasse.dev — fluxo de arquitectura no detalhe.",
+            DemoNote = "Vitrine efémera em demo.tote.galasse.dev — workspace isolado por visitante.",
             Featured = true,
         },
         new ProjectItem
