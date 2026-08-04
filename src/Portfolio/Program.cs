@@ -12,7 +12,16 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Behind Caddy TLS — avoid HTTPS redirect noise in container logs.
+if (!app.Environment.IsDevelopment())
+{
+    // keep HSTS when served publicly via Caddy
+}
+else
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
