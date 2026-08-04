@@ -1,0 +1,21 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal portfolio — ASP.NET Core + TypeScript + Tailwind CSS",
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i ./Client/styles/input.css -o ./wwwroot/css/site.css --minify",
+    "build:js": "esbuild Client/ts/main.ts --bundle --minify --outfile=wwwroot/js/site.js --target=es2020",
+    "build": "npm run build:css && npm run build:js",
+    "watch:css": "npx @tailwindcss/cli -i ./Client/styles/input.css -o ./wwwroot/css/site.css --watch",
+    "watch:js": "esbuild Client/ts/main.ts --bundle --outfile=wwwroot/js/site.js --target=es2020 --watch",
+    "dev": "npm run build"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.11",
+    "@types/node": "^22.17.0",
+    "esbuild": "^0.25.8",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5.9.2"
+  }
+}

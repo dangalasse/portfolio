@@ -1,0 +1,76 @@
+﻿@using Portfolio.Data
+@{
+    var profile = PortfolioCatalog.Profile;
+    var path = ViewContext.HttpContext.Request.Path.Value ?? "/";
+}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@(ViewData["Title"] != null ? $"{ViewData["Title"]} · " : "")@profile.Name</title>
+    <meta name="description" content="@profile.Tagline" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="site-shell grain" data-edge-status-url="@(ViewData["EdgeStatusUrl"])">
+    <header class="border-b border-line/80 backdrop-blur-sm sticky top-0 z-40 bg-ink/80">
+        <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
+            <a href="/" class="font-display text-lg font-bold tracking-tight text-paper hover:text-signal transition-colors">
+                @profile.Name
+            </a>
+            <nav class="hidden md:flex items-center gap-6" aria-label="Principal">
+                <a class="nav-link" href="/" aria-current="@(path == "/" ? "page" : null)">Início</a>
+                <a class="nav-link" href="/Projects" aria-current="@(path.StartsWith("/Projects", StringComparison.OrdinalIgnoreCase) ? "page" : null)">Projectos</a>
+                <a class="nav-link" href="/Labs" aria-current="@(path.StartsWith("/Labs", StringComparison.OrdinalIgnoreCase) ? "page" : null)">Labs</a>
+                <a class="nav-link" href="/About" aria-current="@(path.StartsWith("/About", StringComparison.OrdinalIgnoreCase) ? "page" : null)">Sobre</a>
+            </nav>
+            <div class="hidden md:flex items-center gap-3">
+                <a class="btn-ghost !px-3 !py-1.5 text-xs" href="@profile.GitHubUrl" rel="noopener noreferrer" target="_blank">GitHub</a>
+                <a class="btn-primary !px-3 !py-1.5 text-xs" href="@profile.LinkedInUrl" rel="noopener noreferrer" target="_blank">LinkedIn</a>
+            </div>
+            <button type="button" class="md:hidden btn-ghost !px-3 !py-1.5" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav">Menu</button>
+        </div>
+        <div id="mobile-nav" class="hidden border-t border-line md:hidden" data-nav-panel data-open="false">
+            <nav class="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4" aria-label="Mobile">
+                <a class="nav-link" href="/">Início</a>
+                <a class="nav-link" href="/Projects">Projectos</a>
+                <a class="nav-link" href="/Labs">Labs</a>
+                <a class="nav-link" href="/About">Sobre</a>
+                <div class="flex gap-3 pt-2">
+                    <a class="btn-ghost !px-3 !py-1.5 text-xs" href="@profile.GitHubUrl" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a class="btn-primary !px-3 !py-1.5 text-xs" href="@profile.LinkedInUrl" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-1">
+        @RenderBody()
+    </main>
+
+    <footer class="border-t border-line mt-16">
+        <div class="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 md:flex-row md:items-center md:justify-between md:px-6">
+            <p class="text-sm text-mist">
+                <span class="font-display text-paper">@profile.Name</span>
+                · <span data-year></span>
+                · ASP.NET Core · TypeScript · Tailwind
+            </p>
+            <div class="flex flex-wrap gap-4 text-sm">
+                <a class="text-mist hover:text-signal" href="@profile.SiteUrl" target="_blank" rel="noopener noreferrer">Site</a>
+                <a class="text-mist hover:text-signal" href="@profile.GitHubUrl" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a class="text-mist hover:text-signal" href="@profile.LinkedInUrl" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                @if (!string.IsNullOrWhiteSpace(profile.CvPdfPath))
+                {
+                    <a class="text-mist hover:text-signal" href="@profile.CvPdfPath">CV PDF</a>
+                }
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

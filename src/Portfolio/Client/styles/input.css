@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-ink: #0b1215;
+  --color-ink-soft: #121c21;
+  --color-panel: #162229;
+  --color-line: #2a3a44;
+  --color-mist: #9db0bb;
+  --color-paper: #e8eef1;
+  --color-signal: #3dd6c6;
+  --color-signal-dim: #1f8f84;
+  --color-aws: #ff9900;
+  --color-cf: #f6821f;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink text-paper font-body antialiased;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-signal) 35%, transparent);
+  }
+}
+
+@layer components {
+  .site-shell {
+    @apply min-h-screen flex flex-col;
+  }
+
+  .nav-link {
+    @apply text-sm tracking-wide text-mist transition-colors duration-300 hover:text-paper;
+  }
+
+  .nav-link[aria-current="page"] {
+    @apply text-signal;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-signal px-5 py-2.5 text-sm font-semibold text-ink transition duration-300 hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-line px-5 py-2.5 text-sm font-medium text-paper transition duration-300 hover:border-signal/60 hover:text-signal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal;
+  }
+
+  .section-title {
+    @apply font-display text-3xl md:text-4xl font-semibold tracking-tight text-paper;
+  }
+
+  .section-lead {
+    @apply mt-3 max-w-2xl text-mist text-base md:text-lg leading-relaxed;
+  }
+
+  .status-pill {
+    @apply inline-flex items-center gap-2 rounded-md border border-line bg-panel px-3 py-1.5 text-xs font-mono uppercase tracking-wider text-mist;
+  }
+
+  .status-dot {
+    @apply size-2 rounded-full bg-signal animate-pulse;
+  }
+
+  .project-tile {
+    @apply relative block overflow-hidden border border-line bg-ink-soft transition duration-500 hover:border-signal/50;
+  }
+
+  .lab-card {
+    @apply border border-line bg-panel/80 p-5 md:p-6;
+  }
+
+  .grain {
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% -10%, color-mix(in oklab, var(--color-signal) 18%, transparent), transparent 55%),
+      radial-gradient(ellipse 60% 40% at 90% 10%, color-mix(in oklab, var(--color-cf) 12%, transparent), transparent 50%),
+      linear-gradient(180deg, var(--color-ink) 0%, var(--color-ink-soft) 100%);
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 700ms ease, transform 700ms ease;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
