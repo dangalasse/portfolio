@@ -148,12 +148,12 @@ public static class PortfolioCatalog
                 "Edge LLMOps: POST /analyze-error → Workers AI (llama fp8) or Gemini → summary, likelyCause, suggestedFix. Domain edge.galasse.dev. API keys only via wrangler secret.",
             Stack = ["Cloudflare Workers", "Workers AI", "TypeScript", "Gemini", "Wrangler"],
             Accent = "#8b5cf6",
-            LiveUrl = "https://edge.galasse.dev/health",
+            LiveUrl = "https://edge.galasse.dev/",
             RepoUrl = "https://github.com/dangalasse/edge-labs",
             DemoNote =
-                "GET /health e POST /analyze-error em edge.galasse.dev — veja docs/RECRUITER.md.",
+                "Abra edge.galasse.dev — botão Analyze live. A resposta JSON traz provider, model e analyzedAt (prova de inferência real). Hoje: Workers AI; Gemini quando o secret GEMINI_API_KEY existir.",
             DemoNoteEn =
-                "GET /health and POST /analyze-error at edge.galasse.dev — see docs/RECRUITER.md.",
+                "Open edge.galasse.dev — Analyze live. JSON includes provider, model, analyzedAt (real inference proof). Today: Workers AI; Gemini when GEMINI_API_KEY secret is set.",
             Featured = true,
         },
         new ProjectItem
