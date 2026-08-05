@@ -53,6 +53,37 @@ public static class PortfolioCatalog
         },
         new ProjectItem
         {
+            Slug = "pipeline-pulse",
+            Title = "Pipeline Pulse",
+            Summary =
+                "Esteira CI/CD completa: GitHub Actions → Cloudflare Workers, com meta-dashboard ao vivo.",
+            Description =
+                "Repo de vitrine DevOps: lint/typecheck/test/build, preview de PR, staging com smoke /api/health e production via tag/environment. A UI mostra SHA, ambiente e o workflow run que publicou o build.",
+            SummaryEn =
+                "Full CI/CD conveyor: GitHub Actions → Cloudflare Workers, with a live meta-dashboard.",
+            DescriptionEn =
+                "DevOps showcase repo: lint/typecheck/test/build, PR preview, staging with /api/health smoke, and production via tag/environment. The UI shows SHA, environment, and the workflow run that shipped the build.",
+            Stack =
+            [
+                "GitHub Actions",
+                "Cloudflare Workers",
+                "Hono",
+                "Vite",
+                "React",
+                "Biome",
+                "Vitest",
+            ],
+            Accent = "#3dd6a5",
+            LiveUrl = "https://pipeline.galasse.dev",
+            RepoUrl = "https://github.com/dangalasse/pipeline-pulse",
+            DemoNote =
+                "Live em pipeline.galasse.dev — veja também a aba Actions do repo.",
+            DemoNoteEn =
+                "Live at pipeline.galasse.dev — also open the repo Actions tab.",
+            Featured = true,
+        },
+        new ProjectItem
+        {
             Slug = "edge-status",
             Title = "Edge Status Lab",
             Summary =
@@ -123,11 +154,26 @@ public static class PortfolioCatalog
             Id = "cloudflare",
             Title = "Cloudflare Edge",
             Provider = "Cloudflare",
-            Description = "Pages/DNS + Worker de status (região / ray / latência).",
-            DescriptionEn = "Pages/DNS + status Worker (region / ray / latency).",
-            Proof = "Card com probe ao vivo nesta página.",
-            ProofEn = "Card with a live probe on this page.",
+            Description =
+                "Workers/DNS + Pipeline Pulse (esteira Actions) e Worker de status.",
+            DescriptionEn =
+                "Workers/DNS + Pipeline Pulse (Actions conveyor) and status Worker.",
+            Proof = "pipeline.galasse.dev + probe Labs.",
+            ProofEn = "pipeline.galasse.dev + Labs probe.",
             DocsUrl = "https://developers.cloudflare.com/workers/",
+        },
+        new LabIndicator
+        {
+            Id = "github",
+            Title = "GitHub Actions",
+            Provider = "GitHub",
+            Description =
+                "CI/CD público no Pipeline Pulse — CI, preview, staging e production.",
+            DescriptionEn =
+                "Public CI/CD on Pipeline Pulse — CI, preview, staging, and production.",
+            Proof = "Badges e runs em dangalasse/pipeline-pulse/actions.",
+            ProofEn = "Badges and runs at dangalasse/pipeline-pulse/actions.",
+            DocsUrl = "https://github.com/dangalasse/pipeline-pulse/actions",
         },
         new LabIndicator
         {
@@ -139,17 +185,6 @@ public static class PortfolioCatalog
             Proof = "URL + diagrama no detalhe do projeto.",
             ProofEn = "URL + diagram on the project detail page.",
             DocsUrl = "https://docs.aws.amazon.com/",
-        },
-        new LabIndicator
-        {
-            Id = "github",
-            Title = "GitHub",
-            Provider = "GitHub",
-            Description = "Código-fonte deste site e repositórios dos projetos.",
-            DescriptionEn = "Source code for this site and project repositories.",
-            Proof = "Botão Ver código / perfil GitHub.",
-            ProofEn = "View source button / GitHub profile.",
-            DocsUrl = ProfileBase.GitHubUrl,
         },
     ];
 
