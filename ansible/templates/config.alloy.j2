@@ -1,0 +1,22 @@
+// WHY: Grafana Alloy (Agent successor) scrapes Node Exporter and remote_writes
+// to Grafana Cloud Free Tier. App traces/metrics go OTLP from ASP.NET; Alloy
+// covers the *host* so you get infra + app in one Grafana stack.
+
+prometheus.scrape "node_exporter" {
+  targets = [{
+    "__address__" = "127.0.0.1:9100",
+  }]
+  forward_to = [prometheus.remote_write.grafana_cloud.receiver]
+  scrape_interval = "60s"
+  // WHY: 60s keeps Free Tier series/samples low on a single EC2.
+}
+
+prometheus.remote_write "grafana_cloud" {
+  endpoint {
+    url = "{{ grafana_prometheus_url }}"
+    basic_auth {
+      username = "{{ grafana_instance_id }}"
+      password = "{{ grafana_api_key }}"
+    }
+  }
+}

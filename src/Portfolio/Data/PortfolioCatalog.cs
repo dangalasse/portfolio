@@ -36,12 +36,22 @@ public static class PortfolioCatalog
             Summary =
                 "Plataforma de patrimônio com whitelabel, setup wizard e deploy zero-touch.",
             Description =
-                "Sistema full-stack com bounded contexts, identidade visual configurável e operação em containers. Demonstra Nest/Next no produto e disciplina de domínio (SDD).",
+                "Sistema full-stack com bounded contexts, identidade visual configurável e operação em containers. Demonstra Nest/Next no produto, disciplina de domínio (SDD) e chart Helm demonstrativo em k8s/tote-chart/.",
             SummaryEn =
                 "Asset management platform with whitelabel branding, setup wizard, and zero-touch deploy.",
             DescriptionEn =
-                "Full-stack system with bounded contexts, configurable visual identity, and container operations. Shows Nest/Next in product and domain discipline (SDD).",
-            Stack = ["TypeScript", "Next.js", "NestJS", "PostgreSQL", "Docker", "Caddy", "AWS EC2"],
+                "Full-stack system with bounded contexts, configurable visual identity, and container operations. Shows Nest/Next in product, domain discipline (SDD), and a demonstrative Helm chart under k8s/tote-chart/.",
+            Stack =
+            [
+                "TypeScript",
+                "Next.js",
+                "NestJS",
+                "PostgreSQL",
+                "Docker",
+                "Caddy",
+                "AWS EC2",
+                "Helm",
+            ],
             Accent = "#3dd6c6",
             LiveUrl = "https://demo.tote.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/TOTE",
@@ -107,19 +117,43 @@ public static class PortfolioCatalog
             Slug = "aws-static-demo",
             Title = "AWS Static Demo",
             Summary =
-                "Asset estático servido via S3 + CloudFront com diagrama e custo free-tier.",
+                "Asset estático servido via S3 + CloudFront (OAC) provisionado com Terraform.",
             Description =
-                "Fatia mínima de AWS para CV: bucket privado, distribuição CloudFront, URL pública read-only. Objetivo: prova de infra sem microserviços desnecessários.",
+                "Fatia mínima de AWS para CV: bucket privado, Origin Access Control, distribuição CloudFront PriceClass_100. Objetivo: prova de IaC Free Tier sem microserviços desnecessários.",
             SummaryEn =
-                "Static asset served via S3 + CloudFront with a diagram and free-tier cost notes.",
+                "Static asset via S3 + CloudFront (OAC) provisioned with Terraform.",
             DescriptionEn =
-                "Minimal AWS slice for a resume: private bucket, CloudFront distribution, read-only public URL. Goal: infra proof without unnecessary microservices.",
-            Stack = ["AWS S3", "CloudFront", "CDK/CLI"],
+                "Minimal AWS slice for a resume: private bucket, Origin Access Control, CloudFront PriceClass_100. Goal: Free Tier IaC proof without unnecessary microservices.",
+            Stack = ["AWS S3", "CloudFront", "Terraform", "OAC"],
             Accent = "#ff9900",
-            LiveUrl = null,
-            RepoUrl = null,
-            DemoNote = "Ligar URL pública após o primeiro deploy AWS.",
-            DemoNoteEn = "Attach a public URL after the first AWS deploy.",
+            LiveUrl = "https://static.galasse.dev",
+            RepoUrl = "https://github.com/dangalasse/aws-static-demo",
+            DemoNote =
+                "Live em static.galasse.dev (S3 privado + CloudFront OAC + ACM). Código Terraform no GitHub.",
+            DemoNoteEn =
+                "Live at static.galasse.dev (private S3 + CloudFront OAC + ACM). Terraform on GitHub.",
+            Featured = true,
+        },
+        new ProjectItem
+        {
+            Slug = "edge-labs",
+            Title = "Edge Labs (LLMOps)",
+            Summary =
+                "Worker Cloudflare que analisa logs de erro com Workers AI (Free Tier) e Gemini opcional.",
+            Description =
+                "LLMOps no edge: POST /analyze-error → Workers AI (llama fp8) ou Gemini → summary, likelyCause, suggestedFix. Domínio edge.galasse.dev. API keys só via wrangler secret.",
+            SummaryEn =
+                "Cloudflare Worker that analyzes error logs with Workers AI (Free Tier) and optional Gemini.",
+            DescriptionEn =
+                "Edge LLMOps: POST /analyze-error → Workers AI (llama fp8) or Gemini → summary, likelyCause, suggestedFix. Domain edge.galasse.dev. API keys only via wrangler secret.",
+            Stack = ["Cloudflare Workers", "Workers AI", "TypeScript", "Gemini", "Wrangler"],
+            Accent = "#8b5cf6",
+            LiveUrl = "https://edge.galasse.dev/health",
+            RepoUrl = "https://github.com/dangalasse/edge-labs",
+            DemoNote =
+                "GET /health e POST /analyze-error em edge.galasse.dev — veja docs/RECRUITER.md.",
+            DemoNoteEn =
+                "GET /health and POST /analyze-error at edge.galasse.dev — see docs/RECRUITER.md.",
             Featured = true,
         },
         new ProjectItem
@@ -130,12 +164,21 @@ public static class PortfolioCatalog
             Summary =
                 "ASP.NET Core Razor Pages + TypeScript + Tailwind — simples, rápido, demonstrável.",
             Description =
-                "Site de CV com projetos, labs Cloudflare/AWS e links LinkedIn/GitHub. Build de assets via npm (esbuild + Tailwind v4), hospedado na EC2 atrás do Caddy com DNS Cloudflare.",
+                "Site de CV com projetos, labs Cloudflare/AWS e links LinkedIn/GitHub. Build de assets via npm (esbuild + Tailwind v4), hospedado na EC2 atrás do Caddy com DNS Cloudflare. CI: Actions → ECR → Ansible; OTEL → Grafana Cloud.",
             SummaryEn =
                 "ASP.NET Core Razor Pages + TypeScript + Tailwind — simple, fast, demonstrable.",
             DescriptionEn =
-                "Resume site with projects, Cloudflare/AWS labs, and LinkedIn/GitHub links. Asset build via npm (esbuild + Tailwind v4), hosted on EC2 behind Caddy with Cloudflare DNS.",
-            Stack = ["ASP.NET Core 8", "TypeScript", "Tailwind CSS", "Caddy", "ECR"],
+                "Resume site with projects, Cloudflare/AWS labs, and LinkedIn/GitHub links. Asset build via npm (esbuild + Tailwind v4), hosted on EC2 behind Caddy with Cloudflare DNS. CI: Actions → ECR → Ansible; OTEL → Grafana Cloud.",
+            Stack =
+            [
+                "ASP.NET Core 8",
+                "TypeScript",
+                "Tailwind CSS",
+                "Caddy",
+                "ECR",
+                "Ansible",
+                "OpenTelemetry",
+            ],
             Accent = "#9db0bb",
             LiveUrl = "https://portfolio.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/portfolio",
@@ -155,12 +198,12 @@ public static class PortfolioCatalog
             Title = "Cloudflare Edge",
             Provider = "Cloudflare",
             Description =
-                "Workers/DNS + Pipeline Pulse (esteira Actions) e Worker de status.",
+                "Workers/DNS + Pipeline Pulse + Edge Labs (LLMOps em edge.galasse.dev).",
             DescriptionEn =
-                "Workers/DNS + Pipeline Pulse (Actions conveyor) and status Worker.",
-            Proof = "pipeline.galasse.dev + probe Labs.",
-            ProofEn = "pipeline.galasse.dev + Labs probe.",
-            DocsUrl = "https://developers.cloudflare.com/workers/",
+                "Workers/DNS + Pipeline Pulse + Edge Labs (LLMOps at edge.galasse.dev).",
+            Proof = "pipeline.galasse.dev · edge.galasse.dev/health",
+            ProofEn = "pipeline.galasse.dev · edge.galasse.dev/health",
+            DocsUrl = "https://edge.galasse.dev/health",
         },
         new LabIndicator
         {
@@ -180,11 +223,13 @@ public static class PortfolioCatalog
             Id = "aws",
             Title = "AWS Surface",
             Provider = "AWS",
-            Description = "Demo mínima S3 + CloudFront (ou Lambda URL) com link público.",
-            DescriptionEn = "Minimal S3 + CloudFront demo (or Lambda URL) with a public link.",
-            Proof = "URL + diagrama no detalhe do projeto.",
-            ProofEn = "URL + diagram on the project detail page.",
-            DocsUrl = "https://docs.aws.amazon.com/",
+            Description =
+                "S3 privado + CloudFront OAC (Terraform) em static.galasse.dev + portfolio na EC2/ECR.",
+            DescriptionEn =
+                "Private S3 + CloudFront OAC (Terraform) at static.galasse.dev + portfolio on EC2/ECR.",
+            Proof = "static.galasse.dev · github.com/dangalasse/aws-static-demo",
+            ProofEn = "static.galasse.dev · github.com/dangalasse/aws-static-demo",
+            DocsUrl = "https://static.galasse.dev",
         },
     ];
 

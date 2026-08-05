@@ -1,7 +1,11 @@
 using Portfolio.Data;
 using Portfolio.I18n;
+using Portfolio.Observability;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// WHY: OTLP → Grafana Cloud Free Tier; gated by OpenTelemetry:Enabled / env.
+builder.AddPortfolioOpenTelemetry();
 
 builder.Services.AddRazorPages();
 

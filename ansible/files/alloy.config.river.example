@@ -1,0 +1,18 @@
+// Static example — playbook renders templates/config.alloy.j2
+// WHY: River/Alloy syntax; replace placeholders before use.
+
+prometheus.scrape "node_exporter" {
+  targets = [{ "__address__" = "127.0.0.1:9100" }]
+  forward_to = [prometheus.remote_write.grafana_cloud.receiver]
+  scrape_interval = "60s"
+}
+
+prometheus.remote_write "grafana_cloud" {
+  endpoint {
+    url = "<GRAFANA_PROMETHEUS_REMOTE_WRITE_URL>"
+    basic_auth {
+      username = "<GRAFANA_INSTANCE_ID>"
+      password = "<GRAFANA_API_KEY>"
+    }
+  }
+}

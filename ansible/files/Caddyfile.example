@@ -1,0 +1,5 @@
+# Static example (templates/Caddyfile.j2 is used by the playbook).
+portfolio.galasse.dev {
+	encode gzip
+	reverse_proxy portfolio:8080
+}

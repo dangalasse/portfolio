@@ -179,22 +179,44 @@ public static class ArchitectureCatalog
             ProjectSlug = "aws-static-demo",
             TitlePt = "Fluxo AWS Static",
             TitleEn = "AWS Static flow",
-            CaptionPt = "Usuário → CloudFront → S3 privado (read-only via CDN)",
-            CaptionEn = "User → CloudFront → private S3 (read-only via CDN)",
+            CaptionPt = "Usuário → CloudFront (OAC) → S3 privado · Terraform",
+            CaptionEn = "User → CloudFront (OAC) → private S3 · Terraform",
             LayerOrder = ["client", "cdn", "storage", "iac"],
             Nodes =
             [
                 N("user", "Usuário", "HTTPS", "HTTPS", "googlechrome", "#e8eef1", "client"),
-                N("cfdist", "CloudFront", "CDN edge", "CDN edge", "amazoncloudfront", "#ff9900", "cdn"),
+                N("cfdist", "CloudFront", "CDN + OAC", "CDN + OAC", "amazoncloudfront", "#ff9900", "cdn"),
                 N("s3", "Amazon S3", "Bucket privado", "Private bucket", "amazons3", "#569a31", "storage"),
-                N("cdk", "AWS CDK", "IaC TypeScript", "IaC TypeScript", "amazonwebservices", "#ff9900", "iac"),
+                N("tf", "Terraform", "IaC", "IaC", "terraform", "#7B42BC", "iac"),
             ],
             Edges =
             [
                 E("user", "cfdist", "HTTPS"),
-                E("cfdist", "s3", "OAI / OAC"),
-                E("cdk", "cfdist", "synth"),
-                E("cdk", "s3", "synth"),
+                E("cfdist", "s3", "OAC SigV4"),
+                E("tf", "cfdist", "apply"),
+                E("tf", "s3", "apply"),
+            ],
+        },
+        ["edge-labs"] = new FlowDef
+        {
+            ProjectSlug = "edge-labs",
+            TitlePt = "Fluxo Edge Labs (LLMOps)",
+            TitleEn = "Edge Labs (LLMOps) flow",
+            CaptionPt = "Cliente → Worker → Gemini AI Studio → JSON de remediação",
+            CaptionEn = "Client → Worker → Gemini AI Studio → remediation JSON",
+            LayerOrder = ["client", "edge", "ai"],
+            Nodes =
+            [
+                N("client", "Cliente", "POST /analyze-error", "POST /analyze-error", "googlechrome", "#e8eef1", "client"),
+                N("worker", "CF Worker", "edge-labs", "edge-labs", "cloudflare", "#f6821f", "edge"),
+                N("gemini", "Workers AI", "llama fp8 / Gemini", "llama fp8 / Gemini", "cloudflare", "#f6821f", "ai"),
+            ],
+            Edges =
+            [
+                E("client", "worker", "JSON log"),
+                E("worker", "gemini", "inference"),
+                E("gemini", "worker", "analysis"),
+                E("worker", "client", "fix"),
             ],
         },
     };

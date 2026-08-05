@@ -9,6 +9,8 @@ Inclui:
 - Labs (Cloudflare / AWS / GitHub) com probe TypeScript
 - Links LinkedIn, GitHub, site e CV PDF
 - API `GET /api/status` para prova local até ligar um Worker Cloudflare
+- **Observabilidade**: OpenTelemetry (OTLP) → Grafana Cloud + Ansible (Docker, Caddy, Node Exporter, Grafana Alloy)
+- **CI/CD**: GitHub Actions → ECR → Ansible roll na EC2
 
 ## Requisitos
 
@@ -36,6 +38,27 @@ Scripts frontend:
 
 O alvo MSBuild `NpmBuild` corre `npm run build` antes de cada `dotnet build`.
 
+## Observabilidade (Grafana Cloud Free Tier)
+
+**App (traces + métricas):** `OpenTelemetryExtensions` exporta OTLP quando `OpenTelemetry:Enabled=true` (ou env). Configure:
+
+```bash
+export OpenTelemetry__Enabled=true
+export OTEL_EXPORTER_OTLP_ENDPOINT="https://otlp-gateway-prod-<REGION>.grafana.net/otlp"
+export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Basic <GRAFANA_OTLP_BASIC_AUTH>"
+```
+
+**Host (EC2):** playbook Ansible instala Node Exporter + Grafana Alloy (sucessor do Agent) e faz remote_write para o Prometheus do Grafana Cloud. Ver `ansible/`.
+
+WHY Alloy (não Agent legado): mesmo Free Tier, binário suportado, config River unificada.
+
+## Deploy (Ansible + GitHub Actions)
+
+1. Copiar `ansible/inventory.example.ini` → `inventory.ini` e `group_vars/all.yml.example` → secrets locais / Vault.
+2. Bootstrap host: `ansible-playbook -i inventory.ini ansible/portfolio-server-setup.yml`
+3. Secrets no GitHub (repo): `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `ECR_REPOSITORY`, `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, e opcionalmente `GRAFANA_*`.
+4. Push em `main` dispara `.github/workflows/deploy.yml` (build → ECR → Ansible recreate container).
+
 ## Personalizar
 
 Editar `src/Portfolio/Data/PortfolioCatalog.cs`:
@@ -56,9 +79,11 @@ ViewData["EdgeStatusUrl"] = "https://edge-status.seu-subdominio.workers.dev";
 
 (ou via configuração / env).
 
-## AWS demo (opcional)
+## AWS demo + Edge Labs
 
-Ver notas no projecto `aws-static-demo`: S3 privado + CloudFront. Ligar a URL pública no catálogo.
+- AWS Static: [static.galasse.dev](https://static.galasse.dev) — Terraform in [aws-static-demo](https://github.com/dangalasse/aws-static-demo)
+- Edge Labs: [edge.galasse.dev/health](https://edge.galasse.dev/health) — [edge-labs](https://github.com/dangalasse/edge-labs)
+- Reviewer map: [docs/RECRUITER.md](docs/RECRUITER.md)
 
 ## Licença
 

@@ -1,0 +1,6 @@
+# WHY: TLS at the edge on the EC2 (Let's Encrypt via Caddy) so the ASP.NET
+# container stays HTTP :8080 — simpler Free Tier layout than ALB + ACM.
+{{ portfolio_domain }} {
+	encode gzip
+	reverse_proxy portfolio:8080
+}

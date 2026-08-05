@@ -1,0 +1,112 @@
+# WHY: Build once in CI, push to ECR, then Ansible rolls the EC2 container.
+# Free Tier: GitHub-hosted ubuntu-latest + existing EC2 (no extra ALB/ECS cost).
+name: Deploy portfolio
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+
+jobs:
+  build:
+    name: Build and push ECR
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.meta.outputs.image }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Image metadata
+        id: meta
+        run: |
+          IMAGE="${{ steps.ecr.outputs.registry }}/${ECR_REPOSITORY}"
+          SHA_TAG="${GITHUB_SHA::12}"
+          echo "image=${IMAGE}:${SHA_TAG}" >> "$GITHUB_OUTPUT"
+          echo "image_latest=${IMAGE}:latest" >> "$GITHUB_OUTPUT"
+          echo "sha_tag=${SHA_TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.image }}
+            ${{ steps.meta.outputs.image_latest }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Ansible roll EC2
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        run: |
+          # WHY: Ansible over SSH to the single Free Tier EC2 — no SSM Session Manager required for this demo path.
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/portfolio_ec2.pem
+          chmod 600 ~/.ssh/portfolio_ec2.pem
+          cat >> ~/.ssh/config <<EOF
+          Host portfolio-ec2
+            HostName ${{ secrets.EC2_HOST }}
+            User ${{ secrets.EC2_USER }}
+            IdentityFile ~/.ssh/portfolio_ec2.pem
+            StrictHostKeyChecking accept-new
+          EOF
+
+      - name: Install Ansible + Docker collection
+        run: |
+          pipx install --include-deps ansible
+          ansible-galaxy collection install community.docker
+
+      - name: Write inventory
+        run: |
+          cat > ansible/inventory.ini <<EOF
+          [portfolio]
+          portfolio-ec2 ansible_host=${{ secrets.EC2_HOST }} ansible_user=${{ secrets.EC2_USER }} ansible_ssh_private_key_file=~/.ssh/portfolio_ec2.pem
+          EOF
+
+      - name: Run portfolio-server-setup playbook
+        env:
+          # Pass Grafana placeholders from secrets when configured; empty keeps playbook defaults.
+          GRAFANA_OTLP_ENDPOINT: ${{ secrets.GRAFANA_OTLP_ENDPOINT }}
+          GRAFANA_PROMETHEUS_URL: ${{ secrets.GRAFANA_PROMETHEUS_REMOTE_WRITE_URL }}
+          GRAFANA_INSTANCE_ID: ${{ secrets.GRAFANA_INSTANCE_ID }}
+          GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }}
+          GRAFANA_OTLP_BASIC_AUTH: ${{ secrets.GRAFANA_OTLP_BASIC_AUTH }}
+        run: |
+          EXTRA=()
+          EXTRA+=(-e "portfolio_image=${{ needs.build.outputs.image }}")
+          [[ -n "$GRAFANA_OTLP_ENDPOINT" ]] && EXTRA+=(-e "grafana_otlp_endpoint=$GRAFANA_OTLP_ENDPOINT")
+          [[ -n "$GRAFANA_PROMETHEUS_URL" ]] && EXTRA+=(-e "grafana_prometheus_url=$GRAFANA_PROMETHEUS_URL")
+          [[ -n "$GRAFANA_INSTANCE_ID" ]] && EXTRA+=(-e "grafana_instance_id=$GRAFANA_INSTANCE_ID")
+          [[ -n "$GRAFANA_API_KEY" ]] && EXTRA+=(-e "grafana_api_key=$GRAFANA_API_KEY")
+          [[ -n "$GRAFANA_OTLP_BASIC_AUTH" ]] && EXTRA+=(-e "grafana_otlp_basic_auth=$GRAFANA_OTLP_BASIC_AUTH")
+          ansible-playbook -i ansible/inventory.ini ansible/portfolio-server-setup.yml "${EXTRA[@]}"

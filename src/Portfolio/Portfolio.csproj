@@ -7,6 +7,15 @@
     <RootNamespace>Portfolio</RootNamespace>
   </PropertyGroup>
 
+  <!-- WHY: OTLP exporters + ASP.NET/Http/Runtime instrumentation for Grafana Cloud Free Tier. -->
+  <ItemGroup>
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.17.0" />
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.17.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0" />
+  </ItemGroup>
+
   <Target Name="NpmBuild" BeforeTargets="BeforeBuild" Condition="Exists('package.json')">
     <Exec Command="npm ci --ignore-scripts" Condition="Exists('package-lock.json') And !Exists('node_modules')" />
     <Exec Command="npm install --ignore-scripts" Condition="!Exists('package-lock.json') And !Exists('node_modules')" />

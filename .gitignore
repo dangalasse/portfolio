@@ -51,6 +51,12 @@ Thumbs.db
 !.env.example
 *.pfx
 
+# Ansible local inventory / secrets (never commit)
+ansible/inventory.ini
+ansible/group_vars/all.yml
+ansible/group_vars/secrets.yml
+*.pem
+
 # Built assets are committed for simple deploy; uncomment to ignore if CI builds them:
 # wwwroot/css/site.css
 # wwwroot/js/site.js

@@ -1,0 +1,219 @@
+---
+# WHY: Idempotent EC2 bootstrap for the portfolio host.
+# Separates host tooling (Docker, Caddy, Node Exporter, Alloy) from the app
+# container so CI can rebuild the image without re-installing the OS stack.
+#
+# Usage:
+#   ansible-playbook -i inventory.ini ansible/portfolio-server-setup.yml \
+#     -e @group_vars/secrets.yml   # never commit secrets
+#
+# Placeholders: replace <SUA_VARIAVEL> or pass -e / vault.
+
+- name: Portfolio EC2 host setup (Docker · Caddy · Node Exporter · Grafana Alloy)
+  hosts: portfolio
+  become: true
+  vars:
+    # WHY: pin a known Alloy package channel; override per env if needed.
+    alloy_config_dest: /etc/alloy/config.alloy
+    caddy_site_dest: /etc/caddy/Caddyfile
+    portfolio_container_name: tote-portfolio
+    # Override from CI: -e portfolio_image=<ACCOUNT>.dkr.ecr.<REGION>.amazonaws.com/portfolio:sha
+    # Default is a no-op sentinel so bootstrap can install host tools without rolling the app.
+    portfolio_image: "public.ecr.aws/docker/library/hello-world:latest"
+    portfolio_network: tote-network
+    grafana_otlp_endpoint: "<GRAFANA_OTLP_ENDPOINT>"
+    grafana_prometheus_url: "<GRAFANA_PROMETHEUS_REMOTE_WRITE_URL>"
+    grafana_instance_id: "<GRAFANA_INSTANCE_ID>"
+    grafana_api_key: "<GRAFANA_API_KEY>"
+    portfolio_domain: "{{ portfolio_domain | default('portfolio.galasse.dev') }}"
+
+  handlers:
+    - name: Reload systemd
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Restart alloy
+      ansible.builtin.service:
+        name: alloy
+        state: restarted
+
+    - name: Reload caddy
+      ansible.builtin.service:
+        name: caddy
+        state: reloaded
+
+    - name: Restart node_exporter
+      ansible.builtin.service:
+        name: prometheus-node-exporter
+        state: restarted
+
+  tasks:
+    - name: Ensure apt prerequisites for Docker and Grafana repos
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+          - apt-transport-https
+        state: present
+        update_cache: true
+
+    # --- Docker -----------------------------------------------------------------
+    # WHY: App runs as a container pulled from ECR; host only needs Docker + network.
+    - name: Add Docker GPG key
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: "0644"
+        force: false
+
+    - name: Add Docker apt repository
+      ansible.builtin.apt_repository:
+        repo: >-
+          deb [arch={{ ansible_architecture | replace('x86_64', 'amd64') | replace('aarch64', 'arm64') }}
+          signed-by=/etc/apt/keyrings/docker.asc]
+          https://download.docker.com/linux/ubuntu
+          {{ ansible_distribution_release }} stable
+        filename: docker
+        state: present
+
+    - name: Install Docker Engine and Compose plugin
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+
+    - name: Enable and start Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Ensure Docker network for Caddy ↔ portfolio alias
+      community.docker.docker_network:
+        name: "{{ portfolio_network }}"
+        state: present
+      # WHY: Caddy upstream uses DNS name "portfolio" on this network (see Caddyfile).
+
+    # --- Caddy ------------------------------------------------------------------
+    # WHY: TLS termination + reverse proxy on the Free Tier EC2 (no ALB cost).
+    - name: Add Caddy GPG key
+      ansible.builtin.get_url:
+        url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+        dest: /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+        mode: "0644"
+        # cloudsmith ships armored key; convert if needed on first run
+
+    - name: Add Caddy apt repository
+      ansible.builtin.apt_repository:
+        repo: >-
+          deb [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg]
+          https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+        filename: caddy-stable
+        state: present
+
+    - name: Install Caddy
+      ansible.builtin.apt:
+        name: caddy
+        state: present
+        update_cache: true
+
+    - name: Deploy Caddyfile
+      ansible.builtin.template:
+        src: templates/Caddyfile.j2
+        dest: "{{ caddy_site_dest }}"
+        mode: "0644"
+      notify: Reload caddy
+
+    - name: Enable and start Caddy
+      ansible.builtin.service:
+        name: caddy
+        state: started
+        enabled: true
+
+    # --- Node Exporter ----------------------------------------------------------
+    # WHY: Host-level CPU/mem/disk for Grafana Cloud Free Tier dashboards.
+    - name: Install Prometheus Node Exporter
+      ansible.builtin.apt:
+        name: prometheus-node-exporter
+        state: present
+
+    - name: Enable and start Node Exporter
+      ansible.builtin.service:
+        name: prometheus-node-exporter
+        state: started
+        enabled: true
+      notify: Restart node_exporter
+
+    # --- Grafana Alloy ----------------------------------------------------------
+    # WHY: Alloy is the supported successor to Grafana Agent; one binary scrapes
+    # Node Exporter and ships metrics (+ optional OTLP receive) to Grafana Cloud.
+    - name: Add Grafana GPG key
+      ansible.builtin.get_url:
+        url: https://apt.grafana.com/gpg.key
+        dest: /etc/apt/keyrings/grafana.gpg
+        mode: "0644"
+
+    - name: Add Grafana apt repository
+      ansible.builtin.apt_repository:
+        repo: >-
+          deb [signed-by=/etc/apt/keyrings/grafana.gpg]
+          https://apt.grafana.com stable main
+        filename: grafana
+        state: present
+
+    - name: Install Grafana Alloy
+      ansible.builtin.apt:
+        name: alloy
+        state: present
+        update_cache: true
+
+    - name: Deploy Alloy config
+      ansible.builtin.template:
+        src: templates/config.alloy.j2
+        dest: "{{ alloy_config_dest }}"
+        mode: "0640"
+        owner: root
+        group: alloy
+      notify: Restart alloy
+
+    - name: Enable and start Alloy
+      ansible.builtin.service:
+        name: alloy
+        state: started
+        enabled: true
+
+    # --- Portfolio container roll ------------------------------------------------
+    # WHY: CI passes portfolio_image after ECR push; pull + recreate keeps Caddy alias.
+    - name: Pull portfolio image from ECR (or registry)
+      community.docker.docker_image:
+        name: "{{ portfolio_image }}"
+        source: pull
+        force_source: true
+      when: portfolio_image is defined and 'hello-world' not in portfolio_image
+
+    - name: Recreate portfolio container
+      community.docker.docker_container:
+        name: "{{ portfolio_container_name }}"
+        image: "{{ portfolio_image }}"
+        state: started
+        restart_policy: unless-stopped
+        networks:
+          - name: "{{ portfolio_network }}"
+            aliases:
+              - portfolio
+        published_ports: []
+        env:
+          ASPNETCORE_ENVIRONMENT: Production
+          # WHY: OTLP to Grafana Cloud — set real values via -e / vault, never commit.
+          OTEL_EXPORTER_OTLP_ENDPOINT: "{{ grafana_otlp_endpoint }}"
+          OTEL_EXPORTER_OTLP_HEADERS: "Authorization=Basic {{ grafana_otlp_basic_auth | default('<GRAFANA_OTLP_BASIC_AUTH>') }}"
+          OpenTelemetry__Enabled: "true"
+        comparisons:
+          image: strict
+      when: portfolio_image is defined and 'hello-world' not in portfolio_image

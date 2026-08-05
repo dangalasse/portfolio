@@ -1,0 +1,18 @@
+---
+# Copy to group_vars/all.yml or pass via -e / Ansible Vault.
+# WHY: Keep Free Tier Grafana Cloud credentials out of git.
+
+portfolio_domain: portfolio.galasse.dev
+portfolio_network: tote-network
+portfolio_container_name: tote-portfolio
+
+# After CI build: <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/portfolio:<SHA>
+portfolio_image: "<ECR_IMAGE_URI>"
+
+# Grafana Cloud Free Tier (OTLP + Prometheus remote write)
+grafana_otlp_endpoint: "https://otlp-gateway-prod-<REGION>.grafana.net/otlp"
+grafana_prometheus_url: "https://prometheus-prod-<REGION>.grafana.net/api/prom/push"
+grafana_instance_id: "<GRAFANA_INSTANCE_ID>"
+grafana_api_key: "<GRAFANA_API_KEY>"
+# Base64(instanceId:apiKey) for OTEL_EXPORTER_OTLP_HEADERS Authorization Basic
+grafana_otlp_basic_auth: "<GRAFANA_OTLP_BASIC_AUTH>"
