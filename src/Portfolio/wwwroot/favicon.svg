@@ -1,15 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="DG">
-  <!-- Theme: signal fill (#3dd6c6), paper/white mark  matches portfolio tokens -->
-  <rect width="32" height="32" rx="8" fill="#3dd6c6"/>
-  <text
-    x="16"
-    y="16.5"
-    text-anchor="middle"
-    dominant-baseline="central"
-    font-family="'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif"
-    font-size="13"
-    font-weight="700"
-    letter-spacing="-0.04em"
-    fill="#ffffff"
-  >DG</text>
+  <rect x="1.5" y="1.5" width="29" height="29" rx="7" fill="#162229" stroke="#3dd6c6" stroke-width="2"/>
+  <text x="16" y="17.2" text-anchor="middle" dominant-baseline="central"
+    font-family="'IBM Plex Sans','Helvetica Neue',Arial,sans-serif"
+    font-size="16" font-weight="700" letter-spacing="-0.08em" fill="#e8eef1">DG</text>
 </svg>
