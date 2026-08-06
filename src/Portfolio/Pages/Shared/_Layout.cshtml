@@ -7,6 +7,10 @@
     var path = ViewContext.HttpContext.Request.Path.Value ?? "/";
     string T(L text) => text.Resolve(locale);
     var otherLocale = AppLocales.IsEnglish(locale) ? AppLocales.PtBr : AppLocales.EnUs;
+    var edgeStatusUrl = ViewData["EdgeStatusUrl"] as string
+        ?? ViewContext.HttpContext.Items["EdgeStatusUrl"] as string
+        ?? Environment.GetEnvironmentVariable("EDGE_STATUS_URL")
+        ?? "";
 }
 <!DOCTYPE html>
 <html lang="@locale">
@@ -25,7 +29,7 @@
     <meta name="theme-color" content="#0b1215" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="site-shell grain" data-edge-status-url="@(ViewData["EdgeStatusUrl"])" data-locale="@locale">
+<body class="site-shell grain" data-edge-status-url="@edgeStatusUrl" data-locale="@locale">
     <header class="border-b border-line/80 backdrop-blur-sm sticky top-0 z-40 bg-ink/80">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
             <a href="/" class="font-display text-lg font-bold tracking-tight text-paper hover:text-signal transition-colors">

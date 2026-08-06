@@ -1,0 +1,10 @@
+---
+- name: Restart alloy
+  ansible.builtin.service:
+    name: alloy
+    state: restarted
+
+- name: Restart node_exporter
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    state: restarted

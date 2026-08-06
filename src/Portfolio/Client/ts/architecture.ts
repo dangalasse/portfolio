@@ -1,5 +1,5 @@
 /**
- * Draws SVG connectors between architecture nodes and highlights paths.
+ * n8n-inspired architecture canvas: animated edges, hover paths, click drawer.
  */
 
 interface ArchEdgeDto {
@@ -8,16 +8,50 @@ interface ArchEdgeDto {
   label?: string | null;
 }
 
+interface ArchNodeDto {
+  id: string;
+  label: string;
+  subtitle: string;
+  plain: string;
+  recruiter: string;
+  snippet: string;
+  repoUrl?: string | null;
+  color: string;
+}
+
+interface ArchI18n {
+  copy: string;
+  copied: string;
+  close: string;
+}
+
 function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function nodeCenter(el: HTMLElement, root: DOMRect): { x: number; y: number } {
+function nodeAnchor(
+  el: HTMLElement,
+  root: DOMRect,
+  side: "out" | "in",
+): { x: number; y: number } {
   const r = el.getBoundingClientRect();
-  return {
-    x: r.left - root.left + r.width / 2,
-    y: r.top - root.top + r.height / 2,
-  };
+  const y = r.top - root.top + r.height / 2;
+  const x =
+    side === "out"
+      ? r.right - root.left - 2
+      : r.left - root.left + 2;
+  return { x, y };
+}
+
+function parseJson<T>(el: HTMLScriptElement | null): T | null {
+  if (!el?.textContent) {
+    return null;
+  }
+  try {
+    return JSON.parse(el.textContent) as T;
+  } catch {
+    return null;
+  }
 }
 
 function clearHighlight(root: HTMLElement): void {
@@ -25,56 +59,43 @@ function clearHighlight(root: HTMLElement): void {
     n.classList.remove("is-hot", "is-dim");
   });
   root.querySelectorAll(".arch-wire.is-hot").forEach((w) => w.classList.remove("is-hot"));
-  root.querySelectorAll(".arch-legend-item.is-hot").forEach((i) => i.classList.remove("is-hot"));
 }
 
-function highlightEdge(root: HTMLElement, from: string, to: string): void {
-  const nodes = root.querySelectorAll<HTMLElement>("[data-arch-node]");
-  nodes.forEach((node) => {
-    const id = node.dataset.archNode;
-    if (id === from || id === to) {
-      node.classList.add("is-hot");
-      node.classList.remove("is-dim");
-    } else {
-      node.classList.add("is-dim");
-      node.classList.remove("is-hot");
+function highlightNeighborhood(section: HTMLElement, id: string): void {
+  const related = new Set<string>([id]);
+  section.querySelectorAll<SVGPathElement>(".arch-wire").forEach((wire) => {
+    const match = wire.dataset.from === id || wire.dataset.to === id;
+    wire.classList.toggle("is-hot", match);
+    if (match) {
+      related.add(wire.dataset.from ?? "");
+      related.add(wire.dataset.to ?? "");
     }
   });
-
-  root.querySelectorAll<SVGPathElement>(".arch-wire").forEach((wire) => {
-    const match = wire.dataset.from === from && wire.dataset.to === to;
-    wire.classList.toggle("is-hot", match);
-  });
-
-  root.querySelectorAll<HTMLElement>(".arch-legend-item").forEach((item) => {
-    const match =
-      item.dataset.archEdgeFrom === from && item.dataset.archEdgeTo === to;
-    item.classList.toggle("is-hot", match);
+  section.querySelectorAll<HTMLElement>("[data-arch-node]").forEach((n) => {
+    const nid = n.dataset.archNode ?? "";
+    n.classList.toggle("is-hot", related.has(nid));
+    n.classList.toggle("is-dim", !related.has(nid));
   });
 }
 
 function drawFlow(section: HTMLElement): void {
   const canvas = section.querySelector<HTMLElement>("[data-arch-canvas]");
   const svg = section.querySelector<SVGSVGElement>("[data-arch-wires]");
-  const edgesJson = section.querySelector<HTMLScriptElement>("[data-arch-edges]");
-  if (!canvas || !svg || !edgesJson?.textContent) {
-    return;
-  }
-
-  let edges: ArchEdgeDto[] = [];
-  try {
-    edges = JSON.parse(edgesJson.textContent) as ArchEdgeDto[];
-  } catch {
+  const edges = parseJson<ArchEdgeDto[]>(
+    section.querySelector<HTMLScriptElement>("[data-arch-edges]"),
+  );
+  if (!canvas || !svg || !edges) {
     return;
   }
 
   const rootBox = canvas.getBoundingClientRect();
   svg.setAttribute("width", String(rootBox.width));
-  svg.setAttribute("height", String(rootBox.height));
-  svg.setAttribute("viewBox", `0 0 ${rootBox.width} ${rootBox.height}`);
+  svg.setAttribute("height", String(Math.max(rootBox.height, 120)));
+  svg.setAttribute("viewBox", `0 0 ${rootBox.width} ${Math.max(rootBox.height, 120)}`);
   svg.replaceChildren();
 
   const ns = "http://www.w3.org/2000/svg";
+  const reduce = prefersReducedMotion();
 
   for (const edge of edges) {
     const fromEl = section.querySelector<HTMLElement>(`[data-arch-node="${edge.from}"]`);
@@ -83,14 +104,11 @@ function drawFlow(section: HTMLElement): void {
       continue;
     }
 
-    const a = nodeCenter(fromEl, rootBox);
-    const b = nodeCenter(toEl, rootBox);
-    const midY = (a.y + b.y) / 2;
+    const a = nodeAnchor(fromEl, rootBox, "out");
+    const b = nodeAnchor(toEl, rootBox, "in");
+    const dx = Math.max(40, Math.abs(b.x - a.x) * 0.45);
     const path = document.createElementNS(ns, "path");
-    const d =
-      Math.abs(b.y - a.y) < 12
-        ? `M ${a.x} ${a.y} L ${b.x} ${b.y}`
-        : `M ${a.x} ${a.y} C ${a.x} ${midY}, ${b.x} ${midY}, ${b.x} ${b.y}`;
+    const d = `M ${a.x} ${a.y} C ${a.x + dx} ${a.y}, ${b.x - dx} ${b.y}, ${b.x} ${b.y}`;
 
     path.setAttribute("d", d);
     path.setAttribute("class", "arch-wire");
@@ -104,58 +122,114 @@ function drawFlow(section: HTMLElement): void {
     path.style.setProperty("--wire-color", color);
     svg.appendChild(path);
 
-    if (!prefersReducedMotion()) {
-      const length = path.getTotalLength();
-      path.style.strokeDasharray = String(length);
-      path.style.strokeDashoffset = String(length);
-      requestAnimationFrame(() => {
-        path.classList.add("is-drawn");
-        path.style.strokeDashoffset = "0";
-      });
+    if (!reduce) {
+      path.classList.add("is-animated");
     } else {
       path.classList.add("is-drawn");
     }
   }
 }
 
-function bindLegend(section: HTMLElement): void {
-  section.querySelectorAll<HTMLElement>(".arch-legend-item").forEach((item) => {
-    const from = item.dataset.archEdgeFrom;
-    const to = item.dataset.archEdgeTo;
-    if (!from || !to) {
+function openDrawer(section: HTMLElement, node: ArchNodeDto): void {
+  const drawer = section.querySelector<HTMLElement>("[data-arch-drawer]");
+  if (!drawer) {
+    return;
+  }
+  const title = drawer.querySelector<HTMLElement>("[data-arch-drawer-title]");
+  const sub = drawer.querySelector<HTMLElement>("[data-arch-drawer-sub]");
+  const plain = drawer.querySelector<HTMLElement>("[data-arch-drawer-plain]");
+  const recruiter = drawer.querySelector<HTMLElement>("[data-arch-drawer-recruiter]");
+  const snippet = drawer.querySelector<HTMLElement>("[data-arch-drawer-snippet]");
+  const repoWrap = drawer.querySelector<HTMLElement>(".arch-drawer-repo");
+  const repo = drawer.querySelector<HTMLAnchorElement>("[data-arch-drawer-repo]");
+
+  if (title) title.textContent = node.label;
+  if (sub) sub.textContent = node.subtitle;
+  if (plain) plain.textContent = node.plain || "—";
+  if (recruiter) recruiter.textContent = node.recruiter || "—";
+  if (snippet) snippet.textContent = node.snippet || "—";
+
+  if (repo && repoWrap) {
+    if (node.repoUrl) {
+      repo.href = node.repoUrl;
+      repoWrap.hidden = false;
+    } else {
+      repoWrap.hidden = true;
+    }
+  }
+
+  drawer.hidden = false;
+  drawer.classList.add("is-open");
+  section.classList.add("has-drawer");
+}
+
+function closeDrawer(section: HTMLElement): void {
+  const drawer = section.querySelector<HTMLElement>("[data-arch-drawer]");
+  if (!drawer) {
+    return;
+  }
+  drawer.classList.remove("is-open");
+  drawer.hidden = true;
+  section.classList.remove("has-drawer");
+  clearHighlight(section);
+}
+
+function bindInteractions(section: HTMLElement): void {
+  const nodes = parseJson<ArchNodeDto[]>(
+    section.querySelector<HTMLScriptElement>("[data-arch-nodes]"),
+  );
+  const i18n = parseJson<ArchI18n>(
+    section.querySelector<HTMLScriptElement>("[data-arch-i18n]"),
+  );
+  const byId = new Map((nodes ?? []).map((n) => [n.id, n]));
+
+  section.querySelectorAll<HTMLElement>("[data-arch-node]").forEach((nodeEl) => {
+    const id = nodeEl.dataset.archNode;
+    if (!id) {
       return;
     }
 
-    item.addEventListener("mouseenter", () => highlightEdge(section, from, to));
-    item.addEventListener("focus", () => highlightEdge(section, from, to));
-    item.addEventListener("mouseleave", () => clearHighlight(section));
-    item.addEventListener("blur", () => clearHighlight(section));
-    item.addEventListener("click", () => highlightEdge(section, from, to));
-  });
-
-  section.querySelectorAll<HTMLElement>("[data-arch-node]").forEach((node) => {
-    node.addEventListener("mouseenter", () => {
-      const id = node.dataset.archNode;
-      if (!id) {
+    nodeEl.addEventListener("mouseenter", () => highlightNeighborhood(section, id));
+    nodeEl.addEventListener("mouseleave", () => {
+      if (!section.classList.contains("has-drawer")) {
+        clearHighlight(section);
+      }
+    });
+    nodeEl.addEventListener("focus", () => highlightNeighborhood(section, id));
+    nodeEl.addEventListener("click", () => {
+      const data = byId.get(id);
+      if (!data) {
         return;
       }
-      const related = new Set<string>([id]);
-      section.querySelectorAll<SVGPathElement>(".arch-wire").forEach((wire) => {
-        if (wire.dataset.from === id || wire.dataset.to === id) {
-          related.add(wire.dataset.from ?? "");
-          related.add(wire.dataset.to ?? "");
-          wire.classList.add("is-hot");
-        } else {
-          wire.classList.remove("is-hot");
-        }
-      });
-      section.querySelectorAll<HTMLElement>("[data-arch-node]").forEach((n) => {
-        const nid = n.dataset.archNode ?? "";
-        n.classList.toggle("is-hot", related.has(nid));
-        n.classList.toggle("is-dim", !related.has(nid));
-      });
+      highlightNeighborhood(section, id);
+      openDrawer(section, data);
     });
-    node.addEventListener("mouseleave", () => clearHighlight(section));
+  });
+
+  section
+    .querySelector<HTMLElement>("[data-arch-drawer-close]")
+    ?.addEventListener("click", () => closeDrawer(section));
+
+  const copyBtn = section.querySelector<HTMLButtonElement>("[data-arch-drawer-copy]");
+  copyBtn?.addEventListener("click", async () => {
+    const code = section.querySelector<HTMLElement>("[data-arch-drawer-snippet]")?.textContent ?? "";
+    try {
+      await navigator.clipboard.writeText(code);
+      if (copyBtn && i18n) {
+        copyBtn.textContent = i18n.copied;
+        window.setTimeout(() => {
+          copyBtn.textContent = i18n.copy;
+        }, 1400);
+      }
+    } catch {
+      /* ignore */
+    }
+  });
+
+  document.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape" && section.classList.contains("has-drawer")) {
+      closeDrawer(section);
+    }
   });
 }
 
@@ -183,7 +257,7 @@ export function initArchitectureFlows(): void {
 
   sections.forEach((section) => {
     bindIconFallbacks(section);
-    bindLegend(section);
+    bindInteractions(section);
     drawFlow(section);
   });
 

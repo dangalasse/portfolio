@@ -17,7 +17,7 @@ public static class PortfolioCatalog
         TaglineEnUs =
             "IT infrastructure focused on SRE, DevOps, and AI — live demos on Cloudflare and AWS, no theater.",
         Location = "Brasil",
-        Email = "contato@example.com",
+        Email = "danton@galasse.dev",
         LinkedInUrl = "https://www.linkedin.com/in/danton-galasse",
         GitHubUrl = "https://github.com/dangalasse",
         SiteUrl = "https://portfolio.galasse.dev",
@@ -198,12 +198,12 @@ public static class PortfolioCatalog
             Title = "Cloudflare Edge",
             Provider = "Cloudflare",
             Description =
-                "Workers/DNS + Pipeline Pulse + Edge Labs (LLMOps em edge.galasse.dev).",
+                "Workers/DNS + Pipeline Pulse + Edge Labs (LLMOps em edge.galasse.dev — / e /coach).",
             DescriptionEn =
-                "Workers/DNS + Pipeline Pulse + Edge Labs (LLMOps at edge.galasse.dev).",
-            Proof = "pipeline.galasse.dev · edge.galasse.dev/health",
-            ProofEn = "pipeline.galasse.dev · edge.galasse.dev/health",
-            DocsUrl = "https://edge.galasse.dev/health",
+                "Workers/DNS + Pipeline Pulse + Edge Labs (LLMOps at edge.galasse.dev — / and /coach).",
+            Proof = "pipeline.galasse.dev · edge.galasse.dev",
+            ProofEn = "pipeline.galasse.dev · edge.galasse.dev",
+            DocsUrl = "https://edge.galasse.dev/",
         },
         new LabIndicator
         {

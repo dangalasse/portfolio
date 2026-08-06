@@ -1,0 +1,47 @@
+---
+- name: Install Prometheus Node Exporter
+  ansible.builtin.apt:
+    name: prometheus-node-exporter
+    state: present
+
+- name: Enable and start Node Exporter
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    state: started
+    enabled: true
+  notify: Restart node_exporter
+
+- name: Add Grafana GPG key
+  ansible.builtin.get_url:
+    url: https://apt.grafana.com/gpg.key
+    dest: /etc/apt/keyrings/grafana.gpg
+    mode: "0644"
+
+- name: Add Grafana apt repository
+  ansible.builtin.apt_repository:
+    repo: >-
+      deb [signed-by=/etc/apt/keyrings/grafana.gpg]
+      https://apt.grafana.com stable main
+    filename: grafana
+    state: present
+
+- name: Install Grafana Alloy
+  ansible.builtin.apt:
+    name: alloy
+    state: present
+    update_cache: true
+
+- name: Deploy Alloy config
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/templates/config.alloy.j2"
+    dest: "{{ alloy_config_dest }}"
+    mode: "0640"
+    owner: root
+    group: alloy
+  notify: Restart alloy
+
+- name: Enable and start Alloy
+  ansible.builtin.service:
+    name: alloy
+    state: started
+    enabled: true

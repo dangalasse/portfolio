@@ -32,7 +32,17 @@ public static class UiCopy
     public static readonly L Stack = new("Stack", "Stack");
     public static readonly L LiveDemo = new("Demo ao vivo", "Live demo");
     public static readonly L ViewSource = new("Ver código", "View source");
-    public static readonly L FlowByPlatform = new("Fluxo por plataforma", "Platform flow");
+    public static readonly L FlowByPlatform = new("Fluxo interativo", "Interactive flow");
+    public static readonly L FlowHint = new(
+        "Passe o rato ou clique num nó para ver o que faz — em linguagem simples e com um trecho de código.",
+        "Hover or click a node to see what it does — in plain language plus a code snippet.");
+    public static readonly L FlowExplain = new("Em palavras simples", "In plain words");
+    public static readonly L FlowRecruiter = new("O que isto prova", "What this proves");
+    public static readonly L FlowSnippet = new("Trecho de código", "Code snippet");
+    public static readonly L FlowOpenRepo = new("Ver no repositório", "View in repository");
+    public static readonly L FlowClose = new("Fechar", "Close");
+    public static readonly L FlowCopy = new("Copiar", "Copy");
+    public static readonly L FlowCopied = new("Copiado", "Copied");
     public static readonly L AboutTitle = new("Sobre", "About");
     public static readonly L Location = new("Localização", "Location");
     public static readonly L Contact = new("Contato", "Contact");

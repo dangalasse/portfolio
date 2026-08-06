@@ -1,0 +1,29 @@
+---
+# WHY: CI passes portfolio_image after ECR push; pull + recreate keeps Caddy alias.
+- name: Pull portfolio image from ECR (or registry)
+  community.docker.docker_image:
+    name: "{{ portfolio_image }}"
+    source: pull
+    force_source: true
+  when: portfolio_image is defined and 'hello-world' not in portfolio_image
+
+- name: Recreate portfolio container
+  community.docker.docker_container:
+    name: "{{ portfolio_container_name }}"
+    image: "{{ portfolio_image }}"
+    state: started
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ portfolio_network }}"
+        aliases:
+          - portfolio
+    published_ports: []
+    env:
+      ASPNETCORE_ENVIRONMENT: Production
+      OTEL_EXPORTER_OTLP_ENDPOINT: "{{ grafana_otlp_endpoint }}"
+      OTEL_EXPORTER_OTLP_HEADERS: "Authorization=Basic {{ grafana_otlp_basic_auth | default('<GRAFANA_OTLP_BASIC_AUTH>') }}"
+      OpenTelemetry__Enabled: "true"
+      EDGE_STATUS_URL: "{{ edge_status_url | default('') }}"
+    comparisons:
+      image: strict
+  when: portfolio_image is defined and 'hello-world' not in portfolio_image

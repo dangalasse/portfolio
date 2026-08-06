@@ -64,3 +64,8 @@ ansible/group_vars/secrets.yml
 # Local
 *.swp
 *~
+
+workers/edge-status/dist/
+workers/edge-status/node_modules/
+workers/edge-status/.cf_upload_code.js
+workers/edge-status/package-lock.json

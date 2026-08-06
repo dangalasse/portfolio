@@ -6,22 +6,38 @@
     var locale = Locale.Current(ViewContext.HttpContext);
     var labs = PortfolioCatalog.For(locale).Labs;
     ViewData["Title"] = UiCopy.LabsTitle.Resolve(locale);
+    var edgeUrl = Environment.GetEnvironmentVariable("EDGE_STATUS_URL");
+    var edgeLive = !string.IsNullOrWhiteSpace(edgeUrl);
     var howTitle = AppLocales.IsEnglish(locale)
-        ? "How to enable the Cloudflare Worker"
-        : "Como ativar o Worker Cloudflare";
-    var steps = AppLocales.IsEnglish(locale)
-        ? new[]
-        {
-            "Create a Worker that returns JSON with region and ray.",
-            "Set the URL in the layout via ViewData[\"EdgeStatusUrl\"] or an environment variable.",
-            "The frontend automatically switches from “ASP.NET probe” to “Cloudflare”.",
-        }
-        : new[]
-        {
-            "Criar um Worker que retorne JSON com region e ray.",
-            "Definir a URL no layout via ViewData[\"EdgeStatusUrl\"] ou variável de ambiente.",
-            "O frontend troca automaticamente de “ASP.NET probe” para “Cloudflare”.",
-        };
+        ? (edgeLive ? "Edge Status Worker (live)" : "How to enable the Cloudflare Worker")
+        : (edgeLive ? "Worker Edge Status (ao vivo)" : "Como ativar o Worker Cloudflare");
+    var steps = edgeLive
+        ? (AppLocales.IsEnglish(locale)
+            ? new[]
+            {
+                $"Live probe: {edgeUrl}",
+                "Each Labs card links to a real surface (Pipeline, Edge Labs, AWS Static).",
+                "The status pill prefers the Worker; ASP.NET /api/status remains the local fallback.",
+            }
+            : new[]
+            {
+                $"Probe ao vivo: {edgeUrl}",
+                "Cada card de Labs liga a uma superfície real (Pipeline, Edge Labs, AWS Static).",
+                "O indicador prefere o Worker; ASP.NET /api/status continua como fallback local.",
+            })
+        : (AppLocales.IsEnglish(locale)
+            ? new[]
+            {
+                "Deploy workers/edge-status (Cloudflare Worker).",
+                "Set EDGE_STATUS_URL on the portfolio container.",
+                "The frontend switches from the ASP.NET probe to Cloudflare automatically.",
+            }
+            : new[]
+            {
+                "Fazer deploy de workers/edge-status (Cloudflare Worker).",
+                "Definir EDGE_STATUS_URL no contentor do portfólio.",
+                "O frontend troca automaticamente do probe ASP.NET para Cloudflare.",
+            });
 }
 
 <section class="mx-auto max-w-6xl px-4 py-16 md:px-6">
@@ -40,16 +56,11 @@
     <div class="mt-12 grid gap-4 md:grid-cols-3">
         @foreach (var lab in labs)
         {
-            <article class="lab-card reveal" data-lab-status>
+            <article class="lab-card reveal">
                 <p class="font-mono text-[11px] uppercase tracking-wider text-mist">@lab.Provider</p>
                 <h2 class="mt-2 font-display text-xl font-semibold text-paper">@lab.Title</h2>
                 <p class="mt-3 text-sm leading-relaxed text-mist">@lab.Description</p>
                 <p class="mt-4 font-mono text-xs text-signal">@lab.Proof</p>
-                <div class="mt-6 flex items-center gap-2 text-xs font-mono text-mist">
-                    <span class="status-dot" data-status-dot></span>
-                    <span data-status-label>…</span>
-                    <span data-status-meta></span>
-                </div>
                 @if (!string.IsNullOrWhiteSpace(lab.DocsUrl))
                 {
                     <a class="mt-5 inline-block text-sm text-paper underline-offset-4 hover:text-signal hover:underline" href="@lab.DocsUrl" target="_blank" rel="noopener noreferrer">Docs / link</a>

@@ -1,6 +1,4 @@
-{
-  "name": "portfolio-edge-status",
-  "main": "src/index.ts",
-  "compatibility_date": "2026-08-01",
-  "workers_dev": true
-}
+name = "portfolio-edge-status"
+main = "src/index.ts"
+compatibility_date = "2025-05-05"
+workers_dev = true

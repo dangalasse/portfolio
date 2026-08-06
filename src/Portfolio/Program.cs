@@ -31,6 +31,18 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
+// WHY: Labs probe prefers Cloudflare Worker when EDGE_STATUS_URL is set on the container.
+app.Use(async (http, next) =>
+{
+    var edgeStatus = Environment.GetEnvironmentVariable("EDGE_STATUS_URL");
+    if (!string.IsNullOrWhiteSpace(edgeStatus))
+    {
+        http.Items["EdgeStatusUrl"] = edgeStatus.Trim();
+    }
+
+    await next();
+});
+
 app.MapGet("/api/status", (HttpContext http) =>
 {
     var locale = Locale.Current(http);
