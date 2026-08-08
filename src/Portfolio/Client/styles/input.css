@@ -315,4 +315,145 @@
   .arch-drawer-repo a {
     @apply text-sm text-signal hover:underline;
   }
+
+  /* Social icons — mist by default, brand tint on hover (Simple Icons glyphs). */
+  .social-links {
+    @apply flex flex-wrap items-center;
+  }
+
+  .social-links--nav,
+  .social-links--footer,
+  .social-links--hero {
+    @apply gap-2;
+  }
+
+  .social-links--about {
+    @apply gap-3;
+  }
+
+  .social-links--presence {
+    @apply grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-4;
+  }
+
+  .social-link {
+    --social-accent: var(--color-signal);
+    @apply inline-flex items-center justify-center text-mist transition duration-300;
+    transition-property: color, background-color, border-color, box-shadow, transform;
+  }
+
+  .social-link:hover,
+  .social-link:focus-visible {
+    color: var(--social-accent);
+    outline: none;
+  }
+
+  .social-link--github {
+    --social-accent: #a371f7;
+  }
+
+  .social-link--linkedin {
+    --social-accent: #70b5f9;
+  }
+
+  .social-link--mail {
+    --social-accent: var(--color-signal);
+  }
+
+  .social-link--cv {
+    --social-accent: #f0c674;
+  }
+
+  .social-icon {
+    @apply shrink-0;
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  .social-links--nav .social-link,
+  .social-links--footer .social-link {
+    @apply size-9 rounded-md border border-line bg-transparent;
+  }
+
+  .social-links--nav .social-link:hover,
+  .social-links--nav .social-link:focus-visible,
+  .social-links--footer .social-link:hover,
+  .social-links--footer .social-link:focus-visible {
+    border-color: color-mix(in oklab, var(--social-accent) 55%, var(--color-line));
+    background: color-mix(in oklab, var(--social-accent) 12%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--social-accent) 18%, transparent);
+  }
+
+  .social-links--hero .social-link {
+    @apply size-10 rounded-md border border-line/80 bg-panel/40;
+  }
+
+  .social-links--hero .social-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .social-links--hero .social-link:hover,
+  .social-links--hero .social-link:focus-visible {
+    border-color: color-mix(in oklab, var(--social-accent) 60%, var(--color-line));
+    background: color-mix(in oklab, var(--social-accent) 14%, var(--color-panel));
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px color-mix(in oklab, var(--social-accent) 18%, transparent);
+  }
+
+  .social-links--about .social-link {
+    @apply gap-2.5 rounded-md border border-line bg-panel/50 px-4 py-2.5 text-sm font-medium;
+  }
+
+  .social-links--about .social-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .social-links--about .social-link:hover,
+  .social-links--about .social-link:focus-visible {
+    border-color: color-mix(in oklab, var(--social-accent) 55%, var(--color-line));
+    background: color-mix(in oklab, var(--social-accent) 12%, var(--color-panel));
+  }
+
+  .social-links--presence .social-link {
+    @apply flex flex-col items-start gap-4 border border-line bg-panel/80 p-5 md:p-6 text-left;
+  }
+
+  .social-links--presence .social-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .social-links--presence .social-label {
+    @apply font-display text-base font-semibold text-paper;
+  }
+
+  .social-links--presence .social-link:hover .social-label,
+  .social-links--presence .social-link:focus-visible .social-label {
+    color: var(--social-accent);
+  }
+
+  .social-links--presence .social-link:hover,
+  .social-links--presence .social-link:focus-visible {
+    border-color: color-mix(in oklab, var(--social-accent) 45%, var(--color-line));
+    background: color-mix(in oklab, var(--social-accent) 10%, var(--color-panel));
+    transform: translateY(-2px);
+  }
+
+  .social-label {
+    @apply transition-colors duration-300;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .social-link {
+      transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+    }
+
+    .social-links--hero .social-link:hover,
+    .social-links--hero .social-link:focus-visible,
+    .social-links--presence .social-link:hover,
+    .social-links--presence .social-link:focus-visible {
+      transform: none;
+    }
+  }
 }

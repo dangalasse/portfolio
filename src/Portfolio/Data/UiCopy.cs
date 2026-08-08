@@ -22,8 +22,11 @@ public static class UiCopy
     public static readonly L AllProjects = new("Ver todos os projetos →", "See all projects →");
     public static readonly L Presence = new("Onde me encontrar", "Where to find me");
     public static readonly L PresenceLead = new(
-        "CV, LinkedIn, GitHub e este site.",
-        "Resume, LinkedIn, GitHub, and this site.");
+        "GitHub, LinkedIn, e-mail e CV — ícones com a cor de cada plataforma.",
+        "GitHub, LinkedIn, email, and CV — icons tinted to each platform on hover.");
+    public static readonly L SocialNavAria = new("Redes e perfil", "Social profiles");
+    public static readonly L SocialHeroAria = new("Links rápidos", "Quick links");
+    public static readonly L SocialFooterAria = new("Links no rodapé", "Footer links");
     public static readonly L ProjectsTitle = new("Projetos", "Projects");
     public static readonly L ProjectsLead = new(
         "Produto, labs e demos — com a stack à vista e, quando possível, um ambiente ao vivo.",

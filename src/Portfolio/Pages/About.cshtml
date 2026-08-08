@@ -2,6 +2,7 @@
 @model Portfolio.Pages.AboutModel
 @using Portfolio.Data
 @using Portfolio.I18n
+@using Portfolio.Models
 @{
     var locale = Locale.Current(ViewContext.HttpContext);
     var profile = PortfolioCatalog.For(locale).Profile;
@@ -33,12 +34,7 @@
             @UiCopy.Contact.Resolve(locale): <a class="text-signal hover:underline" href="mailto:@profile.Email">@profile.Email</a>.
         </p>
     </div>
-    <div class="reveal mt-10 flex flex-wrap gap-3" style="transition-delay: 140ms">
-        <a class="btn-primary" href="@profile.LinkedInUrl" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a class="btn-ghost" href="@profile.GitHubUrl" target="_blank" rel="noopener noreferrer">GitHub</a>
-        @if (!string.IsNullOrWhiteSpace(profile.CvPdfPath))
-        {
-            <a class="btn-ghost" href="@profile.CvPdfPath">CV PDF</a>
-        }
+    <div class="reveal mt-10" style="transition-delay: 140ms">
+        <partial name="_SocialLinks" model="new SocialLinksModel { Profile = profile, Locale = locale, Variant = SocialLinksVariant.About }" />
     </div>
 </section>

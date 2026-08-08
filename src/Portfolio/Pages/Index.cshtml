@@ -2,6 +2,7 @@
 @model Portfolio.Pages.IndexModel
 @using Portfolio.Data
 @using Portfolio.I18n
+@using Portfolio.Models
 @{
     ViewData["Title"] = null;
     var locale = Locale.Current(ViewContext.HttpContext);
@@ -37,6 +38,9 @@
             <p class="mt-6 max-w-xl text-lg leading-relaxed text-mist md:text-xl">
                 @profile.Tagline
             </p>
+            <div class="mt-6">
+                <partial name="_SocialLinks" model="new SocialLinksModel { Profile = profile, Locale = locale, Variant = SocialLinksVariant.Hero }" />
+            </div>
             <div class="mt-8 flex flex-wrap gap-3">
                 <a class="btn-primary" href="/Projects">@T(UiCopy.SeeProjects)</a>
                 <a class="btn-ghost" href="/Labs">@T(UiCopy.LiveLabs)</a>
@@ -110,11 +114,8 @@
             <h2 class="section-title">@T(UiCopy.Presence)</h2>
             <p class="section-lead">@T(UiCopy.PresenceLead)</p>
         </div>
-        <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <a class="lab-card reveal hover:border-signal/40 transition" href="@(profile.CvPdfPath ?? "/About")">CV PDF</a>
-            <a class="lab-card reveal hover:border-signal/40 transition" href="@profile.LinkedInUrl" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a class="lab-card reveal hover:border-signal/40 transition" href="@profile.GitHubUrl" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a class="lab-card reveal hover:border-signal/40 transition" href="@profile.SiteUrl" target="_blank" rel="noopener noreferrer">Site</a>
+        <div class="mt-8 reveal" style="transition-delay: 80ms">
+            <partial name="_SocialLinks" model="new SocialLinksModel { Profile = profile, Locale = locale, Variant = SocialLinksVariant.Presence }" />
         </div>
     </div>
 </section>

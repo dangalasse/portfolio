@@ -1,5 +1,6 @@
 ﻿@using Portfolio.Data
 @using Portfolio.I18n
+@using Portfolio.Models
 @{
     var locale = Locale.Current(ViewContext.HttpContext);
     var catalog = PortfolioCatalog.For(locale);
@@ -48,8 +49,7 @@
             </nav>
             <div class="hidden md:flex items-center gap-3">
                 <partial name="_LocaleToggle" model="locale" />
-                <a class="btn-ghost !px-3 !py-1.5 text-xs" href="@profile.GitHubUrl" rel="noopener noreferrer" target="_blank">GitHub</a>
-                <a class="btn-primary !px-3 !py-1.5 text-xs" href="@profile.LinkedInUrl" rel="noopener noreferrer" target="_blank">LinkedIn</a>
+                <partial name="_SocialLinks" model="new SocialLinksModel { Profile = profile, Locale = locale, Variant = SocialLinksVariant.Nav }" />
             </div>
             <button type="button" class="md:hidden btn-ghost !px-3 !py-1.5" data-nav-toggle aria-expanded="false" aria-controls="mobile-nav">@T(UiCopy.NavMenu)</button>
         </div>
@@ -61,8 +61,7 @@
                 <a class="nav-link" href="/About">@T(UiCopy.NavAbout)</a>
                 <div class="flex flex-wrap items-center gap-3 pt-2">
                     <partial name="_LocaleToggle" model="locale" />
-                    <a class="btn-ghost !px-3 !py-1.5 text-xs" href="@profile.GitHubUrl" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    <a class="btn-primary !px-3 !py-1.5 text-xs" href="@profile.LinkedInUrl" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <partial name="_SocialLinks" model="new SocialLinksModel { Profile = profile, Locale = locale, Variant = SocialLinksVariant.Nav }" />
                 </div>
             </nav>
         </div>
@@ -79,15 +78,7 @@
                 · <span data-year></span>
                 · ASP.NET Core · TypeScript · Tailwind
             </p>
-            <div class="flex flex-wrap gap-4 text-sm">
-                <a class="text-mist hover:text-signal" href="@profile.SiteUrl" target="_blank" rel="noopener noreferrer">Site</a>
-                <a class="text-mist hover:text-signal" href="@profile.GitHubUrl" target="_blank" rel="noopener noreferrer">GitHub</a>
-                <a class="text-mist hover:text-signal" href="@profile.LinkedInUrl" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                @if (!string.IsNullOrWhiteSpace(profile.CvPdfPath))
-                {
-                    <a class="text-mist hover:text-signal" href="@profile.CvPdfPath">CV PDF</a>
-                }
-            </div>
+            <partial name="_SocialLinks" model="new SocialLinksModel { Profile = profile, Locale = locale, Variant = SocialLinksVariant.Footer }" />
         </div>
     </footer>
 
