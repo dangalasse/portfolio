@@ -12,7 +12,7 @@
 }
 
 <section class="relative overflow-hidden">
-    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-20 pt-16 md:px-6 md:pt-24 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-20 pt-16 md:px-6 md:pt-24 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
         <div class="reveal">
             <p class="font-mono text-xs uppercase tracking-[0.2em] text-signal">@profile.Role</p>
             <h1 class="mt-4 font-display text-5xl font-extrabold leading-[0.95] tracking-tight text-paper md:text-7xl">
@@ -20,6 +20,11 @@
             </h1>
             <p class="mt-6 max-w-xl text-lg leading-relaxed text-mist md:text-xl">
                 @profile.Tagline
+            </p>
+            <p class="mt-5 font-mono text-xs uppercase tracking-[0.16em] text-mist/80">
+                @T(UiCopy.StackInUse)
+                <span class="text-line mx-2">·</span>
+                ASP.NET · TypeScript · Cloudflare · AWS
             </p>
             <div class="mt-8 flex flex-wrap gap-3">
                 <a class="btn-primary" href="/Projects">@T(UiCopy.SeeProjects)</a>
@@ -30,28 +35,29 @@
                 }
             </div>
         </div>
-        <div class="reveal relative min-h-[280px] border border-line bg-panel/40 p-6 md:min-h-[340px]" style="transition-delay: 120ms">
-            <div class="absolute inset-0 opacity-40" style="background:
-                linear-gradient(135deg, transparent 40%, color-mix(in oklab, #3dd6c6 25%, transparent) 100%),
-                repeating-linear-gradient(90deg, transparent, transparent 24px, color-mix(in oklab, #2a3a44 70%, transparent) 25px),
-                repeating-linear-gradient(0deg, transparent, transparent 24px, color-mix(in oklab, #2a3a44 70%, transparent) 25px);"></div>
-            <div class="relative flex h-full flex-col justify-between gap-8">
-                <div>
-                    <p class="font-mono text-xs uppercase tracking-wider text-mist">@T(UiCopy.StackInUse)</p>
-                    <ul class="mt-4 space-y-2 font-mono text-sm text-paper">
-                        <li>ASP.NET Core 8</li>
-                        <li>TypeScript + Tailwind</li>
-                        <li>Cloudflare · AWS</li>
-                    </ul>
-                </div>
+        <figure class="hero-portrait reveal" style="transition-delay: 120ms">
+            <picture>
+                <source srcset="/images/danton-galasse.webp" type="image/webp" />
+                <img
+                    class="hero-portrait-img"
+                    src="~/images/danton-galasse.jpg"
+                    asp-append-version="true"
+                    width="767"
+                    height="1024"
+                    alt="@profile.Name"
+                    decoding="async"
+                    fetchpriority="high" />
+            </picture>
+            <div class="hero-portrait-veil" aria-hidden="true"></div>
+            <figcaption class="hero-portrait-meta">
                 <div class="status-pill" data-lab-status>
                     <span class="status-dot" data-status-dot></span>
                     <span data-status-label>@T(UiCopy.Checking)</span>
                     <span class="text-line">|</span>
                     <span data-status-meta>probe…</span>
                 </div>
-            </div>
-        </div>
+            </figcaption>
+        </figure>
     </div>
 </section>
 
@@ -67,12 +73,22 @@
         <div class="mt-10 grid gap-4 md:grid-cols-3">
             @foreach (var project in featured)
             {
-                <a href="/Projects/@project.Slug" class="project-tile group reveal p-5 md:p-6">
-                    <div class="mb-8 h-1 w-12" style="background: @project.Accent"></div>
-                    <h3 class="font-display text-xl font-semibold text-paper transition-colors group-hover:text-signal">@project.Title</h3>
-                    <p class="mt-3 text-sm leading-relaxed text-mist">@project.Summary</p>
-                    <p class="mt-6 font-mono text-xs uppercase tracking-wider text-mist/80">@string.Join(" · ", project.Stack.Take(3))</p>
-                </a>
+                <article class="project-tile reveal flex flex-col p-5 md:p-6">
+                    <a href="/Projects/@project.Slug" class="group flex-1">
+                        <div class="mb-8 h-1 w-12" style="background: @project.Accent"></div>
+                        <h3 class="font-display text-xl font-semibold text-paper transition-colors group-hover:text-signal">@project.Title</h3>
+                        <p class="mt-3 text-sm leading-relaxed text-mist">@project.Summary</p>
+                        <p class="mt-6 font-mono text-xs uppercase tracking-wider text-mist/80">@string.Join(" · ", project.Stack.Take(3))</p>
+                    </a>
+                    @if (!string.IsNullOrWhiteSpace(project.LiveUrl))
+                    {
+                        var liveExternal = project.LiveUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase);
+                        <a class="mt-4 inline-block text-sm text-signal hover:underline"
+                           href="@project.LiveUrl"
+                           target="@(liveExternal ? "_blank" : null)"
+                           rel="@(liveExternal ? "noopener noreferrer" : null)">@T(UiCopy.TryLive)</a>
+                    }
+                </article>
             }
         </div>
     </div>
