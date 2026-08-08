@@ -83,52 +83,41 @@
       linear-gradient(180deg, var(--color-ink) 0%, var(--color-ink-soft) 100%);
   }
 
-  .hero-portrait {
-    @apply relative isolate overflow-hidden border border-line bg-panel;
-    min-height: 22rem;
-    aspect-ratio: 4 / 5;
-    max-height: min(34rem, 72vh);
+  .hero-identity {
+    @apply flex items-center gap-4 md:gap-5;
   }
 
-  .hero-portrait picture {
-    @apply absolute inset-0 block size-full;
+  .hero-avatar {
+    @apply relative shrink-0 overflow-hidden rounded-full;
+    width: 3.75rem;
+    height: 3.75rem;
+    box-shadow:
+      0 12px 32px color-mix(in oklab, var(--color-ink) 58%, transparent),
+      0 4px 12px color-mix(in oklab, var(--color-signal) 14%, transparent);
   }
 
-  .hero-portrait-img {
-    @apply absolute inset-0 size-full object-cover;
+  .hero-avatar picture,
+  .hero-avatar-img {
+    @apply block size-full;
+  }
+
+  .hero-avatar-img {
+    @apply object-cover;
     object-position: 50% 18%;
-    filter: saturate(0.92) contrast(1.04);
+    filter: saturate(0.94) contrast(1.03);
   }
 
-  .hero-portrait-veil {
-    @apply pointer-events-none absolute inset-0;
-    background:
-      linear-gradient(
-        105deg,
-        color-mix(in oklab, var(--color-ink) 72%, transparent) 0%,
-        color-mix(in oklab, var(--color-ink) 18%, transparent) 34%,
-        transparent 58%
-      ),
-      linear-gradient(
-        180deg,
-        transparent 42%,
-        color-mix(in oklab, var(--color-ink) 55%, transparent) 78%,
-        color-mix(in oklab, var(--color-ink) 88%, transparent) 100%
-      ),
-      radial-gradient(
-        ellipse 70% 55% at 85% 12%,
-        color-mix(in oklab, var(--color-signal) 16%, transparent),
-        transparent 60%
-      );
-  }
-
-  .hero-portrait-meta {
-    @apply absolute inset-x-0 bottom-0 z-10 flex items-end justify-start p-4 md:p-5;
+  @media (min-width: 768px) {
+    .hero-avatar {
+      width: 5rem;
+      height: 5rem;
+    }
   }
 
   @media (min-width: 1024px) {
-    .hero-portrait {
-      min-height: 28rem;
+    .hero-avatar {
+      width: 5.75rem;
+      height: 5.75rem;
     }
   }
 
