@@ -14,6 +14,11 @@ public class DetailsModel : PageModel
 
     public IActionResult OnGet(string slug)
     {
+        if (string.Equals(slug, "pipeline-pulse", StringComparison.OrdinalIgnoreCase))
+        {
+            return RedirectPermanent("/Projects/pipeview");
+        }
+
         var locale = Locale.Current(HttpContext);
         var project = PortfolioCatalog.FindProject(slug, locale);
         if (project is null)

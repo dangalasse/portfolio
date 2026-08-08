@@ -13,9 +13,9 @@ public static class PortfolioCatalog
         Name = "Danton Galasse",
         Role = "Infra · SRE & DevOps · Cloud",
         TaglinePtBr =
-            "Infraestrutura de TI com foco em SRE, DevOps e IA — demos ao vivo com Cloudflare e AWS, sem teatro.",
+            "Trabalho com infraestrutura, SRE e DevOps, e deixo demos abertas na Cloudflare e na AWS para quem quiser conhecer o trabalho com calma.",
         TaglineEnUs =
-            "IT infrastructure focused on SRE, DevOps, and AI — live demos on Cloudflare and AWS, no theater.",
+            "I work on infrastructure, SRE, and DevOps, and leave demos open on Cloudflare and AWS so you can explore the work at your own pace.",
         Location = "Brasil",
         Email = "danton@galasse.dev",
         LinkedInUrl = "https://www.linkedin.com/in/danton-galasse",
@@ -36,11 +36,11 @@ public static class PortfolioCatalog
             Summary =
                 "Plataforma de patrimônio com whitelabel, setup wizard e deploy zero-touch.",
             Description =
-                "Sistema full-stack com bounded contexts, identidade visual configurável e operação em containers. Demonstra Nest/Next no produto, disciplina de domínio (SDD) e chart Helm demonstrativo em k8s/tote-chart/.",
+                "Full-stack com bounded contexts, identidade visual configurável e operação em containers. Nest/Next no produto, disciplina de domínio (SDD) e um chart Helm demonstrativo em k8s/tote-chart/.",
             SummaryEn =
                 "Asset management platform with whitelabel branding, setup wizard, and zero-touch deploy.",
             DescriptionEn =
-                "Full-stack system with bounded contexts, configurable visual identity, and container operations. Shows Nest/Next in product, domain discipline (SDD), and a demonstrative Helm chart under k8s/tote-chart/.",
+                "Full-stack with bounded contexts, configurable visual identity, and container ops. Nest/Next in the product, domain discipline (SDD), and a demonstrative Helm chart under k8s/tote-chart/.",
             Stack =
             [
                 "TypeScript",
@@ -56,23 +56,23 @@ public static class PortfolioCatalog
             LiveUrl = "https://demo.tote.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/TOTE",
             DemoNote =
-                "Vitrine efêmera em demo.tote.galasse.dev — workspace isolado por visitante.",
+                "Vitrine em demo.tote.galasse.dev — workspace isolado por visitante.",
             DemoNoteEn =
-                "Ephemeral showcase at demo.tote.galasse.dev — isolated workspace per visitor.",
+                "Showcase at demo.tote.galasse.dev — isolated workspace per visitor.",
             Featured = true,
         },
         new ProjectItem
         {
-            Slug = "pipeline-pulse",
-            Title = "Pipeline Pulse",
+            Slug = "pipeview",
+            Title = "Pipeview",
             Summary =
-                "Esteira CI/CD completa: GitHub Actions → Cloudflare Workers, com meta-dashboard ao vivo.",
+                "Painel de uma esteira CI/CD real: GitHub Actions → Cloudflare Workers, com o que foi publicado à vista.",
             Description =
-                "Repo de vitrine DevOps: lint/typecheck/test/build, preview de PR, staging com smoke /api/health e production via tag/environment. A UI mostra SHA, ambiente e o workflow run que publicou o build.",
+                "Vitrine DevOps: lint, typecheck, testes e build; preview de PR; staging com smoke em /api/health; production via tag/environment. A UI mostra SHA, ambiente e o workflow que publicou o build.",
             SummaryEn =
-                "Full CI/CD conveyor: GitHub Actions → Cloudflare Workers, with a live meta-dashboard.",
+                "A live view of a real CI/CD conveyor: GitHub Actions → Cloudflare Workers, with what shipped in plain sight.",
             DescriptionEn =
-                "DevOps showcase repo: lint/typecheck/test/build, PR preview, staging with /api/health smoke, and production via tag/environment. The UI shows SHA, environment, and the workflow run that shipped the build.",
+                "DevOps showcase: lint, typecheck, tests, and build; PR preview; staging with /api/health smoke; production via tag/environment. The UI shows SHA, environment, and the workflow that shipped the build.",
             Stack =
             [
                 "GitHub Actions",
@@ -84,12 +84,12 @@ public static class PortfolioCatalog
                 "Vitest",
             ],
             Accent = "#3dd6a5",
-            LiveUrl = "https://pipeline.galasse.dev",
+            LiveUrl = "https://pipeview.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/pipeline-pulse",
             DemoNote =
-                "Live em pipeline.galasse.dev — veja também a aba Actions do repo.",
+                "Disponível em pipeview.galasse.dev — a aba Actions do repositório também vale a visita.",
             DemoNoteEn =
-                "Live at pipeline.galasse.dev — also open the repo Actions tab.",
+                "Available at pipeview.galasse.dev — the repo Actions tab is worth a look too.",
             Featured = true,
         },
         new ProjectItem
@@ -97,13 +97,13 @@ public static class PortfolioCatalog
             Slug = "edge-status",
             Title = "Edge Status Lab",
             Summary =
-                "Worker Cloudflare que retorna região, cf-ray e latência — prova de edge real.",
+                "Worker Cloudflare que devolve região, cf-ray e latência — o probe que alimenta a página Labs.",
             Description =
-                "Mini-lab ligado a esta página Labs: o frontend TypeScript consulta um endpoint e mostra indicadores ao vivo. Até o Worker estar deployado, o probe ASP.NET responde localmente.",
+                "Mini-lab ligado à página Labs: o frontend TypeScript consulta um endpoint e mostra os indicadores. Enquanto o Worker não estiver deployado, o probe ASP.NET responde localmente.",
             SummaryEn =
-                "Cloudflare Worker that returns region, cf-ray, and latency — real edge proof.",
+                "Cloudflare Worker that returns region, cf-ray, and latency — the probe behind the Labs page.",
             DescriptionEn =
-                "Mini-lab wired to this Labs page: the TypeScript frontend hits an endpoint and shows live indicators. Until the Worker is deployed, the ASP.NET probe answers locally.",
+                "Mini-lab wired to the Labs page: the TypeScript frontend hits an endpoint and shows the indicators. Until the Worker is deployed, the ASP.NET probe answers locally.",
             Stack = ["Cloudflare Workers", "TypeScript", "ASP.NET Core"],
             Accent = "#f6821f",
             LiveUrl = "/Labs",
@@ -117,19 +117,19 @@ public static class PortfolioCatalog
             Slug = "aws-static-demo",
             Title = "AWS Static Demo",
             Summary =
-                "Asset estático servido via S3 + CloudFront (OAC) provisionado com Terraform.",
+                "Asset estático via S3 + CloudFront (OAC), provisionado com Terraform.",
             Description =
-                "Fatia mínima de AWS para CV: bucket privado, Origin Access Control, distribuição CloudFront PriceClass_100. Objetivo: prova de IaC Free Tier sem microserviços desnecessários.",
+                "Fatia mínima de AWS para o CV: bucket privado, Origin Access Control, CloudFront PriceClass_100. Objetivo: mostrar IaC Free Tier de forma enxuta.",
             SummaryEn =
-                "Static asset via S3 + CloudFront (OAC) provisioned with Terraform.",
+                "Static asset via S3 + CloudFront (OAC), provisioned with Terraform.",
             DescriptionEn =
-                "Minimal AWS slice for a resume: private bucket, Origin Access Control, CloudFront PriceClass_100. Goal: Free Tier IaC proof without unnecessary microservices.",
+                "Minimal AWS slice for a resume: private bucket, Origin Access Control, CloudFront PriceClass_100. Goal: show Free Tier IaC without extra moving parts.",
             Stack = ["AWS S3", "CloudFront", "Terraform", "OAC"],
             Accent = "#ff9900",
             LiveUrl = "https://static.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/aws-static-demo",
             DemoNote =
-                "Live em static.galasse.dev (S3 privado + CloudFront OAC + ACM). Código Terraform no GitHub.",
+                "Live em static.galasse.dev (S3 privado + CloudFront OAC + ACM). Terraform no GitHub.",
             DemoNoteEn =
                 "Live at static.galasse.dev (private S3 + CloudFront OAC + ACM). Terraform on GitHub.",
             Featured = true,
@@ -151,9 +151,9 @@ public static class PortfolioCatalog
             LiveUrl = "https://edge.galasse.dev/",
             RepoUrl = "https://github.com/dangalasse/edge-labs",
             DemoNote =
-                "Abra edge.galasse.dev — botão Analyze live. A resposta JSON traz provider, model e analyzedAt (prova de inferência real). Hoje: Workers AI; Gemini quando o secret GEMINI_API_KEY existir.",
+                "Em edge.galasse.dev pode experimentar o Analyze live. A resposta JSON traz provider, model e analyzedAt. Hoje: Workers AI; Gemini quando o secret GEMINI_API_KEY existir.",
             DemoNoteEn =
-                "Open edge.galasse.dev — Analyze live. JSON includes provider, model, analyzedAt (real inference proof). Today: Workers AI; Gemini when GEMINI_API_KEY secret is set.",
+                "At edge.galasse.dev you can try Analyze live. The JSON includes provider, model, and analyzedAt. Today: Workers AI; Gemini when the GEMINI_API_KEY secret is set.",
             Featured = true,
         },
         new ProjectItem
@@ -162,13 +162,13 @@ public static class PortfolioCatalog
             Title = "Este portfólio",
             TitleEn = "This portfolio",
             Summary =
-                "ASP.NET Core Razor Pages + TypeScript + Tailwind — simples, rápido, demonstrável.",
+                "ASP.NET Core Razor Pages + TypeScript + Tailwind — site de CV que também hospeda os labs.",
             Description =
-                "Site de CV com projetos, labs Cloudflare/AWS e links LinkedIn/GitHub. Build de assets via npm (esbuild + Tailwind v4), hospedado na EC2 atrás do Caddy com DNS Cloudflare. CI: Actions → ECR → Ansible; OTEL → Grafana Cloud.",
+                "Site de CV com projetos, labs Cloudflare/AWS e links LinkedIn/GitHub. Assets via npm (esbuild + Tailwind v4), na EC2 atrás do Caddy com DNS Cloudflare. CI: Actions → ECR → Ansible. Observabilidade: OTEL → Alloy → Grafana Cloud.",
             SummaryEn =
-                "ASP.NET Core Razor Pages + TypeScript + Tailwind — simple, fast, demonstrable.",
+                "ASP.NET Core Razor Pages + TypeScript + Tailwind — resume site that also hosts the labs.",
             DescriptionEn =
-                "Resume site with projects, Cloudflare/AWS labs, and LinkedIn/GitHub links. Asset build via npm (esbuild + Tailwind v4), hosted on EC2 behind Caddy with Cloudflare DNS. CI: Actions → ECR → Ansible; OTEL → Grafana Cloud.",
+                "Resume site with projects, Cloudflare/AWS labs, and LinkedIn/GitHub links. Assets via npm (esbuild + Tailwind v4), on EC2 behind Caddy with Cloudflare DNS. CI: Actions → ECR → Ansible. Observability: OTEL → Alloy → Grafana Cloud.",
             Stack =
             [
                 "ASP.NET Core 8",
@@ -183,9 +183,9 @@ public static class PortfolioCatalog
             LiveUrl = "https://portfolio.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/portfolio",
             DemoNote =
-                "Você está vendo a demo — veja o fluxo de arquitetura abaixo.",
+                "Este próprio site é a demo — o fluxo de arquitetura aparece mais abaixo.",
             DemoNoteEn =
-                "You're looking at the live demo — see the architecture flow below.",
+                "This site is the live demo — the architecture flow appears further down.",
             Featured = false,
         },
     ];
@@ -198,11 +198,11 @@ public static class PortfolioCatalog
             Title = "Cloudflare Edge",
             Provider = "Cloudflare",
             Description =
-                "Workers/DNS + Pipeline Pulse + Edge Labs (LLMOps em edge.galasse.dev — / e /coach).",
+                "Workers e DNS: Pipeview e Edge Labs (LLMOps em edge.galasse.dev — / e /coach).",
             DescriptionEn =
-                "Workers/DNS + Pipeline Pulse + Edge Labs (LLMOps at edge.galasse.dev — / and /coach).",
-            Proof = "pipeline.galasse.dev · edge.galasse.dev",
-            ProofEn = "pipeline.galasse.dev · edge.galasse.dev",
+                "Workers and DNS: Pipeview and Edge Labs (LLMOps at edge.galasse.dev — / and /coach).",
+            Proof = "pipeview.galasse.dev · edge.galasse.dev",
+            ProofEn = "pipeview.galasse.dev · edge.galasse.dev",
             DocsUrl = "https://edge.galasse.dev/",
         },
         new LabIndicator
@@ -211,11 +211,11 @@ public static class PortfolioCatalog
             Title = "GitHub Actions",
             Provider = "GitHub",
             Description =
-                "CI/CD público no Pipeline Pulse — CI, preview, staging e production.",
+                "CI/CD público no Pipeview — CI, preview, staging e production.",
             DescriptionEn =
-                "Public CI/CD on Pipeline Pulse — CI, preview, staging, and production.",
-            Proof = "Badges e runs em dangalasse/pipeline-pulse/actions.",
-            ProofEn = "Badges and runs at dangalasse/pipeline-pulse/actions.",
+                "Public CI/CD on Pipeview — CI, preview, staging, and production.",
+            Proof = "Runs em dangalasse/pipeline-pulse/actions.",
+            ProofEn = "Runs at dangalasse/pipeline-pulse/actions.",
             DocsUrl = "https://github.com/dangalasse/pipeline-pulse/actions",
         },
         new LabIndicator
@@ -224,12 +224,25 @@ public static class PortfolioCatalog
             Title = "AWS Surface",
             Provider = "AWS",
             Description =
-                "S3 privado + CloudFront OAC (Terraform) em static.galasse.dev + portfolio na EC2/ECR.",
+                "S3 privado + CloudFront OAC (Terraform) em static.galasse.dev; este portfólio na EC2/ECR.",
             DescriptionEn =
-                "Private S3 + CloudFront OAC (Terraform) at static.galasse.dev + portfolio on EC2/ECR.",
+                "Private S3 + CloudFront OAC (Terraform) at static.galasse.dev; this portfolio on EC2/ECR.",
             Proof = "static.galasse.dev · github.com/dangalasse/aws-static-demo",
             ProofEn = "static.galasse.dev · github.com/dangalasse/aws-static-demo",
             DocsUrl = "https://static.galasse.dev",
+        },
+        new LabIndicator
+        {
+            Id = "observability",
+            Title = "Observability",
+            Provider = "Grafana · OTEL",
+            Description =
+                "No host: OpenTelemetry do ASP.NET → Alloy → Grafana Cloud. Node Exporter via Ansible. Grafana não é público.",
+            DescriptionEn =
+                "On the host: ASP.NET OpenTelemetry → Alloy → Grafana Cloud. Node Exporter via Ansible. Grafana is not public.",
+            Proof = "Probe Edge Status nesta página · ansible/roles/observability",
+            ProofEn = "Edge Status probe on this page · ansible/roles/observability",
+            DocsUrl = "https://github.com/dangalasse/portfolio/tree/main/ansible/roles/observability",
         },
     ];
 

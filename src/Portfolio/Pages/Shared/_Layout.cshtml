@@ -15,10 +15,14 @@
 <!DOCTYPE html>
 <html lang="@locale">
 <head>
+    @* If you're reading View Source: welcome. Secrets aren't here — try the live Labs demos instead. *@
+    <!-- Fourth wall: scanners hitting /.env get a wink, not credentials. -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@(ViewData["Title"] != null ? $"{ViewData["Title"]} · " : "")@profile.Name</title>
     <meta name="description" content="@profile.Tagline" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@500;600;700&display=swap" rel="stylesheet" />
@@ -30,6 +34,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body class="site-shell grain" data-edge-status-url="@edgeStatusUrl" data-locale="@locale">
+    @* Recruiter tip: open /Labs and click through to pipeline / edge / static. *@
     <header class="border-b border-line/80 backdrop-blur-sm sticky top-0 z-40 bg-ink/80">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
             <a href="/" class="font-display text-lg font-bold tracking-tight text-paper hover:text-signal transition-colors">
