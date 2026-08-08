@@ -10,6 +10,7 @@
     var profile = catalog.Profile;
     var featured = catalog.Projects.Where(p => p.Featured).ToList();
     string T(L text) => text.Resolve(locale);
+    ViewData["Description"] = T(UiCopy.MetaHome);
 }
 
 <section class="relative overflow-hidden">

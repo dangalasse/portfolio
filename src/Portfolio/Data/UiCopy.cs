@@ -27,6 +27,19 @@ public static class UiCopy
     public static readonly L SocialNavAria = new("Redes e perfil", "Social profiles");
     public static readonly L SocialHeroAria = new("Links rápidos", "Quick links");
     public static readonly L SocialFooterAria = new("Links no rodapé", "Footer links");
+
+    public static readonly L MetaHome = new(
+        "Portfólio de Danton Galasse — infraestrutura, SRE, DevOps e IA, com labs ao vivo na Cloudflare e AWS.",
+        "Danton Galasse portfolio — infrastructure, SRE, DevOps, and AI, with live Cloudflare and AWS labs.");
+    public static readonly L MetaProjects = new(
+        "Projetos de infraestrutura, SRE e cloud com demos públicas e código aberto.",
+        "Infrastructure, SRE, and cloud projects with public demos and open source.");
+    public static readonly L MetaLabs = new(
+        "Labs ao vivo: Pipeview, Edge Labs, static hosting e status probes.",
+        "Live labs: Pipeview, Edge Labs, static hosting, and status probes.");
+    public static readonly L MetaAbout = new(
+        "Sobre Danton Galasse — contato, localização e mapa para recrutadores.",
+        "About Danton Galasse — contact, location, and a map for recruiters.");
     public static readonly L ProjectsTitle = new("Projetos", "Projects");
     public static readonly L ProjectsLead = new(
         "Produto, labs e demos — com a stack à vista e, quando possível, um ambiente ao vivo.",

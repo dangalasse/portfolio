@@ -1,4 +1,5 @@
-﻿@using Portfolio.Data
+﻿@using System.Text.Json
+@using Portfolio.Data
 @using Portfolio.I18n
 @using Portfolio.Models
 @{
@@ -7,11 +8,59 @@
     var profile = catalog.Profile;
     var path = ViewContext.HttpContext.Request.Path.Value ?? "/";
     string T(L text) => text.Resolve(locale);
-    var otherLocale = AppLocales.IsEnglish(locale) ? AppLocales.PtBr : AppLocales.EnUs;
     var edgeStatusUrl = ViewData["EdgeStatusUrl"] as string
         ?? ViewContext.HttpContext.Items["EdgeStatusUrl"] as string
         ?? Environment.GetEnvironmentVariable("EDGE_STATUS_URL")
         ?? "";
+
+    var request = ViewContext.HttpContext.Request;
+    var baseUrl = string.IsNullOrWhiteSpace(profile.SiteUrl)
+        ? $"{request.Scheme}://{request.Host.Value}"
+        : profile.SiteUrl.TrimEnd('/');
+    var canonicalPath = path == "/" ? "" : path.TrimEnd('/');
+    var canonical = $"{baseUrl}{canonicalPath}";
+    var pageTitle = ViewData["Title"] as string;
+    var fullTitle = string.IsNullOrWhiteSpace(pageTitle) ? profile.Name : $"{pageTitle} · {profile.Name}";
+    var description = ViewData["Description"] as string;
+    if (string.IsNullOrWhiteSpace(description))
+    {
+        description = profile.Tagline;
+    }
+    var robots = ViewData["Robots"] as string ?? "index, follow";
+    var ogImage = $"{baseUrl}/icon-192.png";
+
+    var websiteJson = JsonSerializer.Serialize(new Dictionary<string, object?>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "WebSite",
+        ["name"] = profile.Name,
+        ["url"] = baseUrl + "/",
+        ["description"] = description,
+        ["inLanguage"] = new[] { "pt-BR", "en-US" },
+        ["publisher"] = new Dictionary<string, object?>
+        {
+            ["@type"] = "Person",
+            ["name"] = profile.Name,
+            ["url"] = baseUrl + "/",
+            ["email"] = profile.Email,
+            ["jobTitle"] = profile.Role,
+            ["sameAs"] = new[] { profile.GitHubUrl, profile.LinkedInUrl },
+        },
+    });
+
+    var personJson = JsonSerializer.Serialize(new Dictionary<string, object?>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "Person",
+        ["name"] = profile.Name,
+        ["url"] = baseUrl + "/",
+        ["email"] = profile.Email,
+        ["jobTitle"] = profile.Role,
+        ["description"] = profile.Tagline,
+        ["image"] = $"{baseUrl}/images/danton-galasse.jpg",
+        ["sameAs"] = new[] { profile.GitHubUrl, profile.LinkedInUrl },
+        ["knowsAbout"] = new[] { "SRE", "DevOps", "Infrastructure", "Cloudflare", "AWS", "Artificial Intelligence" },
+    });
 }
 <!DOCTYPE html>
 <html lang="@locale">
@@ -20,19 +69,41 @@
     <!-- Fourth wall: scanners hitting /.env get a wink, not credentials. -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@(ViewData["Title"] != null ? $"{ViewData["Title"]} · " : "")@profile.Name</title>
-    <meta name="description" content="@profile.Tagline" />
+    <title>@fullTitle</title>
+    <meta name="description" content="@description" />
+    <meta name="robots" content="@robots" />
+    <link rel="canonical" href="@canonical" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="@profile.Name" />
+    <meta property="og:title" content="@fullTitle" />
+    <meta property="og:description" content="@description" />
+    <meta property="og:url" content="@canonical" />
+    <meta property="og:image" content="@ogImage" />
+    <meta property="og:locale" content="@(AppLocales.IsEnglish(locale) ? "en_US" : "pt_BR")" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="@fullTitle" />
+    <meta name="twitter:description" content="@description" />
+    <meta name="twitter:image" content="@ogImage" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@500;600;700&display=swap" rel="stylesheet" />
+
+    @* Google Search favicon: square PNG, size multiple of 48px. *@
+    <link rel="icon" href="~/favicon.ico" sizes="any" asp-append-version="true" />
     <link rel="icon" href="~/favicon.svg" type="image/svg+xml" asp-append-version="true" />
-    <link rel="icon" href="~/favicon-32.png" type="image/png" sizes="32x32" asp-append-version="true" />
-    <link rel="icon" href="~/favicon-16.png" type="image/png" sizes="16x16" asp-append-version="true" />
+    <link rel="icon" href="~/favicon-48.png" type="image/png" sizes="48x48" asp-append-version="true" />
+    <link rel="icon" href="~/favicon-96.png" type="image/png" sizes="96x96" asp-append-version="true" />
+    <link rel="icon" href="~/icon-192.png" type="image/png" sizes="192x192" asp-append-version="true" />
     <link rel="apple-touch-icon" href="~/apple-touch-icon.png" sizes="180x180" asp-append-version="true" />
     <meta name="theme-color" content="#0b1215" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <script type="application/ld+json">@Html.Raw(websiteJson)</script>
+    <script type="application/ld+json">@Html.Raw(personJson)</script>
 </head>
 <body class="site-shell grain" data-edge-status-url="@edgeStatusUrl" data-locale="@locale">
     @* Recruiter tip: open /Labs and click through to pipeline / edge / static. *@

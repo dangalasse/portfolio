@@ -7,6 +7,7 @@
     var locale = Locale.Current(ViewContext.HttpContext);
     var profile = PortfolioCatalog.For(locale).Profile;
     ViewData["Title"] = UiCopy.AboutTitle.Resolve(locale);
+    ViewData["Description"] = UiCopy.MetaAbout.Resolve(locale);
     var aboutBody = AppLocales.IsEnglish(locale)
         ? "I work on infrastructure, SRE, DevOps, and cloud — mostly ASP.NET Core, TypeScript, Cloudflare, and AWS. This site is where I keep the live pieces: Free Tier demos (S3/CloudFront, Workers AI, Actions→Workers) and public repos with Terraform, Ansible, Helm, and OpenTelemetry."
         : "Trabalho com infraestrutura, SRE, DevOps e cloud — principalmente ASP.NET Core, TypeScript, Cloudflare e AWS. Este site é onde deixo as peças ao vivo: demos Free Tier (S3/CloudFront, Workers AI, Actions→Workers) e repos públicos com Terraform, Ansible, Helm e OpenTelemetry.";

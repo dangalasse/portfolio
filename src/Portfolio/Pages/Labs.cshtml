@@ -6,6 +6,7 @@
     var locale = Locale.Current(ViewContext.HttpContext);
     var labs = PortfolioCatalog.For(locale).Labs;
     ViewData["Title"] = UiCopy.LabsTitle.Resolve(locale);
+    ViewData["Description"] = UiCopy.MetaLabs.Resolve(locale);
     var edgeUrl = Environment.GetEnvironmentVariable("EDGE_STATUS_URL");
     var edgeLive = !string.IsNullOrWhiteSpace(edgeUrl);
     var howTitle = AppLocales.IsEnglish(locale)

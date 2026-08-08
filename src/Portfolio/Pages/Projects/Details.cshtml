@@ -8,6 +8,10 @@
     var project = Model.Project;
     var flow = Model.Architecture;
     string T(L text) => text.Resolve(locale);
+    // WHY: keep SERP focused on hub pages (/, /Projects, /Labs, /About) for sitelinks;
+    // project details stay crawlable for internal links but out of the main result list.
+    ViewData["Robots"] = "noindex, follow";
+    ViewData["Description"] = project.Summary;
 }
 
 <article class="mx-auto max-w-5xl px-4 py-16 md:px-6">

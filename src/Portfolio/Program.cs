@@ -31,6 +31,34 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
+// WHY: playful honeypots for scanners — no secrets, no privilege path.
+var honeypotPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+{
+    "/.env", "/.env.local", "/.git/config", "/wp-admin", "/wp-login.php",
+    "/admin", "/admin/login", "/api/v1/secrets", "/phpmyadmin", "/actuator/env",
+};
+var honeypotHints = new[] { "tenta mais", "ainda não", "quase lá", "boa tentativa" };
+app.Use(async (http, next) =>
+{
+    var path = http.Request.Path.Value ?? "";
+    if (honeypotPaths.Contains(path))
+    {
+        var hint = honeypotHints[Math.Abs(path.GetHashCode()) % honeypotHints.Length];
+        http.Response.StatusCode = StatusCodes.Status404NotFound;
+        http.Response.Headers.CacheControl = "no-store";
+        http.Response.Headers["X-Content-Type-Options"] = "nosniff";
+        await http.Response.WriteAsJsonAsync(new
+        {
+            ok = false,
+            hint,
+            note = "Fourth wall: nothing useful here. Try /Labs instead.",
+        });
+        return;
+    }
+
+    await next();
+});
+
 // WHY: Labs probe prefers Cloudflare Worker when EDGE_STATUS_URL is set on the container.
 app.Use(async (http, next) =>
 {
@@ -82,6 +110,46 @@ app.MapPost("/api/locale", async (HttpContext http) =>
         });
 
     return Results.Redirect(returnUrl);
+});
+
+// WHY: legacy Google-indexed slug after Pipeview rename.
+app.MapGet("/Projects/pipeline-pulse", () => Results.Redirect("/Projects/pipeview", permanent: true));
+
+app.MapGet("/robots.txt", (HttpContext http) =>
+{
+    var profile = PortfolioCatalog.ProfileBase;
+    var baseUrl = profile.SiteUrl.TrimEnd('/');
+    var body =
+        $"User-agent: *\nAllow: /\nDisallow: /Error\nDisallow: /api/\n\nSitemap: {baseUrl}/sitemap.xml\n";
+    return Results.Text(body, "text/plain; charset=utf-8");
+});
+
+app.MapGet("/sitemap.xml", (HttpContext http) =>
+{
+    var profile = PortfolioCatalog.ProfileBase;
+    var baseUrl = profile.SiteUrl.TrimEnd('/');
+    var urls = new (string Path, string Priority, string Changefreq)[]
+    {
+        ("/", "1.0", "weekly"),
+        ("/Projects", "0.9", "weekly"),
+        ("/Labs", "0.9", "weekly"),
+        ("/About", "0.8", "monthly"),
+    };
+
+    var sb = new System.Text.StringBuilder();
+    sb.AppendLine("""<?xml version="1.0" encoding="UTF-8"?>""");
+    sb.AppendLine("""<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">""");
+    foreach (var (path, priority, changefreq) in urls)
+    {
+        sb.AppendLine("  <url>");
+        sb.AppendLine($"    <loc>{baseUrl}{path}</loc>");
+        sb.AppendLine($"    <changefreq>{changefreq}</changefreq>");
+        sb.AppendLine($"    <priority>{priority}</priority>");
+        sb.AppendLine("  </url>");
+    }
+
+    sb.AppendLine("</urlset>");
+    return Results.Text(sb.ToString(), "application/xml; charset=utf-8");
 });
 
 app.MapRazorPages();
