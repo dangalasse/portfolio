@@ -16,13 +16,13 @@
             ? new[]
             {
                 $"Live probe: {edgeUrl}",
-                "Each Labs card links to a real surface (Pipeline, Edge Labs, AWS Static).",
+                "Each Labs card links to a real surface (Pipeline, Edge Labs, AWS Static, Observability repo).",
                 "The status pill prefers the Worker; ASP.NET /api/status remains the local fallback.",
             }
             : new[]
             {
                 $"Probe ao vivo: {edgeUrl}",
-                "Cada card de Labs liga a uma superfície real (Pipeline, Edge Labs, AWS Static).",
+                "Cada card de Labs liga a uma superfície real (Pipeline, Edge Labs, AWS Static, repo de Observability).",
                 "O indicador prefere o Worker; ASP.NET /api/status continua como fallback local.",
             })
         : (AppLocales.IsEnglish(locale)
@@ -35,7 +35,7 @@
             : new[]
             {
                 "Fazer deploy de workers/edge-status (Cloudflare Worker).",
-                "Definir EDGE_STATUS_URL no contentor do portfólio.",
+                "Definir EDGE_STATUS_URL no container do portfólio.",
                 "O frontend troca automaticamente do probe ASP.NET para Cloudflare.",
             });
 }
@@ -53,9 +53,12 @@
         <span data-status-meta>…</span>
     </div>
 
-    <div class="mt-12 grid gap-4 md:grid-cols-3">
+    <div class="mt-12 grid gap-4 md:grid-cols-2">
         @foreach (var lab in labs)
         {
+            var linkLabel = lab.Id == "observability"
+                ? UiCopy.ViewSource.Resolve(locale)
+                : UiCopy.TryLive.Resolve(locale);
             <article class="lab-card reveal">
                 <p class="font-mono text-[11px] uppercase tracking-wider text-mist">@lab.Provider</p>
                 <h2 class="mt-2 font-display text-xl font-semibold text-paper">@lab.Title</h2>
@@ -63,11 +66,18 @@
                 <p class="mt-4 font-mono text-xs text-signal">@lab.Proof</p>
                 @if (!string.IsNullOrWhiteSpace(lab.DocsUrl))
                 {
-                    <a class="mt-5 inline-block text-sm text-paper underline-offset-4 hover:text-signal hover:underline" href="@lab.DocsUrl" target="_blank" rel="noopener noreferrer">Docs / link</a>
+                    <a class="mt-5 inline-block text-sm text-paper underline-offset-4 hover:text-signal hover:underline"
+                       href="@lab.DocsUrl"
+                       target="_blank"
+                       rel="noopener noreferrer">@linkLabel</a>
                 }
             </article>
         }
     </div>
+
+    <p class="reveal mt-8 text-sm leading-relaxed text-mist">
+        @UiCopy.LabsObservabilityNote.Resolve(locale)
+    </p>
 
     <div class="reveal mt-14 border border-line bg-panel/50 p-6 md:p-8">
         <h2 class="font-display text-2xl font-semibold">@howTitle</h2>

@@ -13,9 +13,9 @@ public static class PortfolioCatalog
         Name = "Danton Galasse",
         Role = "Infra · SRE & DevOps · Cloud",
         TaglinePtBr =
-            "Trabalho com infraestrutura, SRE e DevOps, e deixo demos abertas na Cloudflare e na AWS para quem quiser conhecer o trabalho com calma.",
+            "Trabalho com infraestrutura, SRE e DevOps, e deixo demos abertas na Cloudflare e na AWS para quem quiser conhecer o trabalho.",
         TaglineEnUs =
-            "I work on infrastructure, SRE, and DevOps, and leave demos open on Cloudflare and AWS so you can explore the work at your own pace.",
+            "I work on infrastructure, SRE, and DevOps, and leave demos open on Cloudflare and AWS so you can explore the work.",
         Location = "Brasil",
         Email = "danton@galasse.dev",
         LinkedInUrl = "https://www.linkedin.com/in/danton-galasse",
