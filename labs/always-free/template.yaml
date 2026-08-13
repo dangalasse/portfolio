@@ -1,0 +1,156 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Always Free ops lab — Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom.
+  No CMK, no API Gateway, no NAT. Stays inside Lambda/CW/DDB/KMS Always Free caps.
+
+Parameters:
+  Targets:
+    Type: String
+    Default: >-
+      portfolio|https://portfolio.galasse.dev/api/status,pipeview|https://pipeview.galasse.dev/,edge|https://edge.galasse.dev/health,static|https://static.galasse.dev/
+  CodeBucket:
+    Type: String
+  CodeKey:
+    Type: String
+    Default: always-free/ops-labs.zip
+
+Resources:
+  ChecksTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: galasse-ops-labs
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      TimeToLiveSpecification:
+        AttributeName: expireAt
+        Enabled: true
+      Tags:
+        - Key: Project
+          Value: aws-ops-labs
+
+  ProbeLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/galasse-ops-labs
+      RetentionInDays: 7
+
+  ProbeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: galasse-ops-labs-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ops-labs
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: Logs
+                Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !GetAtt ProbeLogGroup.Arn
+              - Sid: Dynamo
+                Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:Query
+                Resource: !GetAtt ChecksTable.Arn
+              - Sid: KmsRandom
+                Effect: Allow
+                Action:
+                  - kms:GenerateRandom
+                Resource: "*"
+
+  ProbeFn:
+    Type: AWS::Lambda::Function
+    DependsOn: ProbeLogGroup
+    Properties:
+      FunctionName: galasse-ops-labs
+      Runtime: python3.12
+      Architectures: [x86_64]
+      Handler: handler.lambda_handler
+      MemorySize: 128
+      Timeout: 15
+      Role: !GetAtt ProbeRole.Arn
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref ChecksTable
+          TARGETS: !Ref Targets
+          TTL_DAYS: "7"
+      Code:
+        S3Bucket: !Ref CodeBucket
+        S3Key: !Ref CodeKey
+      Tags:
+        - Key: Project
+          Value: aws-ops-labs
+
+  ProbeUrl:
+    Type: AWS::Lambda::Url
+    Properties:
+      AuthType: NONE
+      Cors:
+        AllowOrigins: ["*"]
+        AllowMethods: [GET, POST]
+        AllowHeaders: [content-type]
+        MaxAge: 86400
+      TargetFunctionArn: !GetAtt ProbeFn.Arn
+
+  ProbeUrlPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ProbeFn
+      Principal: "*"
+      Action: lambda:InvokeFunctionUrl
+      FunctionUrlAuthType: NONE
+
+  ProbeUrlInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ProbeFn
+      Principal: "*"
+      Action: lambda:InvokeFunction
+      InvokedViaFunctionUrl: true
+
+  ProbeSchedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: galasse-ops-labs-every-5m
+      Description: Probe public labs every 5 minutes (Always Free EventBridge)
+      ScheduleExpression: rate(5 minutes)
+      State: ENABLED
+      Targets:
+        - Id: ProbeFn
+          Arn: !GetAtt ProbeFn.Arn
+
+  ProbeSchedulePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ProbeFn
+      Principal: events.amazonaws.com
+      Action: lambda:InvokeFunction
+      SourceArn: !GetAtt ProbeSchedule.Arn
+
+Outputs:
+  FunctionUrl:
+    Description: Public Function URL
+    Value: !GetAtt ProbeUrl.FunctionUrl
+  TableName:
+    Value: !Ref ChecksTable
+  FunctionName:
+    Value: !Ref ProbeFn

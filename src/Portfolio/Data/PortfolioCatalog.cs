@@ -136,6 +136,36 @@ public static class PortfolioCatalog
         },
         new ProjectItem
         {
+            Slug = "aws-ops-labs",
+            Title = "AWS Ops Labs",
+            Summary =
+                "Probe Always Free: Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom.",
+            Description =
+                "Lab público sem CMK e sem API Gateway. A cada 5 minutos a Lambda testa as superfícies ao vivo, grava o resultado no DynamoDB (TTL 7d) e emite métricas EMF. GET /kms/random pede entropia ao KMS sem chave gerenciada ($1/mês evitado).",
+            SummaryEn =
+                "Always Free probe: Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom.",
+            DescriptionEn =
+                "Public lab with no CMK and no API Gateway. Every 5 minutes Lambda checks live surfaces, writes DynamoDB (7-day TTL), and emits EMF metrics. GET /kms/random pulls HSM entropy without a customer-managed key ($1/mo avoided).",
+            Stack =
+            [
+                "AWS Lambda",
+                "Function URL",
+                "DynamoDB",
+                "EventBridge",
+                "KMS",
+                "CloudFormation",
+            ],
+            Accent = "#ff9900",
+            LiveUrl = "https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status",
+            RepoUrl = "https://github.com/dangalasse/portfolio/tree/main/labs/always-free",
+            DemoNote =
+                "GET /status, POST /probe, GET /kms/random — CloudFormation em labs/always-free.",
+            DemoNoteEn =
+                "GET /status, POST /probe, GET /kms/random — CloudFormation under labs/always-free.",
+            Featured = true,
+        },
+        new ProjectItem
+        {
             Slug = "edge-labs",
             Title = "Edge Labs (LLMOps)",
             Summary =
@@ -224,12 +254,12 @@ public static class PortfolioCatalog
             Title = "AWS Surface",
             Provider = "AWS",
             Description =
-                "S3 privado + CloudFront OAC (Terraform) em static.galasse.dev; este portfólio na EC2/ECR.",
+                "S3+CloudFront (static.galasse.dev) e o probe Always Free (Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom).",
             DescriptionEn =
-                "Private S3 + CloudFront OAC (Terraform) at static.galasse.dev; this portfolio on EC2/ECR.",
-            Proof = "static.galasse.dev · github.com/dangalasse/aws-static-demo",
-            ProofEn = "static.galasse.dev · github.com/dangalasse/aws-static-demo",
-            DocsUrl = "https://static.galasse.dev",
+                "S3+CloudFront (static.galasse.dev) and the Always Free probe (Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom).",
+            Proof = "static.galasse.dev · Lambda Function URL /status",
+            ProofEn = "static.galasse.dev · Lambda Function URL /status",
+            DocsUrl = "https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status",
         },
         new LabIndicator
         {

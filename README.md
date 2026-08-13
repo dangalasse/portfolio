@@ -82,6 +82,7 @@ ViewData["EdgeStatusUrl"] = "https://edge-status.seu-subdominio.workers.dev";
 ## AWS demo + Edge Labs
 
 - AWS Static: [static.galasse.dev](https://static.galasse.dev) — Terraform in [aws-static-demo](https://github.com/dangalasse/aws-static-demo)
+- AWS Ops Labs: [Function URL](https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status) (Lambda + DynamoDB + EventBridge + KMS GenerateRandom) — [labs/always-free](labs/always-free)
 - Edge Labs: [edge.galasse.dev/health](https://edge.galasse.dev/health) — [edge-labs](https://github.com/dangalasse/edge-labs)
 - Reviewer map: [docs/RECRUITER.md](docs/RECRUITER.md)
 

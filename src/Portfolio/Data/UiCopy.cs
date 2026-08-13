@@ -35,8 +35,8 @@ public static class UiCopy
         "Projetos de infraestrutura, SRE e cloud com demos públicas e código aberto.",
         "Infrastructure, SRE, and cloud projects with public demos and open source.");
     public static readonly L MetaLabs = new(
-        "Labs ao vivo: Pipeview, Edge Labs, static hosting e status probes.",
-        "Live labs: Pipeview, Edge Labs, static hosting, and status probes.");
+        "Labs ao vivo: Pipeview, Edge Labs, AWS Static, AWS Ops Labs e status probes.",
+        "Live labs: Pipeview, Edge Labs, AWS Static, AWS Ops Labs, and status probes.");
     public static readonly L MetaAbout = new(
         "Sobre Danton Galasse — contato, localização e mapa para recrutadores.",
         "About Danton Galasse — contact, location, and a map for recruiters.");
@@ -74,8 +74,8 @@ public static class UiCopy
         "Para ligar o Worker Cloudflare: faça deploy de workers/edge-status e defina EDGE_STATUS_URL no container.",
         "To enable the Cloudflare Worker: deploy workers/edge-status and set EDGE_STATUS_URL on the container.");
     public static readonly L LabsObservabilityNote = new(
-        "Observabilidade: traces e metrics seguem OTEL → Alloy → Grafana Cloud no host. O Grafana em si não é público — o probe Edge Status nesta página é a prova que se pode ver daqui.",
-        "Observability: traces and metrics go OTEL → Alloy → Grafana Cloud on the host. Grafana itself is not public — the Edge Status probe on this page is the proof you can see from here.");
+        "Observabilidade: traces e metrics seguem OTEL → Alloy → Grafana Cloud no host. O Grafana em si não é público — o probe Edge Status nesta página e o AWS Ops Labs (GET /status) são a prova que se pode ver daqui.",
+        "Observability: traces and metrics go OTEL → Alloy → Grafana Cloud on the host. Grafana itself is not public — the Edge Status probe on this page and AWS Ops Labs (GET /status) are the proof you can see from here.");
     public static readonly L Checking = new("Verificando…", "Checking…");
     public static readonly L LocalePtLabel = new("Português (Brasil)", "Portuguese (Brazil)");
     public static readonly L LocaleEnLabel = new("English (US)", "English (US)");

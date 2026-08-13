@@ -12,6 +12,7 @@ Every featured project links to a **live URL** and a **public GitHub repo** with
 | Pipeview | https://pipeview.galasse.dev | Last real `live-demo.yml` run on open; canvas | Dispatch needs Turnstile + ticket + KV (1/IP/15m, 8/day) + `GITHUB_TOKEN` behind gate |
 | Edge Labs | https://edge.galasse.dev/ | Playground Analyze / Coach (Workers AI) | Turnstile + ticket + KV (5/IP/h, 80/day); body ≤4KB; CORS strict |
 | AWS Static | https://static.galasse.dev | Static HTML | No mutations |
+| AWS Ops Labs | https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status | Latest probe JSON, `/kms/random`, `/probe` | Function URL public; EventBridge every 5m; no CMK; DDB TTL 7d |
 | Edge Status | Labs / Worker | Uptime probes | Read-only |
 
 **Principle:** you see a **true reflection** (real JSON, real Actions run, real Nest UI). Abuse is blocked by **contract** (Turnstile → HMAC ticket → quota), not a soft in-memory rate limit.
@@ -19,7 +20,7 @@ Every featured project links to a **live URL** and a **public GitHub repo** with
 ## How to review in 15 minutes
 
 1. Open [portfolio.galasse.dev](https://portfolio.galasse.dev) → **Projects** / **Labs** → “Explorar ao vivo”.
-2. [static.galasse.dev](https://static.galasse.dev) — static evidence; skim Terraform OAC in the repo.
+2. [static.galasse.dev](https://static.galasse.dev) — static evidence; skim Terraform OAC in the repo. Then the [Always Free Lambda probe](https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status) — `/status`, `/probe`, `/kms/random`.
 3. [edge.galasse.dev](https://edge.galasse.dev/) — complete Turnstile, then Analyze / Coach; check `provider` / `model` / `analyzedAt` in the JSON.
 4. [pipeview.galasse.dev](https://pipeview.galasse.dev) — last run is visible without clicking; “Iniciar uma demo” only after human check (and only if dispatch secret is configured).
 5. [demo.tote.galasse.dev](https://demo.tote.galasse.dev) — human check → ephemeral ADMIN workspace (~2h). Try Colunas, Integridade EAV, Identidade; `/reports`, `/users`, aprovações stay hidden.
@@ -34,13 +35,14 @@ Open `POST /analyze-error` or `/coach` without a ticket → **403**. That is int
 - **Demo Gate:** expensive mutations (LLM, Actions dispatch, vitrine mint) require Turnstile → one-shot ticket → KV/Redis quotas.
 - **Observability without a second bill:** Grafana stays private; Edge Status + Labs copy show the path.
 - **Honest scope:** Helm chart is demonstrative; production TOTE remains Compose on EC2. Edge coach is prompted coaching, not fine-tuned weights.
-- **Free Tier hosting:** AWS (S3/CloudFront/ACM/EC2/ECR) + Cloudflare (Workers, Workers AI, Turnstile, KV, DNS).
+- **Free Tier hosting:** AWS (S3/CloudFront/ACM/EC2/ECR + Always Free Lambda/DDB/EventBridge/KMS GenerateRandom) + Cloudflare (Workers, Workers AI, Turnstile, KV, DNS).
+- **No $1/mo CMK:** Ops Labs uses `kms:GenerateRandom` only.
 
 ## Repo index
 
 | Repo | Role |
 |------|------|
-| [dangalasse/portfolio](https://github.com/dangalasse/portfolio) | CV site, Ansible roles, OTEL, Actions→ECR |
+| [dangalasse/portfolio](https://github.com/dangalasse/portfolio) | CV site, Ansible roles, OTEL, Actions→ECR, Always Free ops lab |
 | [dangalasse/TOTE](https://github.com/dangalasse/TOTE) | Product + Helm chart |
 | [dangalasse/pipeline-pulse](https://github.com/dangalasse/pipeline-pulse) | CI/CD → Workers + gated live-demo |
 | [dangalasse/aws-static-demo](https://github.com/dangalasse/aws-static-demo) | Terraform S3+CloudFront + Ansible sync |
