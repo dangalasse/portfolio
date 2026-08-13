@@ -7,37 +7,37 @@
     var labs = PortfolioCatalog.For(locale).Labs;
     ViewData["Title"] = UiCopy.LabsTitle.Resolve(locale);
     ViewData["Description"] = UiCopy.MetaLabs.Resolve(locale);
-    var edgeUrl = SiteFacts.ResolveEdgeStatusUrl(Model.Configuration);
+    var edgeUrl = Environment.GetEnvironmentVariable("EDGE_STATUS_URL");
     var edgeLive = !string.IsNullOrWhiteSpace(edgeUrl);
-    var howTitle = edgeLive
-        ? UiCopy.LabsProbeLive.Resolve(locale)
-        : UiCopy.LabsProbeFallback.Resolve(locale);
+    var howTitle = AppLocales.IsEnglish(locale)
+        ? (edgeLive ? "Edge Status Worker (live)" : "How to enable the Cloudflare Worker")
+        : (edgeLive ? "Worker Edge Status (ao vivo)" : "Como ativar o Worker Cloudflare");
     var steps = edgeLive
         ? (AppLocales.IsEnglish(locale)
             ? new[]
             {
-                $"Probe origin: {edgeUrl}",
-                "The pill states Cloudflare when this Worker answers, ASP.NET when it does not.",
-                "Labs cards are evidence. The product is TOTE; the CI/CD proof is Pipeview.",
+                $"Live probe: {edgeUrl}",
+                "Each Labs card links to a real surface (Pipeline, Edge Labs, AWS Static, AWS Ops Labs, Observability repo).",
+                "The status pill prefers the Worker; ASP.NET /api/status remains the local fallback.",
             }
             : new[]
             {
-                $"Origem do probe: {edgeUrl}",
-                "O pill diz Cloudflare quando este Worker responde, ASP.NET quando não.",
-                "Os cards de Labs são evidência. O produto é o TOTE; a prova de CI/CD é o Pipeview.",
+                $"Probe ao vivo: {edgeUrl}",
+                "Cada card de Labs liga a uma superfície real (Pipeline, Edge Labs, AWS Static, AWS Ops Labs, repo de Observability).",
+                "O indicador prefere o Worker; ASP.NET /api/status continua como fallback local.",
             })
         : (AppLocales.IsEnglish(locale)
             ? new[]
             {
-                "This container has no EDGE_STATUS_URL. The ASP.NET /api/status probe is the live origin.",
-                "The Worker source is workers/edge-status. Until it is wired, the pill will not say Cloudflare.",
-                "That is a host config gap, not a fake green status.",
+                "Deploy workers/edge-status (Cloudflare Worker).",
+                "Set EDGE_STATUS_URL on the portfolio container.",
+                "The frontend switches from the ASP.NET probe to Cloudflare automatically.",
             }
             : new[]
             {
-                "Este container não tem EDGE_STATUS_URL. O probe ASP.NET /api/status é a origem ao vivo.",
-                "O código do Worker está em workers/edge-status. Enquanto não estiver ligado, o pill não diz Cloudflare.",
-                "Isso é lacuna de config do host, não um status verde inventado.",
+                "Fazer deploy de workers/edge-status (Cloudflare Worker).",
+                "Definir EDGE_STATUS_URL no container do portfólio.",
+                "O frontend troca automaticamente do probe ASP.NET para Cloudflare.",
             });
 }
 
@@ -60,7 +60,6 @@
             var linkLabel = lab.Id == "observability"
                 ? UiCopy.ViewSource.Resolve(locale)
                 : UiCopy.TryLive.Resolve(locale);
-            var external = lab.DocsUrl?.StartsWith("http", StringComparison.OrdinalIgnoreCase) == true;
             <article class="lab-card reveal">
                 <p class="font-mono text-[11px] uppercase tracking-wider text-mist">@lab.Provider</p>
                 <h2 class="mt-2 font-display text-xl font-semibold text-paper">@lab.Title</h2>
@@ -70,8 +69,8 @@
                 {
                     <a class="mt-5 inline-block text-sm text-paper underline-offset-4 hover:text-signal hover:underline"
                        href="@lab.DocsUrl"
-                       target="@(external ? "_blank" : null)"
-                       rel="@(external ? "noopener noreferrer" : null)">@linkLabel</a>
+                       target="_blank"
+                       rel="noopener noreferrer">@linkLabel</a>
                 }
             </article>
         }
@@ -83,7 +82,6 @@
 
     <div class="reveal mt-14 border border-line bg-panel/50 p-6 md:p-8">
         <h2 class="font-display text-2xl font-semibold">@howTitle</h2>
-        <p class="mt-2 text-sm text-mist">@UiCopy.LabsHowTo.Resolve(locale)</p>
         <ol class="mt-4 list-decimal space-y-2 pl-5 text-sm text-mist leading-relaxed">
             @foreach (var step in steps)
             {

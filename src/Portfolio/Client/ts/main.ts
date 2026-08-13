@@ -4,11 +4,34 @@
 
 import { initArchitectureFlows } from "./architecture";
 
+function prefersReducedMotion(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function initReveal(): void {
-  // Content is visible in CSS. Keep the observer only so existing markup stays valid.
-  document.querySelectorAll<HTMLElement>(".reveal").forEach((node) => {
-    node.classList.add("is-visible");
-  });
+  const nodes = document.querySelectorAll<HTMLElement>(".reveal");
+  if (nodes.length === 0) {
+    return;
+  }
+
+  if (prefersReducedMotion()) {
+    nodes.forEach((node) => node.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      }
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+  );
+
+  nodes.forEach((node) => observer.observe(node));
 }
 
 interface EdgeStatusPayload {
@@ -99,12 +122,10 @@ function renderStatus(target: HTMLElement, payload: EdgeStatusPayload): void {
     }
     parts.push(
       payload.source === "live"
-        ? isEn
-          ? "Cloudflare Worker"
-          : "Worker Cloudflare"
+        ? "Cloudflare"
         : isEn
-          ? "ASP.NET fallback"
-          : "Fallback ASP.NET",
+          ? "ASP.NET probe"
+          : "Probe ASP.NET",
     );
     meta.textContent = parts.join(" · ");
   }

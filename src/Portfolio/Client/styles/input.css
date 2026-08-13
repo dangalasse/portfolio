@@ -134,31 +134,14 @@
   }
 
   .reveal {
-    /* Visible without JS. Motion is additive; crawlers and ATS screenshots must see content. */
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 700ms ease, transform 700ms ease;
   }
 
-  .honest-box {
-    @apply border border-line bg-panel/60 px-4 py-3;
-  }
-
-  .recruiter-map-list {
-    @apply mt-6 max-w-3xl list-decimal space-y-3 pl-5 text-sm leading-relaxed text-mist;
-  }
-
-  .recruiter-map-list a {
-    @apply text-signal hover:underline;
-  }
-
-  .evidence-table {
-    @apply w-full text-left text-sm text-mist;
-  }
-
-  .evidence-table th {
-    @apply border-b border-line bg-ink-soft px-3 py-2 font-mono text-[11px] uppercase tracking-wider text-mist;
-  }
-
-  .evidence-table td {
-    @apply border-b border-line px-3 py-3 align-top;
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .arch-flow {

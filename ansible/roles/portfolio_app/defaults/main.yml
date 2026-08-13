@@ -3,4 +3,4 @@ portfolio_container_name: tote-portfolio
 portfolio_network: tote-network
 portfolio_image: "public.ecr.aws/docker/library/hello-world:latest"
 grafana_otlp_endpoint: "<GRAFANA_OTLP_ENDPOINT>"
-edge_status_url: "https://portfolio-edge-status.dantonguerragalasse.workers.dev"
+edge_status_url: ""

@@ -1,50 +1,49 @@
 # Recruiter / reviewer map
 
-This site is the **evidence hub** for an infra / SRE / DevOps profile.
-It is **not** an AI-developer pitch. Edge Labs is a playground, listed as a lab.
+This site is the **evidence hub** for a Pleno DevOps / SRE / Cloud portfolio.
+Every featured project links to a **live URL** and a **public GitHub repo** with IaC, CI/CD, or edge code you can clone and inspect.
 
-## Hierarchy (what to open first)
+## Live surfaces (what you can load / what is capped)
 
-| Order | What | Why | Honest limit |
-|-------|------|-----|----------------|
-| 1 | [TOTE](https://portfolio.galasse.dev/Projects/tote) | The product | Turnstile checkbox mints an ephemeral ADMIN workspace (~2h). No password. |
-| 2 | [Pipeview](https://pipeview.galasse.dev) | CI/CD proof: SHA, env, CF-Ray, workflow | Top card = published build. Belt = last `live-demo.yml` (goes red if lint fails). |
-| 3 | [Labs](https://portfolio.galasse.dev/Labs) | Always Free / edge evidence | Not the job. Human pages: [/Labs/Ops](https://portfolio.galasse.dev/Labs/Ops), [/Labs/Static](https://portfolio.galasse.dev/Labs/Static). |
-| — | CV PDF | Only if `wwwroot/files/cv.pdf` exists | If the button is missing, the file is **not** published (it was 404). |
+| Proof | Live URL | You can load | Hard limit (by design) |
+|-------|----------|--------------|------------------------|
+| Portfolio | https://portfolio.galasse.dev | Full site, architecture flow, Labs | Read-mostly; honeypots wink |
+| TOTE vitrine | https://demo.tote.galasse.dev | Real ADMIN UI (schema, EAV, audit, trash, obs, identity) | Turnstile → session; 1 IP / 30 min; branding **per workspace**; no password for `demo@…`; host `tote.galasse.dev` does **not** mint demo |
+| Pipeview | https://pipeview.galasse.dev | Last real `live-demo.yml` run on open; canvas | Dispatch needs Turnstile + ticket + KV (1/IP/15m, 8/day) + `GITHUB_TOKEN` behind gate |
+| Edge Labs | https://edge.galasse.dev/ | Playground Analyze / Coach (Workers AI) | Turnstile + ticket + KV (5/IP/h, 80/day); body ≤4KB; CORS strict |
+| AWS Static | https://static.galasse.dev | Static HTML | No mutations |
+| AWS Ops Labs | https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status | Latest probe JSON, `/kms/random`, `/probe` | Function URL public; EventBridge every 5m; no CMK; DDB TTL 7d |
+| Edge Status | Labs / Worker | Uptime probes | Read-only |
 
-Home shows **two** featured items. Everything else is grouped under Labs.
+**Principle:** you see a **true reflection** (real JSON, real Actions run, real Nest UI). Abuse is blocked by **contract** (Turnstile → HMAC ticket → quota), not a soft in-memory rate limit.
 
-## Live surfaces
+## How to review in 15 minutes
 
-| Proof | URL | You can load | Hard limit |
-|-------|-----|--------------|------------|
-| Portfolio | https://portfolio.galasse.dev | Full site, recruiter map | Read-mostly |
-| TOTE demo | https://demo.tote.galasse.dev | Turnstile → ephemeral ADMIN session | ~2h workspace; reports/users/approvals hidden |
-| Pipeview | https://pipeview.galasse.dev | Last real run | Dispatch gated; run may be red |
-| Edge Labs | https://edge.galasse.dev/ | Analyze / Coach after Turnstile | Playground. Gemini **not** configured. Not LLMOps. |
-| AWS Static (human) | https://portfolio.galasse.dev/Labs/Static | What OAC proves | Raw HTML is two paragraphs |
-| AWS Ops (human) | https://portfolio.galasse.dev/Labs/Ops | Table of last pings | Raw JSON still public; not Grafana |
-| Edge Status | Worker + pill | Region / cf-ray when wired | Fallback is ASP.NET if the Worker URL is empty |
+1. Open [portfolio.galasse.dev](https://portfolio.galasse.dev) → **Projects** / **Labs** → “Explorar ao vivo”.
+2. [static.galasse.dev](https://static.galasse.dev) — static evidence; skim Terraform OAC in the repo. Then the [Always Free Lambda probe](https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status) — `/status`, `/probe`, `/kms/random`.
+3. [edge.galasse.dev](https://edge.galasse.dev/) — complete Turnstile, then Analyze / Coach; check `provider` / `model` / `analyzedAt` in the JSON.
+4. [pipeview.galasse.dev](https://pipeview.galasse.dev) — last run is visible without clicking; “Iniciar uma demo” only after human check (and only if dispatch secret is configured).
+5. [demo.tote.galasse.dev](https://demo.tote.galasse.dev) — human check → ephemeral ADMIN workspace (~2h). Try Colunas, Integridade EAV, Identidade; `/reports`, `/users`, aprovações stay hidden.
+6. Skim Helm [TOTE k8s/tote-chart](https://github.com/dangalasse/TOTE/tree/main/k8s/tote-chart) and Ansible/OTEL in [portfolio](https://github.com/dangalasse/portfolio).
 
-**Still outside a green Pipeview belt until CI is green:**
+Open `POST /analyze-error` or `/coach` without a ticket → **403**. That is intentional.
 
-1. **CV PDF** — this agent cannot read `C:\Users\...`. Drop `src/Portfolio/wwwroot/files/cv.pdf` into the repo (or attach the file in chat).
-2. **Pipeview belt** — last `live-demo.yml` failed on Biome quotes in CSS. Fix is in `pipeline-pulse` (format + push + dispatch live-demo).
-3. **Production roll of this site** — push `main` to trigger Actions → ECR → Ansible.
+## Design principles (what seniors look for)
 
-## What this profile is not claiming
-
-- AI developer / LLMOps as a role
-- Helm as TOTE production (chart is demonstrative; Compose on EC2)
-- Public Grafana
-- Gemini on Edge Labs
+- **Least privilege on the edge of the internet:** S3 never public; CloudFront OAC only.
+- **Secrets out of git:** GitHub Secrets, Wrangler secrets, Turnstile + HMAC ticket secrets on Workers/Nest.
+- **Demo Gate:** expensive mutations (LLM, Actions dispatch, vitrine mint) require Turnstile → one-shot ticket → KV/Redis quotas.
+- **Observability without a second bill:** Grafana stays private; Edge Status + Labs copy show the path.
+- **Honest scope:** Helm chart is demonstrative; production TOTE remains Compose on EC2. Edge coach is prompted coaching, not fine-tuned weights.
+- **Free Tier hosting:** AWS (S3/CloudFront/ACM/EC2/ECR + Always Free Lambda/DDB/EventBridge/KMS GenerateRandom) + Cloudflare (Workers, Workers AI, Turnstile, KV, DNS).
+- **No $1/mo CMK:** Ops Labs uses `kms:GenerateRandom` only.
 
 ## Repo index
 
 | Repo | Role |
 |------|------|
-| [dangalasse/portfolio](https://github.com/dangalasse/portfolio) | This site, Ansible, OTEL, Always Free ops lab |
-| [dangalasse/TOTE](https://github.com/dangalasse/TOTE) | Product |
-| [dangalasse/pipeline-pulse](https://github.com/dangalasse/pipeline-pulse) | CI/CD proof |
-| [dangalasse/aws-static-demo](https://github.com/dangalasse/aws-static-demo) | Terraform S3+CloudFront |
-| [dangalasse/edge-labs](https://github.com/dangalasse/edge-labs) | Inference playground |
+| [dangalasse/portfolio](https://github.com/dangalasse/portfolio) | CV site, Ansible roles, OTEL, Actions→ECR, Always Free ops lab |
+| [dangalasse/TOTE](https://github.com/dangalasse/TOTE) | Product + Helm chart |
+| [dangalasse/pipeline-pulse](https://github.com/dangalasse/pipeline-pulse) | CI/CD → Workers + gated live-demo |
+| [dangalasse/aws-static-demo](https://github.com/dangalasse/aws-static-demo) | Terraform S3+CloudFront + Ansible sync |
+| [dangalasse/edge-labs](https://github.com/dangalasse/edge-labs) | LLMOps Worker + coach modes + Demo Gate |

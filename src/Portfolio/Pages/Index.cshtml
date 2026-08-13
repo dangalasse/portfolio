@@ -7,14 +7,14 @@
     ViewData["Title"] = null;
     var locale = Locale.Current(ViewContext.HttpContext);
     var catalog = PortfolioCatalog.For(locale);
-    var profile = SiteFacts.WithPublishedCv(ViewContext.HttpContext, catalog.Profile);
-    var featured = catalog.Projects.Where(p => p.Featured).OrderBy(p => p.Kind).ToList();
+    var profile = catalog.Profile;
+    var featured = catalog.Projects.Where(p => p.Featured).ToList();
     string T(L text) => text.Resolve(locale);
     ViewData["Description"] = T(UiCopy.MetaHome);
 }
 
 <section class="relative overflow-hidden">
-    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-16 pt-16 md:px-6 md:pt-24 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-20 pt-16 md:px-6 md:pt-24 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
         <div class="reveal">
             <p class="font-mono text-xs uppercase tracking-[0.2em] text-signal">@profile.Role</p>
             <div class="hero-identity mt-5">
@@ -39,6 +39,9 @@
             <p class="mt-6 max-w-xl text-lg leading-relaxed text-mist md:text-xl">
                 @profile.Tagline
             </p>
+            <div class="mt-6">
+                <partial name="_SocialLinks" model="new SocialLinksModel { Profile = profile, Locale = locale, Variant = SocialLinksVariant.Hero }" />
+            </div>
             <div class="mt-8 flex flex-wrap gap-3">
                 <a class="btn-primary" href="/Projects">@T(UiCopy.SeeProjects)</a>
                 <a class="btn-ghost" href="/Labs">@T(UiCopy.LiveLabs)</a>
@@ -48,7 +51,11 @@
                 }
             </div>
         </div>
-        <div class="reveal relative min-h-[240px] border border-line bg-panel/40 p-6 md:min-h-[300px]" style="transition-delay: 120ms">
+        <div class="reveal relative min-h-[280px] border border-line bg-panel/40 p-6 md:min-h-[340px]" style="transition-delay: 120ms">
+            <div class="absolute inset-0 opacity-40" style="background:
+                linear-gradient(135deg, transparent 40%, color-mix(in oklab, #3dd6c6 25%, transparent) 100%),
+                repeating-linear-gradient(90deg, transparent, transparent 24px, color-mix(in oklab, #2a3a44 70%, transparent) 25px),
+                repeating-linear-gradient(0deg, transparent, transparent 24px, color-mix(in oklab, #2a3a44 70%, transparent) 25px);"></div>
             <div class="relative flex h-full flex-col justify-between gap-8">
                 <div>
                     <p class="font-mono text-xs uppercase tracking-wider text-mist">@T(UiCopy.StackInUse)</p>
@@ -57,11 +64,6 @@
                         <li>TypeScript + Tailwind</li>
                         <li>Cloudflare · AWS</li>
                     </ul>
-                    <p class="mt-4 text-xs leading-relaxed text-mist">
-                        @(AppLocales.IsEnglish(locale)
-                            ? "This is the resume host, not the product. The product is TOTE (TypeScript)."
-                            : "Isto é o host do CV, não o produto. O produto é o TOTE (TypeScript).")
-                    </p>
                 </div>
                 <div class="status-pill" data-lab-status>
                     <span class="status-dot" data-status-dot></span>
@@ -83,28 +85,23 @@
             </div>
             <a class="nav-link text-signal" href="/Projects">@T(UiCopy.AllProjects)</a>
         </div>
-        <div class="mt-10 grid gap-4 md:grid-cols-2">
+        <div class="mt-10 grid gap-4 md:grid-cols-3">
             @foreach (var project in featured)
             {
-                var cta = string.IsNullOrWhiteSpace(project.LiveCta) ? T(UiCopy.TryLive) : project.LiveCta;
-                var liveExternal = project.LiveUrl?.StartsWith("http", StringComparison.OrdinalIgnoreCase) == true;
-                <article class="project-tile project-tile--featured reveal flex flex-col p-6 md:p-8">
-                    <p class="font-mono text-[11px] uppercase tracking-wider text-signal">@T(UiCopy.ForKind(project.Kind))</p>
-                    <a href="/Projects/@project.Slug" class="group mt-3 flex-1">
-                        <h3 class="font-display text-2xl font-semibold text-paper transition-colors group-hover:text-signal">@project.Title</h3>
-                        <p class="mt-3 text-sm leading-relaxed text-mist">@(project.Problem ?? project.Summary)</p>
-                        @if (!string.IsNullOrWhiteSpace(project.HonestLimit))
-                        {
-                            <p class="mt-4 border border-line bg-ink px-3 py-2 text-xs leading-relaxed text-mist">@project.HonestLimit</p>
-                        }
-                        <p class="mt-6 font-mono text-xs uppercase tracking-wider text-mist/80">@string.Join(" · ", project.Stack.Take(4))</p>
+                <article class="project-tile reveal flex flex-col p-5 md:p-6">
+                    <a href="/Projects/@project.Slug" class="group flex-1">
+                        <div class="mb-8 h-1 w-12" style="background: @project.Accent"></div>
+                        <h3 class="font-display text-xl font-semibold text-paper transition-colors group-hover:text-signal">@project.Title</h3>
+                        <p class="mt-3 text-sm leading-relaxed text-mist">@project.Summary</p>
+                        <p class="mt-6 font-mono text-xs uppercase tracking-wider text-mist/80">@string.Join(" · ", project.Stack.Take(3))</p>
                     </a>
                     @if (!string.IsNullOrWhiteSpace(project.LiveUrl))
                     {
-                        <a class="mt-5 inline-block text-sm text-signal hover:underline"
+                        var liveExternal = project.LiveUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase);
+                        <a class="mt-4 inline-block text-sm text-signal hover:underline"
                            href="@project.LiveUrl"
                            target="@(liveExternal ? "_blank" : null)"
-                           rel="@(liveExternal ? "noopener noreferrer" : null)">@cta</a>
+                           rel="@(liveExternal ? "noopener noreferrer" : null)">@T(UiCopy.TryLive)</a>
                     }
                 </article>
             }
@@ -115,15 +112,11 @@
 <section class="border-t border-line bg-ink-soft/50">
     <div class="mx-auto max-w-6xl px-4 py-16 md:px-6">
         <div class="reveal">
-            <h2 class="section-title">@T(UiCopy.LabsStripTitle)</h2>
-            <p class="section-lead">@T(UiCopy.LabsStripLead)</p>
-            <a class="mt-4 inline-block text-signal hover:underline" href="/Labs">@T(UiCopy.LiveLabs) →</a>
+            <h2 class="section-title">@T(UiCopy.Presence)</h2>
+            <p class="section-lead">@T(UiCopy.PresenceLead)</p>
         </div>
-    </div>
-</section>
-
-<section class="border-t border-line">
-    <div class="mx-auto max-w-6xl px-4 py-16 md:px-6">
-        <partial name="_RecruiterMap" />
+        <div class="mt-8 reveal" style="transition-delay: 80ms">
+            <partial name="_SocialLinks" model="new SocialLinksModel { Profile = profile, Locale = locale, Variant = SocialLinksVariant.Presence }" />
+        </div>
     </div>
 </section>

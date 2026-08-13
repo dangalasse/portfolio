@@ -5,7 +5,6 @@ namespace Portfolio.Data;
 
 /// <summary>
 /// Static portfolio content (pt-BR + en-US). Resolve with <see cref="For"/>.
-/// Featured is curated: product + one DevOps proof. Labs stay in /Labs.
 /// </summary>
 public static class PortfolioCatalog
 {
@@ -14,9 +13,9 @@ public static class PortfolioCatalog
         Name = "Danton Galasse",
         Role = "Infra · SRE & DevOps · Cloud",
         TaglinePtBr =
-            "Infraestrutura de TI, 5 anos. O trabalho principal é operar e entregar sistemas — não colecionar tags. Este site tem um produto (TOTE), uma prova de esteira (Pipeview) e labs Always Free como evidência, não como o cargo.",
+            "Sou um profissional de infraestrutura de TI com 5 anos de experiência na área, atualmente focado em Inteligência Artificial e cultura SRE & DevOps.",
         TaglineEnUs =
-            "IT infrastructure, 5 years. The actual job is running and shipping systems — not collecting tags. This site has one product (TOTE), one CI/CD proof (Pipeview), and Always Free labs as evidence, not as the role.",
+            "I'm an IT infrastructure professional with 5 years of experience, currently focused on Artificial Intelligence and SRE & DevOps culture.",
         Location = "Brasil",
         Email = "danton@galasse.dev",
         LinkedInUrl = "https://www.linkedin.com/in/danton-galasse",
@@ -34,29 +33,14 @@ public static class PortfolioCatalog
         {
             Slug = "tote",
             Title = "TOTE",
-            Kind = ProjectKind.Product,
             Summary =
-                "Sistema de inventário de ativos de TI: patrimônio, custódia, auditoria e whitelabel.",
+                "Plataforma de patrimônio com whitelabel, setup wizard e deploy zero-touch.",
             Description =
-                "Produto full-stack (Next.js + NestJS + PostgreSQL) com bounded contexts, schema EAV, RBAC e deploy por Docker Compose na EC2. Existe um chart Helm em k8s/tote-chart/ — é demonstrativo. Produção neste host é Compose, não Kubernetes.",
+                "Full-stack com bounded contexts, identidade visual configurável e operação em containers. Nest/Next no produto, disciplina de domínio (SDD) e um chart Helm demonstrativo em k8s/tote-chart/.",
             SummaryEn =
-                "IT asset inventory: patrimony, custody, audit, and whitelabel.",
+                "Asset management platform with whitelabel branding, setup wizard, and zero-touch deploy.",
             DescriptionEn =
-                "Full-stack product (Next.js + NestJS + PostgreSQL) with bounded contexts, EAV schema, RBAC, and Docker Compose on EC2. There is a Helm chart under k8s/tote-chart/ — it is demonstrative. Production on this host is Compose, not Kubernetes.",
-            Problem =
-                "Patrimônio de TI espalhado em planilha, sem trilha de quem mudou o quê, e onboarding de cliente que exige logo/cores sem rebuild.",
-            ProblemEn =
-                "IT assets living in spreadsheets, no audit trail, and customer onboarding that needs branding without a rebuild.",
-            HonestLimit =
-                "A porta é o Turnstile. Marque o checkbox: o bootstrap cria um workspace ADMIN efêmero (~2h) e autentica sozinho, sem senha. A tela de login que aparece antes disso é o produto, não o portão.",
-            HonestLimitEn =
-                "The gate is Turnstile. Check the box: bootstrap mints an ephemeral ADMIN workspace (~2h) and signs you in — no password. The login screen before that is the product, not the lock.",
-            VerifyHint =
-                "demo.tote.galasse.dev → checkbox humano → dashboard. Experimente Colunas, Integridade EAV, Identidade. Relatórios/usuários/aprovações ficam ocultos de propósito.",
-            VerifyHintEn =
-                "demo.tote.galasse.dev → human checkbox → dashboard. Try Columns, EAV integrity, Identity. Reports/users/approvals stay hidden on purpose.",
-            LiveCta = "Abrir a vitrine (Turnstile)",
-            LiveCtaEn = "Open the showcase (Turnstile)",
+                "Full-stack with bounded contexts, configurable visual identity, and container ops. Nest/Next in the product, domain discipline (SDD), and a demonstrative Helm chart under k8s/tote-chart/.",
             Stack =
             [
                 "TypeScript",
@@ -66,43 +50,29 @@ public static class PortfolioCatalog
                 "Docker",
                 "Caddy",
                 "AWS EC2",
+                "Helm",
             ],
             Accent = "#3dd6c6",
             LiveUrl = "https://demo.tote.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/TOTE",
             DemoNote =
-                "demo.tote.galasse.dev — checkbox do Turnstile, depois sessão efêmera. Sem senha.",
+                "Vitrine em demo.tote.galasse.dev — workspace isolado por visitante.",
             DemoNoteEn =
-                "demo.tote.galasse.dev — Turnstile checkbox, then an ephemeral session. No password.",
+                "Showcase at demo.tote.galasse.dev — isolated workspace per visitor.",
             Featured = true,
         },
         new ProjectItem
         {
             Slug = "pipeview",
             Title = "Pipeview",
-            Kind = ProjectKind.Proof,
             Summary =
-                "Painel da esteira real: GitHub Actions → Cloudflare Workers, com SHA, ambiente e o run que publicou.",
+                "Painel de uma esteira CI/CD real: GitHub Actions → Cloudflare Workers, com o que foi publicado à vista.",
             Description =
-                "Prova DevOps, não um produto. Lint, typecheck, testes, preview de PR, staging com smoke em /api/health, production por tag. A UI mostra o deploy atual. O último run da demo pode estar vermelho — é o GitHub de verdade, não um print verde.",
+                "Vitrine DevOps: lint, typecheck, testes e build; preview de PR; staging com smoke em /api/health; production via tag/environment. A UI mostra SHA, ambiente e o workflow que publicou o build.",
             SummaryEn =
-                "Dashboard of the real conveyor: GitHub Actions → Cloudflare Workers, with SHA, environment, and the run that shipped.",
+                "A live view of a real CI/CD conveyor: GitHub Actions → Cloudflare Workers, with what shipped in plain sight.",
             DescriptionEn =
-                "DevOps proof, not a product. Lint, typecheck, tests, PR preview, staging smoke on /api/health, production via tag. The UI shows the current deploy. The last demo run may be red — that is real GitHub, not a green screenshot.",
-            Problem =
-                "Portfólio DevOps que só mostra YAML. Aqui a esteira está no ar, com o SHA do build visível.",
-            ProblemEn =
-                "Most DevOps portfolios show YAML. This one shows the live conveyor and the SHA that shipped.",
-            HonestLimit =
-                "A esteira é o último run de live-demo.yml no GitHub — inclusive se o lint quebrar. O card de cima (SHA / PRODUCTION) é o que está publicado. São duas coisas.",
-            HonestLimitEn =
-                "The belt is the last live-demo.yml run on GitHub — including a lint failure. The card above (SHA / PRODUCTION) is what is published. Those are two different things.",
-            VerifyHint =
-                "Card de cima: SHA e workflow que publicaram. Esteira: último live-demo. Se a esteira estiver vermelha, abra o run no GitHub — é o job real.",
-            VerifyHintEn =
-                "Top card: SHA and the workflow that shipped. Belt: last live-demo. If the belt is red, open the GitHub run — that is the real job.",
-            LiveCta = "Abrir o painel (run real)",
-            LiveCtaEn = "Open the dashboard (real run)",
+                "DevOps showcase: lint, typecheck, tests, and build; PR preview; staging with /api/health smoke; production via tag/environment. The UI shows SHA, environment, and the workflow that shipped the build.",
             Stack =
             [
                 "GitHub Actions",
@@ -117,96 +87,65 @@ public static class PortfolioCatalog
             LiveUrl = "https://pipeview.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/pipeline-pulse",
             DemoNote =
-                "pipeview.galasse.dev — staging em staging.pipeview.galasse.dev. O run pode estar vermelho.",
+                "Disponível em pipeview.galasse.dev — a aba Actions do repositório também vale a visita.",
             DemoNoteEn =
-                "pipeview.galasse.dev — staging at staging.pipeview.galasse.dev. The run may be red.",
+                "Available at pipeview.galasse.dev — the repo Actions tab is worth a look too.",
             Featured = true,
         },
         new ProjectItem
         {
             Slug = "edge-status",
             Title = "Edge Status Lab",
-            Kind = ProjectKind.Lab,
             Summary =
-                "Worker Cloudflare que devolve região e cf-ray. Evidência de probe, não um produto.",
+                "Worker Cloudflare que devolve região, cf-ray e latência — o probe que alimenta a página Labs.",
             Description =
-                "Lab mínimo: o frontend consulta o Worker e mostra região/latência. Se o container não tiver a URL, cai no probe ASP.NET deste site. Os dois estados são honestos — o pill não finge Cloudflare quando a origem é local.",
+                "Mini-lab ligado à página Labs: o frontend TypeScript consulta um endpoint e mostra os indicadores. Enquanto o Worker não estiver deployado, o probe ASP.NET responde localmente.",
             SummaryEn =
-                "Cloudflare Worker that returns region and cf-ray. Probe evidence, not a product.",
+                "Cloudflare Worker that returns region, cf-ray, and latency — the probe behind the Labs page.",
             DescriptionEn =
-                "Minimal lab: the frontend hits the Worker and shows region/latency. If the container has no URL, it falls back to this site's ASP.NET probe. Both states are honest — the pill does not pretend to be Cloudflare when the origin is local.",
-            HonestLimit =
-                "Isto prova um GET na edge. Não prova SRE.",
-            HonestLimitEn =
-                "This proves a GET at the edge. It does not prove SRE.",
-            VerifyHint =
-                "Olhe o pill no topo. Se disser Cloudflare, o Worker respondeu. Se disser probe ASP.NET, o fallback está no ar.",
-            VerifyHintEn =
-                "Look at the status pill. Cloudflare means the Worker answered. ASP.NET probe means the fallback is live.",
+                "Mini-lab wired to the Labs page: the TypeScript frontend hits an endpoint and shows the indicators. Until the Worker is deployed, the ASP.NET probe answers locally.",
             Stack = ["Cloudflare Workers", "TypeScript", "ASP.NET Core"],
             Accent = "#f6821f",
             LiveUrl = "/Labs",
             RepoUrl = "https://github.com/dangalasse/portfolio/tree/main/workers/edge-status",
-            DemoNote = "Indicador no topo desta página e em /Labs.",
-            DemoNoteEn = "Status pill on this page and on /Labs.",
-            Featured = false,
+            DemoNote = "Indicador ao vivo na página Labs.",
+            DemoNoteEn = "Live indicator on the Labs page.",
+            Featured = true,
         },
         new ProjectItem
         {
             Slug = "aws-static-demo",
             Title = "AWS Static Demo",
-            Kind = ProjectKind.Lab,
             Summary =
-                "Página estática atrás de S3 privado + CloudFront OAC, via Terraform. Lab, não produto.",
+                "Asset estático via S3 + CloudFront (OAC), provisionado com Terraform.",
             Description =
-                "Fatia mínima de AWS: bucket sem acesso público, Origin Access Control, CloudFront PriceClass_100, ACM. Se a página abre, DNS + TLS + OAC fecharam. Não há app por trás — é o HTML que o IaC publica.",
+                "Fatia mínima de AWS para o CV: bucket privado, Origin Access Control, CloudFront PriceClass_100. Objetivo: mostrar IaC Free Tier de forma enxuta.",
             SummaryEn =
-                "Static page behind private S3 + CloudFront OAC, via Terraform. A lab, not a product.",
+                "Static asset via S3 + CloudFront (OAC), provisioned with Terraform.",
             DescriptionEn =
-                "Minimal AWS slice: no public bucket access, Origin Access Control, CloudFront PriceClass_100, ACM. If the page loads, DNS + TLS + OAC closed. There is no app behind it — it is the HTML the IaC publishes.",
-            HonestLimit =
-                "Dois parágrafos no ar. A prova é o caminho IaC, não a UI. Leia a página humana em /Labs/Static antes do HTML cru.",
-            HonestLimitEn =
-                "Two paragraphs on the wire. The proof is the IaC path, not the UI. Read the human page at /Labs/Static before the raw HTML.",
-            VerifyHint =
-                "Terraform no repo aws-static-demo: block_public_acls, OAC, PriceClass_100.",
-            VerifyHintEn =
-                "Terraform in aws-static-demo: block_public_acls, OAC, PriceClass_100.",
-            LiveCta = "Ver a explicação",
-            LiveCtaEn = "Read the explanation",
+                "Minimal AWS slice for a resume: private bucket, Origin Access Control, CloudFront PriceClass_100. Goal: show Free Tier IaC without extra moving parts.",
             Stack = ["AWS S3", "CloudFront", "Terraform", "OAC"],
             Accent = "#ff9900",
-            LiveUrl = "/Labs/Static",
+            LiveUrl = "https://static.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/aws-static-demo",
             DemoNote =
-                "HTML cru em static.galasse.dev — a página deste site traduz o que aquilo prova.",
+                "Live em static.galasse.dev (S3 privado + CloudFront OAC + ACM). Terraform no GitHub.",
             DemoNoteEn =
-                "Raw HTML at static.galasse.dev — this site's page translates what that proves.",
-            Featured = false,
+                "Live at static.galasse.dev (private S3 + CloudFront OAC + ACM). Terraform on GitHub.",
+            Featured = true,
         },
         new ProjectItem
         {
             Slug = "aws-ops-labs",
             Title = "AWS Ops Labs",
-            Kind = ProjectKind.Lab,
             Summary =
-                "Lambda que pinga as superfícies ao vivo a cada 5 minutos e grava DynamoDB. JSON, não dashboard.",
+                "Probe Always Free: Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom.",
             Description =
-                "Lab Always Free: Function URL (sem API Gateway), DynamoDB PAY_PER_REQUEST com TTL 7d, EventBridge rate(5 minutes), KMS GenerateRandom sem CMK. GET /status é JSON cru. A página /Labs/Ops traduz isso para humano.",
+                "Lab público sem CMK e sem API Gateway. A cada 5 minutos a Lambda testa as superfícies ao vivo, grava o resultado no DynamoDB (TTL 7d) e emite métricas EMF. GET /kms/random pede entropia ao KMS sem chave gerenciada ($1/mês evitado).",
             SummaryEn =
-                "Lambda that pings live surfaces every 5 minutes and writes DynamoDB. JSON, not a dashboard.",
+                "Always Free probe: Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom.",
             DescriptionEn =
-                "Always Free lab: Function URL (no API Gateway), DynamoDB PAY_PER_REQUEST with 7-day TTL, EventBridge rate(5 minutes), KMS GenerateRandom with no CMK. GET /status is raw JSON. /Labs/Ops translates it for a human.",
-            HonestLimit =
-                "Não é monitoramento de produção. É um probe Free Tier. Grafana deste portfólio continua privado.",
-            HonestLimitEn =
-                "This is not production monitoring. It is a Free Tier probe. Grafana for this portfolio stays private.",
-            VerifyHint =
-                "Abra /Labs/Ops: tabela de labs, HTTP, latência, último check. JSON cru no link.",
-            VerifyHintEn =
-                "Open /Labs/Ops: lab table, HTTP, latency, last check. Raw JSON is linked.",
-            LiveCta = "Ver o status em tabela",
-            LiveCtaEn = "See status as a table",
+                "Public lab with no CMK and no API Gateway. Every 5 minutes Lambda checks live surfaces, writes DynamoDB (7-day TTL), and emits EMF metrics. GET /kms/random pulls HSM entropy without a customer-managed key ($1/mo avoided).",
             Stack =
             [
                 "AWS Lambda",
@@ -217,69 +156,49 @@ public static class PortfolioCatalog
                 "CloudFormation",
             ],
             Accent = "#ff9900",
-            LiveUrl = "/Labs/Ops",
+            LiveUrl = "https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status",
             RepoUrl = "https://github.com/dangalasse/portfolio/tree/main/labs/always-free",
             DemoNote =
-                "Function URL pública continua no ar; esta página é a leitura humana.",
+                "GET /status, POST /probe, GET /kms/random — CloudFormation em labs/always-free.",
             DemoNoteEn =
-                "The public Function URL is still live; this page is the human reading.",
-            Featured = false,
+                "GET /status, POST /probe, GET /kms/random — CloudFormation under labs/always-free.",
+            Featured = true,
         },
         new ProjectItem
         {
             Slug = "edge-labs",
-            Title = "Edge Labs",
-            Kind = ProjectKind.Lab,
+            Title = "Edge Labs (LLMOps)",
             Summary =
-                "Playground de inferência no Workers AI: cola um erro, recebe JSON. Não é LLMOps de produção.",
+                "Worker Cloudflare que analisa logs de erro com Workers AI (Free Tier) e Gemini opcional.",
             Description =
-                "Worker Cloudflare chama Llama (fp8) no Free Tier e devolve summary, likelyCause, suggestedFix, provider, model, analyzedAt. Gemini só entra se o secret existir — hoje não está configurado, então não está na stack. Abas SDD/DDD/TDD são prompts, não disciplinas implementadas.",
+                "LLMOps no edge: POST /analyze-error → Workers AI (llama fp8) ou Gemini → summary, likelyCause, suggestedFix. Domínio edge.galasse.dev. API keys só via wrangler secret.",
             SummaryEn =
-                "Workers AI inference playground: paste an error, get JSON. Not production LLMOps.",
+                "Cloudflare Worker that analyzes error logs with Workers AI (Free Tier) and optional Gemini.",
             DescriptionEn =
-                "A Cloudflare Worker calls Llama (fp8) on the Free Tier and returns summary, likelyCause, suggestedFix, provider, model, analyzedAt. Gemini only appears if the secret exists — it is not configured today, so it is not on the stack. SDD/DDD/TDD tabs are prompts, not implemented disciplines.",
-            HonestLimit =
-                "Isto prova que uma inferência rodou na edge. Não prova treino, eval, RAG, agente ou operação de modelo.",
-            HonestLimitEn =
-                "This proves one inference ran at the edge. It does not prove training, evals, RAG, agents, or model ops.",
-            VerifyHint =
-                "edge.galasse.dev — complete o Turnstile, analise, confira provider/model/analyzedAt. /health diz workers-ai.",
-            VerifyHintEn =
-                "edge.galasse.dev — complete Turnstile, analyze, check provider/model/analyzedAt. /health says workers-ai.",
-            LiveCta = "Abrir o playground",
-            LiveCtaEn = "Open the playground",
-            Stack = ["Cloudflare Workers", "Workers AI", "TypeScript", "Wrangler"],
+                "Edge LLMOps: POST /analyze-error → Workers AI (llama fp8) or Gemini → summary, likelyCause, suggestedFix. Domain edge.galasse.dev. API keys only via wrangler secret.",
+            Stack = ["Cloudflare Workers", "Workers AI", "TypeScript", "Gemini", "Wrangler"],
             Accent = "#8b5cf6",
             LiveUrl = "https://edge.galasse.dev/",
             RepoUrl = "https://github.com/dangalasse/edge-labs",
             DemoNote =
-                "Turnstile na frente. Gemini não está ligado. O JSON muda analyzedAt a cada chamada.",
+                "Em edge.galasse.dev pode experimentar o Analyze live. A resposta JSON traz provider, model e analyzedAt. Hoje: Workers AI; Gemini quando o secret GEMINI_API_KEY existir.",
             DemoNoteEn =
-                "Turnstile in front. Gemini is not on. analyzedAt changes every call.",
-            Featured = false,
+                "At edge.galasse.dev you can try Analyze live. The JSON includes provider, model, and analyzedAt. Today: Workers AI; Gemini when the GEMINI_API_KEY secret is set.",
+            Featured = true,
         },
         new ProjectItem
         {
             Slug = "portfolio",
             Title = "Este portfólio",
             TitleEn = "This portfolio",
-            Kind = ProjectKind.Lab,
             Summary =
-                "O site que você está lendo: ASP.NET Core, Caddy, ECR, Ansible. É o veículo, não o produto.",
+                "ASP.NET Core Razor Pages + TypeScript + Tailwind — site de CV que também hospeda os labs.",
             Description =
-                "Razor Pages + TypeScript + Tailwind na EC2 atrás do Caddy. CI: Actions → ECR → Ansible. Observabilidade: OTEL → Alloy → Grafana Cloud (Grafana não é público). Este projeto existe para hospedar o CV e os labs.",
+                "Site de CV com projetos, labs Cloudflare/AWS e links LinkedIn/GitHub. Assets via npm (esbuild + Tailwind v4), na EC2 atrás do Caddy com DNS Cloudflare. CI: Actions → ECR → Ansible. Observabilidade: OTEL → Alloy → Grafana Cloud.",
             SummaryEn =
-                "The site you are reading: ASP.NET Core, Caddy, ECR, Ansible. The vehicle, not the product.",
+                "ASP.NET Core Razor Pages + TypeScript + Tailwind — resume site that also hosts the labs.",
             DescriptionEn =
-                "Razor Pages + TypeScript + Tailwind on EC2 behind Caddy. CI: Actions → ECR → Ansible. Observability: OTEL → Alloy → Grafana Cloud (Grafana is not public). This project exists to host the resume and the labs.",
-            HonestLimit =
-                "Não é o produto. É o site do CV. ASP.NET está aqui porque este host já opera .NET — não porque o TOTE seja .NET.",
-            HonestLimitEn =
-                "Not the product. The resume site. ASP.NET is here because this host already runs .NET — not because TOTE is .NET.",
-            VerifyHint =
-                "ansible/ no repo, workflow deploy.yml, Dockerfile. O fluxo de arquitetura está abaixo se você quiser o desenho.",
-            VerifyHintEn =
-                "ansible/ in the repo, deploy.yml workflow, Dockerfile. The architecture flow is below if you want the drawing.",
+                "Resume site with projects, Cloudflare/AWS labs, and LinkedIn/GitHub links. Assets via npm (esbuild + Tailwind v4), on EC2 behind Caddy with Cloudflare DNS. CI: Actions → ECR → Ansible. Observability: OTEL → Alloy → Grafana Cloud.",
             Stack =
             [
                 "ASP.NET Core 8",
@@ -293,8 +212,10 @@ public static class PortfolioCatalog
             Accent = "#9db0bb",
             LiveUrl = "https://portfolio.galasse.dev",
             RepoUrl = "https://github.com/dangalasse/portfolio",
-            DemoNote = "Você já está na demo.",
-            DemoNoteEn = "You are already on the demo.",
+            DemoNote =
+                "Este próprio site é a demo — o fluxo de arquitetura aparece mais abaixo.",
+            DemoNoteEn =
+                "This site is the live demo — the architecture flow appears further down.",
             Featured = false,
         },
     ];
@@ -307,12 +228,12 @@ public static class PortfolioCatalog
             Title = "Cloudflare Edge",
             Provider = "Cloudflare",
             Description =
-                "Workers e DNS. Pipeview é a prova de esteira. Edge Labs é um playground de inferência — não LLMOps de produção.",
+                "Workers e DNS: Pipeview e Edge Labs (LLMOps em edge.galasse.dev — / e /coach).",
             DescriptionEn =
-                "Workers and DNS. Pipeview is the conveyor proof. Edge Labs is an inference playground — not production LLMOps.",
+                "Workers and DNS: Pipeview and Edge Labs (LLMOps at edge.galasse.dev — / and /coach).",
             Proof = "pipeview.galasse.dev · edge.galasse.dev",
             ProofEn = "pipeview.galasse.dev · edge.galasse.dev",
-            DocsUrl = "https://pipeview.galasse.dev",
+            DocsUrl = "https://edge.galasse.dev/",
         },
         new LabIndicator
         {
@@ -320,11 +241,11 @@ public static class PortfolioCatalog
             Title = "GitHub Actions",
             Provider = "GitHub",
             Description =
-                "CI/CD público no Pipeview: CI, preview, staging, production. O run visível pode estar vermelho.",
+                "CI/CD público no Pipeview — CI, preview, staging e production.",
             DescriptionEn =
-                "Public CI/CD on Pipeview: CI, preview, staging, production. The visible run may be red.",
-            Proof = "dangalasse/pipeline-pulse/actions",
-            ProofEn = "dangalasse/pipeline-pulse/actions",
+                "Public CI/CD on Pipeview — CI, preview, staging, and production.",
+            Proof = "Runs em dangalasse/pipeline-pulse/actions.",
+            ProofEn = "Runs at dangalasse/pipeline-pulse/actions.",
             DocsUrl = "https://github.com/dangalasse/pipeline-pulse/actions",
         },
         new LabIndicator
@@ -333,12 +254,12 @@ public static class PortfolioCatalog
             Title = "AWS Surface",
             Provider = "AWS",
             Description =
-                "S3+CloudFront (OAC) e o probe Lambda. Páginas humanas em /Labs/Static e /Labs/Ops — o HTML/JSON crus são o anexo.",
+                "S3+CloudFront (static.galasse.dev) e o probe Always Free (Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom).",
             DescriptionEn =
-                "S3+CloudFront (OAC) and the Lambda probe. Human pages at /Labs/Static and /Labs/Ops — raw HTML/JSON are the appendix.",
-            Proof = "/Labs/Static · /Labs/Ops",
-            ProofEn = "/Labs/Static · /Labs/Ops",
-            DocsUrl = "/Labs/Ops",
+                "S3+CloudFront (static.galasse.dev) and the Always Free probe (Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom).",
+            Proof = "static.galasse.dev · Lambda Function URL /status",
+            ProofEn = "static.galasse.dev · Lambda Function URL /status",
+            DocsUrl = "https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status",
         },
         new LabIndicator
         {
@@ -346,11 +267,11 @@ public static class PortfolioCatalog
             Title = "Observability",
             Provider = "Grafana · OTEL",
             Description =
-                "OTEL do ASP.NET → Alloy → Grafana Cloud no host. Grafana não é público. A prova visível é o probe desta página e /Labs/Ops.",
+                "No host: OpenTelemetry do ASP.NET → Alloy → Grafana Cloud. Node Exporter via Ansible. Grafana não é público.",
             DescriptionEn =
-                "ASP.NET OTEL → Alloy → Grafana Cloud on the host. Grafana is not public. Visible proof is this page's probe and /Labs/Ops.",
-            Proof = "Probe nesta página · ansible/roles/observability",
-            ProofEn = "Probe on this page · ansible/roles/observability",
+                "On the host: ASP.NET OpenTelemetry → Alloy → Grafana Cloud. Node Exporter via Ansible. Grafana is not public.",
+            Proof = "Probe Edge Status nesta página · ansible/roles/observability",
+            ProofEn = "Edge Status probe on this page · ansible/roles/observability",
             DocsUrl = "https://github.com/dangalasse/portfolio/tree/main/ansible/roles/observability",
         },
     ];
@@ -370,10 +291,6 @@ public static class PortfolioCatalog
                 Summary = en ? (p.SummaryEn ?? p.Summary) : p.Summary,
                 Description = en ? (p.DescriptionEn ?? p.Description) : p.Description,
                 DemoNote = en ? (p.DemoNoteEn ?? p.DemoNote) : p.DemoNote,
-                Problem = en ? (p.ProblemEn ?? p.Problem) : p.Problem,
-                HonestLimit = en ? (p.HonestLimitEn ?? p.HonestLimit) : p.HonestLimit,
-                VerifyHint = en ? (p.VerifyHintEn ?? p.VerifyHint) : p.VerifyHint,
-                LiveCta = en ? (p.LiveCtaEn ?? p.LiveCta) : p.LiveCta,
             })
             .ToList();
 

@@ -5,10 +5,12 @@
 @using Portfolio.Models
 @{
     var locale = Locale.Current(ViewContext.HttpContext);
-    var profile = SiteFacts.WithPublishedCv(ViewContext.HttpContext, PortfolioCatalog.For(locale).Profile);
+    var profile = PortfolioCatalog.For(locale).Profile;
     ViewData["Title"] = UiCopy.AboutTitle.Resolve(locale);
     ViewData["Description"] = UiCopy.MetaAbout.Resolve(locale);
-    var en = AppLocales.IsEnglish(locale);
+    var aboutBody = AppLocales.IsEnglish(locale)
+        ? "I work on infrastructure, SRE, DevOps, and cloud — mostly ASP.NET Core, TypeScript, Cloudflare, and AWS. This site is where I keep the live pieces: Free Tier demos (S3/CloudFront, Workers AI, Actions→Workers) and public repos with Terraform, Ansible, Helm, and OpenTelemetry."
+        : "Trabalho com infraestrutura, SRE, DevOps e cloud — principalmente ASP.NET Core, TypeScript, Cloudflare e AWS. Este site é onde deixo as peças ao vivo: demos Free Tier (S3/CloudFront, Workers AI, Actions→Workers) e repos públicos com Terraform, Ansible, Helm e OpenTelemetry.";
 }
 
 <section class="mx-auto max-w-3xl px-4 py-16 md:px-6">
@@ -17,40 +19,17 @@
         <p class="section-lead">@profile.Tagline</p>
     </div>
     <div class="reveal mt-10 space-y-4 text-mist leading-relaxed" style="transition-delay: 80ms">
-        @if (en)
-        {
-            <p>
-                I work on infrastructure, SRE, DevOps, and cloud. The product in this portfolio is
-                <a class="text-signal hover:underline" href="/Projects/tote">TOTE</a>
-                (TypeScript). This site is ASP.NET because the host already runs .NET — that is operations, not a claim that TOTE is a .NET app.
-            </p>
-            <p>
-                I am not presenting myself as an AI developer here. There is a Workers AI playground under
-                <a class="text-signal hover:underline" href="https://edge.galasse.dev/" target="_blank" rel="noopener noreferrer">edge.galasse.dev</a>.
-                That proves an inference call. It does not prove training, evals, or model operations.
-            </p>
-            <p>
-                I do not invent workplace impact on this page. LinkedIn and GitHub are the employment and code records.
-                This site is the live evidence hub — and it now says what is product, what is proof, and what is a lab.
-            </p>
-        }
-        else
-        {
-            <p>
-                Trabalho com infraestrutura, SRE, DevOps e cloud. O produto neste portfólio é o
-                <a class="text-signal hover:underline" href="/Projects/tote">TOTE</a>
-                (TypeScript). Este site é ASP.NET porque o host já opera .NET — isso é operação, não a afirmação de que o TOTE é um app .NET.
-            </p>
-            <p>
-                Não me apresento aqui como IA developer. Existe um playground de Workers AI em
-                <a class="text-signal hover:underline" href="https://edge.galasse.dev/" target="_blank" rel="noopener noreferrer">edge.galasse.dev</a>.
-                Isso prova uma chamada de inferência. Não prova treino, eval nem operação de modelo.
-            </p>
-            <p>
-                Não invento impacto de emprego nesta página. LinkedIn e GitHub são o registro profissional e o código.
-                Este site é o hub de evidência ao vivo — e agora diz o que é produto, o que é prova e o que é lab.
-            </p>
-        }
+        <p>@aboutBody</p>
+        <p>
+            @UiCopy.RecruiterStrip.Resolve(locale)
+            <a class="text-signal hover:underline" href="https://github.com/dangalasse/portfolio/blob/main/docs/RECRUITER.md" target="_blank" rel="noopener noreferrer">docs/RECRUITER.md</a>
+            ·
+            <a class="text-signal hover:underline" href="https://static.galasse.dev" target="_blank" rel="noopener noreferrer">static.galasse.dev</a>
+            ·
+            <a class="text-signal hover:underline" href="https://edge.galasse.dev/health" target="_blank" rel="noopener noreferrer">edge.galasse.dev</a>
+            ·
+            <a class="text-signal hover:underline" href="https://pipeview.galasse.dev" target="_blank" rel="noopener noreferrer">pipeview.galasse.dev</a>
+        </p>
         <p>
             @UiCopy.Location.Resolve(locale): @profile.Location.
             @UiCopy.Contact.Resolve(locale): <a class="text-signal hover:underline" href="mailto:@profile.Email">@profile.Email</a>.
@@ -58,8 +37,5 @@
     </div>
     <div class="reveal mt-10" style="transition-delay: 140ms">
         <partial name="_SocialLinks" model="new SocialLinksModel { Profile = profile, Locale = locale, Variant = SocialLinksVariant.About }" />
-    </div>
-    <div class="mt-16 border-t border-line pt-12">
-        <partial name="_RecruiterMap" />
     </div>
 </section>

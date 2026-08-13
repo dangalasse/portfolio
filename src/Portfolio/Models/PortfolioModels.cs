@@ -1,17 +1,5 @@
 namespace Portfolio.Models;
 
-public enum ProjectKind
-{
-    /// <summary>A real product with domain, not a lab.</summary>
-    Product,
-
-    /// <summary>Live proof of an operations practice (CI/CD, etc.).</summary>
-    Proof,
-
-    /// <summary>Always Free / edge evidence. Not the main work.</summary>
-    Lab,
-}
-
 public sealed record SiteProfile
 {
     public required string Name { get; init; }
@@ -43,15 +31,6 @@ public sealed record ProjectItem
     public string? DemoNote { get; init; }
     public string? DemoNoteEn { get; init; }
     public bool Featured { get; init; }
-    public ProjectKind Kind { get; init; } = ProjectKind.Lab;
-    public string? Problem { get; init; }
-    public string? ProblemEn { get; init; }
-    public string? HonestLimit { get; init; }
-    public string? HonestLimitEn { get; init; }
-    public string? VerifyHint { get; init; }
-    public string? VerifyHintEn { get; init; }
-    public string? LiveCta { get; init; }
-    public string? LiveCtaEn { get; init; }
 }
 
 public sealed record LabIndicator
