@@ -27,7 +27,9 @@ public class DetailsModel : PageModel
         }
 
         Project = project;
-        Architecture = ArchitectureCatalog.ForProject(slug, locale);
+        Architecture = project.Kind is ProjectKind.Product or ProjectKind.Proof
+            ? ArchitectureCatalog.ForProject(slug, locale)
+            : null;
         return Page();
     }
 }

@@ -1,28 +1,49 @@
 @page
-@model Portfolio.Pages.Projects.IndexModel
 @using Portfolio.Data
 @using Portfolio.I18n
+@using Portfolio.Models
 @{
     var locale = Locale.Current(ViewContext.HttpContext);
     var catalog = PortfolioCatalog.For(locale);
     ViewData["Title"] = UiCopy.ProjectsTitle.Resolve(locale);
     ViewData["Description"] = UiCopy.MetaProjects.Resolve(locale);
+    string T(L text) => text.Resolve(locale);
+
+    var groups = new (L Title, IReadOnlyList<ProjectItem> Items, bool Compact)[]
+    {
+        (UiCopy.GroupProduct, catalog.Projects.Where(p => p.Kind == ProjectKind.Product).ToList(), false),
+        (UiCopy.GroupProof, catalog.Projects.Where(p => p.Kind == ProjectKind.Proof).ToList(), false),
+        (UiCopy.GroupLabs, catalog.Projects.Where(p => p.Kind == ProjectKind.Lab).ToList(), true),
+    };
 }
 
 <section class="mx-auto max-w-6xl px-4 py-16 md:px-6">
     <div class="reveal">
-        <h1 class="section-title">@UiCopy.ProjectsTitle.Resolve(locale)</h1>
-        <p class="section-lead">@UiCopy.ProjectsLead.Resolve(locale)</p>
+        <h1 class="section-title">@T(UiCopy.ProjectsTitle)</h1>
+        <p class="section-lead">@T(UiCopy.ProjectsLead)</p>
     </div>
-    <div class="mt-12 grid gap-4 md:grid-cols-2">
-        @foreach (var project in catalog.Projects)
+
+    @foreach (var group in groups)
+    {
+        if (group.Items.Count == 0)
         {
-            <a href="/Projects/@project.Slug" class="project-tile group reveal p-6">
-                <div class="mb-6 h-1 w-12" style="background: @project.Accent"></div>
-                <h2 class="font-display text-2xl font-semibold text-paper group-hover:text-signal transition-colors">@project.Title</h2>
-                <p class="mt-3 text-sm leading-relaxed text-mist">@project.Summary</p>
-                <p class="mt-6 font-mono text-xs uppercase tracking-wider text-mist/80">@string.Join(" · ", project.Stack)</p>
-            </a>
+            continue;
         }
-    </div>
+        <h2 class="reveal mt-14 font-mono text-xs uppercase tracking-[0.18em] text-signal">@T(group.Title)</h2>
+        <div class="mt-4 grid gap-4 @(group.Compact ? "md:grid-cols-2" : "md:grid-cols-1")">
+            @foreach (var project in group.Items)
+            {
+                <a href="/Projects/@project.Slug" class="project-tile group reveal p-6">
+                    <p class="font-mono text-[11px] uppercase tracking-wider text-mist">@T(UiCopy.ForKind(project.Kind))</p>
+                    <h3 class="mt-2 font-display text-2xl font-semibold text-paper group-hover:text-signal transition-colors">@project.Title</h3>
+                    <p class="mt-3 text-sm leading-relaxed text-mist">@(project.Problem ?? project.Summary)</p>
+                    @if (!group.Compact && !string.IsNullOrWhiteSpace(project.HonestLimit))
+                    {
+                        <p class="mt-4 text-xs leading-relaxed text-mist/90">@project.HonestLimit</p>
+                    }
+                    <p class="mt-6 font-mono text-xs uppercase tracking-wider text-mist/80">@string.Join(" · ", group.Compact ? project.Stack.Take(4) : project.Stack)</p>
+                </a>
+            }
+        </div>
+    }
 </section>

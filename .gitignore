@@ -64,6 +64,7 @@ ansible/group_vars/secrets.yml
 # Local
 *.swp
 *~
+.review-shots/
 
 workers/edge-status/dist/
 workers/edge-status/node_modules/

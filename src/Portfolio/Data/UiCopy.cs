@@ -1,4 +1,5 @@
 using Portfolio.I18n;
+using Portfolio.Models;
 
 namespace Portfolio.Data;
 
@@ -11,39 +12,64 @@ public static class UiCopy
     public static readonly L NavAbout = new("Sobre", "About");
     public static readonly L NavMenu = new("Menu", "Menu");
     public static readonly L NavMainAria = new("Principal", "Primary");
-    public static readonly L SeeProjects = new("Explorar projetos", "Explore projects");
-    public static readonly L LiveLabs = new("Conhecer os labs", "Visit the labs");
+    public static readonly L SeeProjects = new("Ver o produto e a prova", "See the product and the proof");
+    public static readonly L LiveLabs = new("Labs (evidência)", "Labs (evidence)");
     public static readonly L DownloadCv = new("Baixar CV", "Download CV");
     public static readonly L StackInUse = new("Stack deste site", "Stack behind this site");
-    public static readonly L FeaturedProjects = new("Projetos em destaque", "Featured work");
+    public static readonly L FeaturedProjects = new("O que importa", "What matters");
     public static readonly L FeaturedLead = new(
-        "Uma seleção com demos públicas — explore quando quiser.",
-        "A short selection with public demos — explore whenever you like.");
-    public static readonly L AllProjects = new("Ver todos os projetos →", "See all projects →");
+        "Dois itens, de propósito. O resto é lab e fica em Labs.",
+        "Two items, on purpose. Everything else is a lab and lives under Labs.");
+    public static readonly L AllProjects = new("Lista completa, agrupada →", "Full list, grouped →");
     public static readonly L Presence = new("Onde me encontrar", "Where to find me");
     public static readonly L PresenceLead = new(
-        "GitHub, LinkedIn, e-mail e CV — ícones com a cor de cada plataforma.",
-        "GitHub, LinkedIn, email, and CV — icons tinted to each platform on hover.");
+        "GitHub, LinkedIn e e-mail. CV só aparece quando o PDF estiver neste site.",
+        "GitHub, LinkedIn, and email. CV only shows when the PDF is on this site.");
+    public static readonly L KindProduct = new("Produto", "Product");
+    public static readonly L KindProof = new("Prova DevOps", "DevOps proof");
+    public static readonly L KindLab = new("Lab — evidência", "Lab — evidence");
+    public static readonly L Problem = new("Problema", "Problem");
+    public static readonly L HonestLimit = new("Limite honesto", "Honest limit");
+    public static readonly L Verify = new("O que verificar", "What to verify");
+    public static readonly L RecruiterMapTitle = new("Mapa em 5 minutos", "5-minute map");
+    public static readonly L RecruiterMapLead = new(
+        "Se você está filtrando a vaga, leia isto antes de clicar em tudo.",
+        "If you are screening the role, read this before clicking everything.");
+    public static readonly L LabsStripTitle = new("Labs", "Labs");
+    public static readonly L LabsStripLead = new(
+        "Always Free e edge. Evidência de que as superfícies existem — não o trabalho principal.",
+        "Always Free and edge. Evidence the surfaces exist — not the main work.");
+    public static readonly L ProbeAspnet = new("Probe ASP.NET (fallback)", "ASP.NET probe (fallback)");
+    public static readonly L ProbeCloudflare = new("Worker Cloudflare", "Cloudflare Worker");
+    public static readonly L GroupProduct = new("Produto", "Product");
+    public static readonly L GroupProof = new("Prova", "Proof");
+    public static readonly L GroupLabs = new("Labs", "Labs");
     public static readonly L SocialNavAria = new("Redes e perfil", "Social profiles");
     public static readonly L SocialHeroAria = new("Links rápidos", "Quick links");
     public static readonly L SocialFooterAria = new("Links no rodapé", "Footer links");
 
     public static readonly L MetaHome = new(
-        "Portfólio de Danton Galasse — infraestrutura, SRE, DevOps e IA, com labs ao vivo na Cloudflare e AWS.",
-        "Danton Galasse portfolio — infrastructure, SRE, DevOps, and AI, with live Cloudflare and AWS labs.");
+        "Danton Galasse — infraestrutura, SRE e DevOps. Um produto (TOTE), uma prova de esteira (Pipeview), labs como evidência.",
+        "Danton Galasse — infrastructure, SRE, and DevOps. One product (TOTE), one CI/CD proof (Pipeview), labs as evidence.");
     public static readonly L MetaProjects = new(
-        "Projetos de infraestrutura, SRE e cloud com demos públicas e código aberto.",
-        "Infrastructure, SRE, and cloud projects with public demos and open source.");
+        "TOTE (produto), Pipeview (prova CI/CD) e labs Always Free — separados de propósito.",
+        "TOTE (product), Pipeview (CI/CD proof), and Always Free labs — separated on purpose.");
     public static readonly L MetaLabs = new(
-        "Labs ao vivo: Pipeview, Edge Labs, AWS Static, AWS Ops Labs e status probes.",
-        "Live labs: Pipeview, Edge Labs, AWS Static, AWS Ops Labs, and status probes.");
+        "Labs: probes, S3+OAC e um playground de inferência. Evidência, não o cargo.",
+        "Labs: probes, S3+OAC, and an inference playground. Evidence, not the job.");
     public static readonly L MetaAbout = new(
-        "Sobre Danton Galasse — contato, localização e mapa para recrutadores.",
-        "About Danton Galasse — contact, location, and a map for recruiters.");
+        "Sobre Danton Galasse — o que este site é, o que não é, e como revisar em 5 minutos.",
+        "About Danton Galasse — what this site is, what it is not, and how to review in 5 minutes.");
+    public static readonly L MetaOps = new(
+        "AWS Ops Labs em tabela: último ping de cada superfície. JSON cru no anexo.",
+        "AWS Ops Labs as a table: last ping per surface. Raw JSON in the appendix.");
+    public static readonly L MetaStatic = new(
+        "O que static.galasse.dev prova: S3 privado, CloudFront OAC, Terraform.",
+        "What static.galasse.dev proves: private S3, CloudFront OAC, Terraform.");
     public static readonly L ProjectsTitle = new("Projetos", "Projects");
     public static readonly L ProjectsLead = new(
-        "Produto, labs e demos — com a stack à vista e, quando possível, um ambiente ao vivo.",
-        "Product work, labs, and demos — stack listed, with a live surface when one exists.");
+        "Agrupado: produto, prova, labs. Labs não competem com o produto na mesma prateleira.",
+        "Grouped: product, proof, labs. Labs do not sit on the same shelf as the product.");
     public static readonly L Context = new("Contexto", "Context");
     public static readonly L Stack = new("Stack", "Stack");
     public static readonly L LiveDemo = new("Demo ao vivo", "Live demo");
@@ -64,22 +90,49 @@ public static class UiCopy
     public static readonly L Location = new("Localização", "Location");
     public static readonly L Contact = new("Contato", "Contact");
     public static readonly L RecruiterStrip = new(
-        "Se tiver uns minutos, este mapa pode ajudar a navegar:",
-        "If you have a few minutes, this map can help you find your way:");
+        "Mapa no próprio site — não no GitHub:",
+        "The map lives on this site — not on GitHub:");
     public static readonly L LabsTitle = new("Labs", "Labs");
     public static readonly L LabsLead = new(
-        "Superfícies de edge e cloud ligadas a este site. O status pill no topo atualiza sozinho.",
-        "Edge and cloud surfaces wired into this site. The status pill at the top updates on its own.");
+        "Evidência de superfícies. Nenhum card desta página é o produto.",
+        "Surface evidence. No card on this page is the product.");
     public static readonly L LabsHowTo = new(
-        "Para ligar o Worker Cloudflare: faça deploy de workers/edge-status e defina EDGE_STATUS_URL no container.",
-        "To enable the Cloudflare Worker: deploy workers/edge-status and set EDGE_STATUS_URL on the container.");
+        "O pill acima diz a origem do probe. Cloudflare = Worker. ASP.NET = fallback deste host.",
+        "The pill above states the probe origin. Cloudflare = Worker. ASP.NET = this host's fallback.");
     public static readonly L LabsObservabilityNote = new(
-        "Observabilidade: traces e metrics seguem OTEL → Alloy → Grafana Cloud no host. O Grafana em si não é público — o probe Edge Status nesta página e o AWS Ops Labs (GET /status) são a prova que se pode ver daqui.",
-        "Observability: traces and metrics go OTEL → Alloy → Grafana Cloud on the host. Grafana itself is not public — the Edge Status probe on this page and AWS Ops Labs (GET /status) are the proof you can see from here.");
+        "Observabilidade: OTEL → Alloy → Grafana Cloud no host. Grafana não é público. A prova visível daqui é o pill e a tabela em /Labs/Ops.",
+        "Observability: OTEL → Alloy → Grafana Cloud on the host. Grafana is not public. Visible proof from here is the pill and the table at /Labs/Ops.");
+    public static readonly L LabsProbeLive = new(
+        "Worker Edge Status ao vivo",
+        "Edge Status Worker live");
+    public static readonly L LabsProbeFallback = new(
+        "Fallback ASP.NET no ar",
+        "ASP.NET fallback live");
+    public static readonly L RawJson = new("JSON cru", "Raw JSON");
+    public static readonly L RawHtml = new("HTML no CloudFront", "HTML on CloudFront");
+    public static readonly L OpsTitle = new("AWS Ops Labs", "AWS Ops Labs");
+    public static readonly L OpsLead = new(
+        "A Lambda pinga as superfícies a cada 5 minutos. Abaixo está a última leitura, em tabela. Isto não é um dashboard de produção.",
+        "Lambda pings the surfaces every 5 minutes. Below is the latest reading, as a table. This is not a production dashboard.");
+    public static readonly L StaticTitle = new("AWS Static Demo", "AWS Static Demo");
+    public static readonly L StaticLead = new(
+        "Se static.galasse.dev abre, o caminho Terraform fechou: bucket privado, OAC, CloudFront, ACM. A página em si é um parágrafo de prova — não um produto.",
+        "If static.galasse.dev loads, the Terraform path closed: private bucket, OAC, CloudFront, ACM. The page itself is a proof paragraph — not a product.");
+    public static readonly L OpenRaw = new("Abrir a superfície crua", "Open the raw surface");
+    public static readonly L FetchFailed = new(
+        "Não consegui puxar o JSON agora. O endpoint público continua no link abaixo.",
+        "Could not fetch the JSON just now. The public endpoint is still in the link below.");
     public static readonly L Checking = new("Verificando…", "Checking…");
     public static readonly L LocalePtLabel = new("Português (Brasil)", "Portuguese (Brazil)");
     public static readonly L LocaleEnLabel = new("English (US)", "English (US)");
     public static readonly L SwitchLanguage = new("Idioma", "Language");
+
+    public static L ForKind(ProjectKind kind) => kind switch
+    {
+        ProjectKind.Product => KindProduct,
+        ProjectKind.Proof => KindProof,
+        _ => KindLab,
+    };
 
     public static string Resolve(L text, string locale) => text.Resolve(locale);
 }

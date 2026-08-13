@@ -1,0 +1,30 @@
+@using Portfolio.Data
+@using Portfolio.I18n
+@{
+    var locale = Locale.Current(ViewContext.HttpContext);
+    string T(L text) => text.Resolve(locale);
+    var en = AppLocales.IsEnglish(locale);
+}
+
+<section class="recruiter-map reveal" aria-label="@T(UiCopy.RecruiterMapTitle)">
+    <h2 class="section-title">@T(UiCopy.RecruiterMapTitle)</h2>
+    <p class="section-lead">@T(UiCopy.RecruiterMapLead)</p>
+    <ol class="recruiter-map-list">
+        @if (en)
+        {
+            <li><a href="/Projects/tote">TOTE</a> is the product. Check the Turnstile box — an ephemeral ADMIN workspace is minted. No password.</li>
+            <li><a href="https://pipeview.galasse.dev" target="_blank" rel="noopener noreferrer">Pipeview</a> is the CI/CD proof. Top card = what shipped. The belt = last live-demo run (may be red if lint failed).</li>
+            <li><a href="/Labs">Labs</a> are Always Free evidence. They do not compete with the product on the home page.</li>
+            <li>This site does not claim an AI-developer role. <a href="https://edge.galasse.dev/" target="_blank" rel="noopener noreferrer">Edge Labs</a> is an inference playground.</li>
+            <li>The CV PDF is listed only if the file exists on this host. If you do not see “Download CV”, it is not published.</li>
+        }
+        else
+        {
+            <li><a href="/Projects/tote">TOTE</a> é o produto. Marque o Turnstile — sobe um workspace ADMIN efêmero. Sem senha.</li>
+            <li><a href="https://pipeview.galasse.dev" target="_blank" rel="noopener noreferrer">Pipeview</a> é a prova de CI/CD. Card de cima = o que publicou. A esteira = último live-demo (pode estar vermelha se o lint falhou).</li>
+            <li><a href="/Labs">Labs</a> são evidência Always Free. Não competem com o produto na home.</li>
+            <li>Este site não vende o cargo de IA developer. <a href="https://edge.galasse.dev/" target="_blank" rel="noopener noreferrer">Edge Labs</a> é um playground de inferência.</li>
+            <li>O PDF do CV só aparece se o arquivo existir neste host. Se não há “Baixar CV”, ele não está publicado.</li>
+        }
+    </ol>
+</section>

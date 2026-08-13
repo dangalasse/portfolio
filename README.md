@@ -4,13 +4,12 @@ Portfólio pessoal (CV) com **ASP.NET Core 8**, **TypeScript** e **Tailwind CSS*
 
 Inclui:
 
-- Home com hero e indicador de status ao vivo
-- Projetos (lista + detalhe)
-- Labs (Cloudflare / AWS / GitHub) com probe TypeScript
-- Links LinkedIn, GitHub, site e CV PDF
-- API `GET /api/status` para prova local até ligar um Worker Cloudflare
-- **Observabilidade**: OpenTelemetry (OTLP) → Grafana Cloud + Ansible (Docker, Caddy, Node Exporter, Grafana Alloy)
-- **CI/CD**: GitHub Actions → ECR → Ansible roll na EC2
+- Home com **dois** destaques (TOTE = produto, Pipeview = prova). Labs não competem na prateleira.
+- Projetos agrupados: produto / prova / labs
+- Labs com páginas humanas (`/Labs/Ops`, `/Labs/Static`) — JSON/HTML crus são anexo
+- Mapa de recrutador **no site** (`/` e `/About`), não só no GitHub
+- CV PDF só se `wwwroot/files/cv.pdf` existir (sem botão 404)
+- Probe Edge: Worker em `appsettings.json`; fallback ASP.NET se a URL falhar
 
 ## Requisitos
 
@@ -67,7 +66,7 @@ Editar `src/Portfolio/Data/PortfolioCatalog.cs`:
 - URLs LinkedIn / GitHub / site
 - Lista de projectos e labs
 
-Colocar o PDF do CV em `wwwroot/files/cv.pdf`.
+Colocar o PDF do CV em `wwwroot/files/cv.pdf`. Enquanto o arquivo não existir, o site **não** mostra “Baixar CV”.
 
 ## Cloudflare Worker (opcional)
 
@@ -84,7 +83,7 @@ ViewData["EdgeStatusUrl"] = "https://edge-status.seu-subdominio.workers.dev";
 - AWS Static: [static.galasse.dev](https://static.galasse.dev) — Terraform in [aws-static-demo](https://github.com/dangalasse/aws-static-demo)
 - AWS Ops Labs: [Function URL](https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status) (Lambda + DynamoDB + EventBridge + KMS GenerateRandom) — [labs/always-free](labs/always-free)
 - Edge Labs: [edge.galasse.dev/health](https://edge.galasse.dev/health) — [edge-labs](https://github.com/dangalasse/edge-labs)
-- Reviewer map: [docs/RECRUITER.md](docs/RECRUITER.md)
+- Reviewer map: [docs/RECRUITER.md](docs/RECRUITER.md) (also rendered on `/` and `/About`)
 
 ## Licença
 

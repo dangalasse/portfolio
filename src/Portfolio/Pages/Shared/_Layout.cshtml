@@ -5,12 +5,11 @@
 @{
     var locale = Locale.Current(ViewContext.HttpContext);
     var catalog = PortfolioCatalog.For(locale);
-    var profile = catalog.Profile;
+    var profile = SiteFacts.WithPublishedCv(ViewContext.HttpContext, catalog.Profile);
     var path = ViewContext.HttpContext.Request.Path.Value ?? "/";
     string T(L text) => text.Resolve(locale);
     var edgeStatusUrl = ViewData["EdgeStatusUrl"] as string
         ?? ViewContext.HttpContext.Items["EdgeStatusUrl"] as string
-        ?? Environment.GetEnvironmentVariable("EDGE_STATUS_URL")
         ?? "";
 
     var request = ViewContext.HttpContext.Request;
@@ -59,7 +58,7 @@
         ["description"] = profile.Tagline,
         ["image"] = $"{baseUrl}/images/danton-galasse.jpg",
         ["sameAs"] = new[] { profile.GitHubUrl, profile.LinkedInUrl },
-        ["knowsAbout"] = new[] { "SRE", "DevOps", "Infrastructure", "Cloudflare", "AWS", "Artificial Intelligence" },
+        ["knowsAbout"] = new[] { "SRE", "DevOps", "Infrastructure", "Cloudflare", "AWS" },
     });
 }
 <!DOCTYPE html>
@@ -106,7 +105,7 @@
     <script type="application/ld+json">@Html.Raw(personJson)</script>
 </head>
 <body class="site-shell grain" data-edge-status-url="@edgeStatusUrl" data-locale="@locale">
-    @* Recruiter tip: open /Labs and click through to pipeline / edge / static. *@
+    @* Recruiter: product is TOTE, proof is Pipeview, labs are evidence. CV only if the PDF exists. *@
     <header class="border-b border-line/80 backdrop-blur-sm sticky top-0 z-40 bg-ink/80">
         <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
             <a href="/" class="font-display text-lg font-bold tracking-tight text-paper hover:text-signal transition-colors">

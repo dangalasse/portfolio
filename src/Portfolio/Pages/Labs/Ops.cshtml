@@ -1,0 +1,81 @@
+@page "/Labs/Ops"
+@model Portfolio.Pages.Labs.OpsModel
+@using Portfolio.Data
+@using Portfolio.I18n
+@{
+    var locale = Locale.Current(ViewContext.HttpContext);
+    ViewData["Title"] = UiCopy.OpsTitle.Resolve(locale);
+    ViewData["Description"] = UiCopy.MetaOps.Resolve(locale);
+    var en = AppLocales.IsEnglish(locale);
+}
+
+<section class="mx-auto max-w-5xl px-4 py-16 md:px-6">
+    <p class="reveal font-mono text-xs uppercase tracking-[0.2em] text-signal">
+        <a href="/Labs" class="hover:text-paper">Labs</a> / ops
+    </p>
+    <h1 class="reveal mt-4 section-title">@UiCopy.OpsTitle.Resolve(locale)</h1>
+    <p class="reveal section-lead">@UiCopy.OpsLead.Resolve(locale)</p>
+
+    <div class="reveal honest-box mt-8">
+        <p class="font-mono text-[11px] uppercase tracking-wider text-signal">@UiCopy.HonestLimit.Resolve(locale)</p>
+        <p class="mt-2 text-sm leading-relaxed text-paper">
+            @(en
+                ? "Always Free probe: Function URL, DynamoDB TTL 7d, EventBridge every 5 minutes, KMS GenerateRandom (no $1/mo CMK). Not Grafana. Not production monitoring."
+                : "Probe Always Free: Function URL, DynamoDB TTL 7d, EventBridge a cada 5 minutos, KMS GenerateRandom (sem CMK de $1/mês). Não é Grafana. Não é monitoramento de produção.")
+        </p>
+    </div>
+
+    @if (Model.FetchError is not null)
+    {
+        <p class="reveal mt-8 text-sm text-mist">@UiCopy.FetchFailed.Resolve(locale)</p>
+    }
+    else
+    {
+        <p class="reveal mt-8 font-mono text-xs text-mist">
+            @(Model.Ok == true ? "ok" : "degraded")
+            @if (Model.CheckedAt is { } at)
+            {
+                <span> · @at.UtcDateTime.ToString("u")</span>
+            }
+        </p>
+        <div class="reveal mt-4 overflow-x-auto border border-line">
+            <table class="evidence-table">
+                <thead>
+                    <tr>
+                        <th>Lab</th>
+                        <th>HTTP</th>
+                        <th>@(en ? "Latency" : "Latência")</th>
+                        <th>@(en ? "Last check" : "Último check")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.Rows)
+                    {
+                        <tr>
+                            <td>
+                                <span class="font-medium text-paper">@row.Lab</span>
+                                @if (!string.IsNullOrWhiteSpace(row.Url))
+                                {
+                                    <div class="mt-1 font-mono text-[11px] text-mist break-all">@row.Url</div>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(row.Error))
+                                {
+                                    <div class="mt-1 text-xs text-red-300">@row.Error</div>
+                                }
+                            </td>
+                            <td class="font-mono">@(row.Ok ? "ok" : "fail") @(row.HttpStatus is { } s ? s.ToString() : "—")</td>
+                            <td class="font-mono">@(row.LatencyMs is { } ms ? $"{ms} ms" : "—")</td>
+                            <td class="font-mono text-xs">@(row.CheckedAt ?? "—")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="reveal mt-8 flex flex-wrap gap-3">
+        <a class="btn-ghost" href="@Model.RawUrl" target="_blank" rel="noopener noreferrer">@UiCopy.RawJson.Resolve(locale)</a>
+        <a class="btn-ghost" href="@Model.KmsUrl" target="_blank" rel="noopener noreferrer">GET /kms/random</a>
+        <a class="btn-ghost" href="https://github.com/dangalasse/portfolio/tree/main/labs/always-free" target="_blank" rel="noopener noreferrer">@UiCopy.ViewSource.Resolve(locale)</a>
+    </div>
+</section>

@@ -8,6 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddPortfolioOpenTelemetry();
 
 builder.Services.AddRazorPages();
+builder.Services.AddHttpClient("ops-labs", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(8);
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("portfolio.galasse.dev/ops-probe");
+});
 
 var app = builder.Build();
 
@@ -59,14 +64,19 @@ app.Use(async (http, next) =>
     await next();
 });
 
-// WHY: Labs probe prefers Cloudflare Worker when EDGE_STATUS_URL is set on the container.
+// WHY: Worker URL from env, else appsettings. Empty env must not hide the live Worker.
 app.Use(async (http, next) =>
 {
-    var edgeStatus = Environment.GetEnvironmentVariable("EDGE_STATUS_URL");
+    var config = http.RequestServices.GetRequiredService<IConfiguration>();
+    var edgeStatus = SiteFacts.ResolveEdgeStatusUrl(config);
     if (!string.IsNullOrWhiteSpace(edgeStatus))
     {
-        http.Items["EdgeStatusUrl"] = edgeStatus.Trim();
+        http.Items["EdgeStatusUrl"] = edgeStatus;
     }
+
+    var env = http.RequestServices.GetRequiredService<IWebHostEnvironment>();
+    http.Items["HasCv"] = System.IO.File.Exists(
+        Path.Combine(env.WebRootPath, SiteFacts.CvRelativePath.Replace('/', Path.DirectorySeparatorChar)));
 
     await next();
 });
@@ -133,6 +143,8 @@ app.MapGet("/sitemap.xml", (HttpContext http) =>
         ("/", "1.0", "weekly"),
         ("/Projects", "0.9", "weekly"),
         ("/Labs", "0.9", "weekly"),
+        ("/Labs/Ops", "0.6", "weekly"),
+        ("/Labs/Static", "0.6", "monthly"),
         ("/About", "0.8", "monthly"),
     };
 
