@@ -15,6 +15,7 @@ interface ArchNodeDto {
   plain: string;
   recruiter: string;
   snippet: string;
+  lang?: string | null;
   repoUrl?: string | null;
   color: string;
 }
@@ -23,6 +24,42 @@ interface ArchI18n {
   copy: string;
   copied: string;
   close: string;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+const KEYWORD_RE =
+  /\b(export|default|async|function|const|let|var|return|await|import|from|class|interface|type|if|else|new|public|static|required|resource|def|True|False|None|null|undefined|using|namespace|select|where|and|or|not|with|for|in|of|try|catch|throw|switch|case)\b/g;
+
+/** Lightweight highlighter — tokens are escaped first so snippets cannot inject HTML. */
+function highlightSnippet(source: string, _lang: string): string {
+  const lines = source.split("\n");
+  return lines
+    .map((line) => {
+      const trimmed = line.trimStart();
+      if (
+        trimmed.startsWith("#") ||
+        trimmed.startsWith("//") ||
+        trimmed.startsWith("--") ||
+        trimmed.startsWith("<!--")
+      ) {
+        return `<span class="tok-cm">${escapeHtml(line)}</span>`;
+      }
+      let html = escapeHtml(line);
+      html = html.replace(
+        /(&quot;.*?&quot;|&#39;.*?&#39;|`[^`]*`)/g,
+        `<span class="tok-str">$1</span>`,
+      );
+      html = html.replace(KEYWORD_RE, `<span class="tok-kw">$1</span>`);
+      return html;
+    })
+    .join("\n");
 }
 
 function prefersReducedMotion(): boolean {
@@ -140,6 +177,8 @@ function openDrawer(section: HTMLElement, node: ArchNodeDto): void {
   const plain = drawer.querySelector<HTMLElement>("[data-arch-drawer-plain]");
   const recruiter = drawer.querySelector<HTMLElement>("[data-arch-drawer-recruiter]");
   const snippet = drawer.querySelector<HTMLElement>("[data-arch-drawer-snippet]");
+  const snippetPre = drawer.querySelector<HTMLElement>(".arch-snippet");
+  const langBadge = drawer.querySelector<HTMLElement>("[data-arch-drawer-lang]");
   const repoWrap = drawer.querySelector<HTMLElement>(".arch-drawer-repo");
   const repo = drawer.querySelector<HTMLAnchorElement>("[data-arch-drawer-repo]");
 
@@ -147,7 +186,13 @@ function openDrawer(section: HTMLElement, node: ArchNodeDto): void {
   if (sub) sub.textContent = node.subtitle;
   if (plain) plain.textContent = node.plain || "—";
   if (recruiter) recruiter.textContent = node.recruiter || "—";
-  if (snippet) snippet.textContent = node.snippet || "—";
+  const lang = (node.lang || "txt").toLowerCase();
+  if (snippet) {
+    snippet.dataset.raw = node.snippet || "";
+    snippet.innerHTML = node.snippet ? highlightSnippet(node.snippet, lang) : "—";
+  }
+  if (snippetPre) snippetPre.dataset.lang = lang;
+  if (langBadge) langBadge.textContent = lang;
 
   if (repo && repoWrap) {
     if (node.repoUrl) {
@@ -212,7 +257,10 @@ function bindInteractions(section: HTMLElement): void {
 
   const copyBtn = section.querySelector<HTMLButtonElement>("[data-arch-drawer-copy]");
   copyBtn?.addEventListener("click", async () => {
-    const code = section.querySelector<HTMLElement>("[data-arch-drawer-snippet]")?.textContent ?? "";
+    const code =
+      section.querySelector<HTMLElement>("[data-arch-drawer-snippet]")?.dataset.raw ??
+      section.querySelector<HTMLElement>("[data-arch-drawer-snippet]")?.textContent ??
+      "";
     try {
       await navigator.clipboard.writeText(code);
       if (copyBtn && i18n) {

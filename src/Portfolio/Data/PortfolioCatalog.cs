@@ -156,34 +156,35 @@ public static class PortfolioCatalog
                 "CloudFormation",
             ],
             Accent = "#ff9900",
-            LiveUrl = "https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status",
+            LiveUrl = "/Labs/aws-ops",
             RepoUrl = "https://github.com/dangalasse/portfolio/tree/main/labs/always-free",
             DemoNote =
-                "GET /status, POST /probe, GET /kms/random — CloudFormation em labs/always-free.",
+                "Página /Labs/aws-ops pinta os cards do GET /status. Function URL crua no rodapé da página.",
             DemoNoteEn =
-                "GET /status, POST /probe, GET /kms/random — CloudFormation under labs/always-free.",
+                "The /Labs/aws-ops page paints GET /status as cards. Raw Function URL is in the page footer.",
             Featured = true,
         },
         new ProjectItem
         {
             Slug = "edge-labs",
-            Title = "Edge Labs (LLMOps)",
+            Title = "Coach de erros no edge",
+            TitleEn = "Edge error coach",
             Summary =
-                "Worker Cloudflare que analisa logs de erro com Workers AI (Free Tier) e Gemini opcional.",
+                "Worker Cloudflare que analisa o mesmo log de erro em quatro modos (SRE, SDD, DDD, TDD) com Workers AI.",
             Description =
-                "LLMOps no edge: POST /analyze-error → Workers AI (llama fp8) ou Gemini → summary, likelyCause, suggestedFix. Domínio edge.galasse.dev. API keys só via wrangler secret.",
+                "POST /analyze-error com mode=sre|sdd|ddd|tdd → Workers AI (llama fp8) ou Gemini opcional → summary, likelyCause, suggestedFix. Domínio edge.galasse.dev. API keys só via wrangler secret.",
             SummaryEn =
-                "Cloudflare Worker that analyzes error logs with Workers AI (Free Tier) and optional Gemini.",
+                "Cloudflare Worker that analyzes the same error log in four modes (SRE, SDD, DDD, TDD) with Workers AI.",
             DescriptionEn =
-                "Edge LLMOps: POST /analyze-error → Workers AI (llama fp8) or Gemini → summary, likelyCause, suggestedFix. Domain edge.galasse.dev. API keys only via wrangler secret.",
+                "POST /analyze-error with mode=sre|sdd|ddd|tdd → Workers AI (llama fp8) or optional Gemini → summary, likelyCause, suggestedFix. Domain edge.galasse.dev. API keys only via wrangler secret.",
             Stack = ["Cloudflare Workers", "Workers AI", "TypeScript", "Gemini", "Wrangler"],
             Accent = "#8b5cf6",
             LiveUrl = "https://edge.galasse.dev/",
             RepoUrl = "https://github.com/dangalasse/edge-labs",
             DemoNote =
-                "Em edge.galasse.dev pode experimentar o Analyze live. A resposta JSON traz provider, model e analyzedAt. Hoje: Workers AI; Gemini quando o secret GEMINI_API_KEY existir.",
+                "Em edge.galasse.dev o mesmo log de erro muda de ângulo nas abas SRE · SDD · DDD · TDD. A resposta JSON traz provider, model, mode e analyzedAt. Caminho normal: Workers AI (Free Tier); Gemini só se o secret existir.",
             DemoNoteEn =
-                "At edge.galasse.dev you can try Analyze live. The JSON includes provider, model, and analyzedAt. Today: Workers AI; Gemini when the GEMINI_API_KEY secret is set.",
+                "At edge.galasse.dev the same error log is re-analyzed under SRE · SDD · DDD · TDD. JSON includes provider, model, mode, and analyzedAt. Default path: Workers AI (Free Tier); Gemini only if the secret is set.",
             Featured = true,
         },
         new ProjectItem
@@ -228,9 +229,9 @@ public static class PortfolioCatalog
             Title = "Cloudflare Edge",
             Provider = "Cloudflare",
             Description =
-                "Workers e DNS: Pipeview e Edge Labs (LLMOps em edge.galasse.dev — / e /coach).",
+                "Workers e DNS: Pipeview e o coach de erros no edge (edge.galasse.dev).",
             DescriptionEn =
-                "Workers and DNS: Pipeview and Edge Labs (LLMOps at edge.galasse.dev — / and /coach).",
+                "Workers and DNS: Pipeview and the edge error coach (edge.galasse.dev).",
             Proof = "pipeview.galasse.dev · edge.galasse.dev",
             ProofEn = "pipeview.galasse.dev · edge.galasse.dev",
             DocsUrl = "https://edge.galasse.dev/",
@@ -257,9 +258,9 @@ public static class PortfolioCatalog
                 "S3+CloudFront (static.galasse.dev) e o probe Always Free (Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom).",
             DescriptionEn =
                 "S3+CloudFront (static.galasse.dev) and the Always Free probe (Lambda Function URL + DynamoDB + EventBridge + KMS GenerateRandom).",
-            Proof = "static.galasse.dev · Lambda Function URL /status",
-            ProofEn = "static.galasse.dev · Lambda Function URL /status",
-            DocsUrl = "https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws/status",
+            Proof = "static.galasse.dev · /Labs/aws-ops",
+            ProofEn = "static.galasse.dev · /Labs/aws-ops",
+            DocsUrl = "/Labs/aws-ops",
         },
         new LabIndicator
         {

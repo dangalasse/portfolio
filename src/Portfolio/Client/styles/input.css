@@ -259,7 +259,7 @@
     border-radius: 0.75rem;
     overflow: hidden;
     inset: auto 0.75rem 0.75rem auto;
-    width: min(22rem, calc(100% - 1.5rem));
+    width: min(28rem, calc(100% - 1.5rem));
     max-height: calc(100% - 1.5rem);
     overflow-y: auto;
   }
@@ -307,9 +307,27 @@
   }
 
   .arch-snippet {
-    @apply overflow-x-auto border border-line bg-ink p-3 font-mono text-[11px] leading-relaxed text-mist;
+    @apply overflow-x-auto border border-line bg-ink p-3 font-mono text-[11px] leading-relaxed text-paper/90;
     border-radius: 0.5rem;
-    white-space: pre-wrap;
+    white-space: pre;
+    tab-size: 2;
+  }
+
+  .arch-lang {
+    @apply ml-1 font-mono text-[9px] uppercase tracking-wider text-signal;
+  }
+
+  .arch-snippet .tok-kw {
+    color: #3dd6c6;
+  }
+
+  .arch-snippet .tok-str {
+    color: #f0b429;
+  }
+
+  .arch-snippet .tok-cm {
+    color: #6b7c86;
+    font-style: italic;
   }
 
   .arch-drawer-repo a {

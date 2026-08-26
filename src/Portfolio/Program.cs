@@ -8,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddPortfolioOpenTelemetry();
 
 builder.Services.AddRazorPages();
+builder.Services.AddHttpClient("aws-ops", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 
 var app = builder.Build();
 
@@ -87,6 +91,32 @@ app.MapGet("/api/status", (HttpContext http) =>
     });
 });
 
+const string AwsOpsFunctionUrl =
+    "https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws";
+
+async Task<IResult> ProxyAwsOps(IHttpClientFactory factory, string path)
+{
+    try
+    {
+        var client = factory.CreateClient("aws-ops");
+        using var res = await client.GetAsync($"{AwsOpsFunctionUrl}{path}");
+        var body = await res.Content.ReadAsStringAsync();
+        return Results.Content(
+            body,
+            "application/json; charset=utf-8",
+            statusCode: (int)res.StatusCode);
+    }
+    catch (Exception ex)
+    {
+        return Results.Json(
+            new { ok = false, error = "upstream_failed", message = ex.Message },
+            statusCode: StatusCodes.Status502BadGateway);
+    }
+}
+
+app.MapGet("/api/aws-ops-status", (IHttpClientFactory factory) => ProxyAwsOps(factory, "/status"));
+app.MapGet("/api/aws-ops-kms", (IHttpClientFactory factory) => ProxyAwsOps(factory, "/kms/random"));
+
 app.MapPost("/api/locale", async (HttpContext http) =>
 {
     var form = await http.Request.ReadFormAsync();
@@ -133,6 +163,7 @@ app.MapGet("/sitemap.xml", (HttpContext http) =>
         ("/", "1.0", "weekly"),
         ("/Projects", "0.9", "weekly"),
         ("/Labs", "0.9", "weekly"),
+        ("/Labs/aws-ops", "0.8", "weekly"),
         ("/About", "0.8", "monthly"),
     };
 

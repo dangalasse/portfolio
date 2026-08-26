@@ -25,6 +25,7 @@
             plain = n.PlainExplain,
             recruiter = n.RecruiterDetail,
             snippet = n.CodeSnippet,
+            lang = n.SnippetLang,
             repoUrl = n.RepoUrl,
             color = n.Color,
         }));
@@ -112,10 +113,10 @@
             </section>
             <section>
                 <div class="arch-drawer-snippet-head">
-                    <h4>@T(UiCopy.FlowSnippet)</h4>
+                    <h4>@T(UiCopy.FlowSnippet) <span class="arch-lang" data-arch-drawer-lang></span></h4>
                     <button type="button" class="arch-copy-btn" data-arch-drawer-copy>@T(UiCopy.FlowCopy)</button>
                 </div>
-                <pre class="arch-snippet"><code data-arch-drawer-snippet></code></pre>
+                <pre class="arch-snippet" data-lang="txt"><code data-arch-drawer-snippet></code></pre>
             </section>
             <p class="arch-drawer-repo" hidden>
                 <a data-arch-drawer-repo href="#" target="_blank" rel="noopener noreferrer">@T(UiCopy.FlowOpenRepo)</a>

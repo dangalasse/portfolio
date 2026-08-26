@@ -21,6 +21,8 @@ public sealed class ArchNode
     public string RecruiterDetail { get; init; } = "";
     /// <summary>Short code snippet (YAML/TF/TS/C#) relevant to this node.</summary>
     public string CodeSnippet { get; init; } = "";
+    /// <summary>Language hint for the drawer highlighter (ts, python, hcl, yaml, caddy, prisma, bash).</summary>
+    public string SnippetLang { get; init; } = "txt";
     /// <summary>Optional deep-link into source.</summary>
     public string? RepoUrl { get; init; }
 }

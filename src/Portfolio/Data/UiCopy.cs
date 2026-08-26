@@ -35,8 +35,8 @@ public static class UiCopy
         "Projetos de infraestrutura, SRE e cloud com demos públicas e código aberto.",
         "Infrastructure, SRE, and cloud projects with public demos and open source.");
     public static readonly L MetaLabs = new(
-        "Labs ao vivo: Pipeview, Edge Labs, AWS Static, AWS Ops Labs e status probes.",
-        "Live labs: Pipeview, Edge Labs, AWS Static, AWS Ops Labs, and status probes.");
+        "Labs ao vivo: Pipeview, coach de erros no edge, AWS Static, AWS Ops Labs e status probes.",
+        "Live labs: Pipeview, edge error coach, AWS Static, AWS Ops Labs, and status probes.");
     public static readonly L MetaAbout = new(
         "Sobre Danton Galasse — contato, localização e mapa para recrutadores.",
         "About Danton Galasse — contact, location, and a map for recruiters.");
@@ -55,7 +55,7 @@ public static class UiCopy
         "Hover or click a node to see what it does — plain language, plus a short code snippet.");
     public static readonly L FlowExplain = new("Em palavras simples", "In plain words");
     public static readonly L FlowRecruiter = new("O que isto ilustra", "What this illustrates");
-    public static readonly L FlowSnippet = new("Snippet de código", "Code snippet");
+    public static readonly L FlowSnippet = new("Excerto do repositório", "Excerpt from the repo");
     public static readonly L FlowOpenRepo = new("Abrir no repositório", "Open in the repository");
     public static readonly L FlowClose = new("Fechar", "Close");
     public static readonly L FlowCopy = new("Copiar", "Copy");
@@ -74,8 +74,20 @@ public static class UiCopy
         "Para ligar o Worker Cloudflare: faça deploy de workers/edge-status e defina EDGE_STATUS_URL no container.",
         "To enable the Cloudflare Worker: deploy workers/edge-status and set EDGE_STATUS_URL on the container.");
     public static readonly L LabsObservabilityNote = new(
-        "Observabilidade: traces e metrics seguem OTEL → Alloy → Grafana Cloud no host. O Grafana em si não é público — o probe Edge Status nesta página e o AWS Ops Labs (GET /status) são a prova que se pode ver daqui.",
-        "Observability: traces and metrics go OTEL → Alloy → Grafana Cloud on the host. Grafana itself is not public — the Edge Status probe on this page and AWS Ops Labs (GET /status) are the proof you can see from here.");
+        "Observabilidade: traces e metrics seguem OTEL → Alloy → Grafana Cloud no host. O Grafana em si não é público — o probe Edge Status nesta página e o AWS Ops Labs em /Labs/aws-ops são a prova que se pode ver daqui.",
+        "Observability: traces and metrics go OTEL → Alloy → Grafana Cloud on the host. Grafana itself is not public — the Edge Status probe on this page and AWS Ops Labs at /Labs/aws-ops are the proof you can see from here.");
+    public static readonly L AwsOpsTitle = new("AWS Ops Labs", "AWS Ops Labs");
+    public static readonly L AwsOpsLead = new(
+        "Probe Always Free: a cada 5 minutos a Lambda testa as superfícies públicas e grava o resultado no DynamoDB. Cards abaixo vêm de GET /status — sem JSON cru.",
+        "Always Free probe: every 5 minutes Lambda checks public surfaces and writes DynamoDB. Cards below come from GET /status — no raw JSON.");
+    public static readonly L AwsOpsEvidence = new("Ver evidência", "View evidence");
+    public static readonly L AwsOpsKms = new("Entropia KMS (GenerateRandom)", "KMS entropy (GenerateRandom)");
+    public static readonly L AwsOpsKmsHint = new(
+        "HSM entropy sem CMK — evita $1/mês de chave gerenciada.",
+        "HSM entropy with no CMK — avoids the $1/mo customer-managed key.");
+    public static readonly L AwsOpsRawApi = new("API crua (Function URL)", "Raw API (Function URL)");
+    public static readonly L AwsOpsLoading = new("A carregar o último probe…", "Loading latest probe…");
+    public static readonly L AwsOpsFailed = new("Não foi possível ler o status.", "Could not read status.");
     public static readonly L Checking = new("Verificando…", "Checking…");
     public static readonly L LocalePtLabel = new("Português (Brasil)", "Portuguese (Brazil)");
     public static readonly L LocaleEnLabel = new("English (US)", "English (US)");

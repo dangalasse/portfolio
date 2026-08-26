@@ -1,0 +1,48 @@
+@page "/Labs/aws-ops"
+@model Portfolio.Pages.Labs.AwsOpsModel
+@using Portfolio.Data
+@using Portfolio.I18n
+@{
+    var locale = Locale.Current(ViewContext.HttpContext);
+    string T(L text) => text.Resolve(locale);
+    ViewData["Title"] = T(UiCopy.AwsOpsTitle);
+    ViewData["Description"] = T(UiCopy.AwsOpsLead);
+    var rawApi = "https://4notqcazblkzqyd3avwjrkxtki0grnho.lambda-url.sa-east-1.on.aws";
+}
+
+<section class="mx-auto max-w-6xl px-4 py-16 md:px-6" data-aws-ops>
+    <p class="reveal font-mono text-xs uppercase tracking-[0.2em] text-signal">
+        <a href="/Labs" class="hover:text-paper">@T(UiCopy.NavLabs)</a> / aws-ops
+    </p>
+    <h1 class="reveal mt-4 font-display text-4xl font-bold tracking-tight md:text-5xl">@T(UiCopy.AwsOpsTitle)</h1>
+    <p class="reveal mt-5 max-w-3xl text-lg text-mist leading-relaxed">@T(UiCopy.AwsOpsLead)</p>
+
+    <p class="reveal mt-6 status-pill w-fit" data-lab-status>
+        <span class="status-dot" data-status-dot></span>
+        <span data-status-label>@T(UiCopy.Checking)</span>
+        <span class="text-line">|</span>
+        <span data-status-meta>…</span>
+    </p>
+
+    <div class="mt-10" data-aws-ops-grid>
+        <p class="font-mono text-sm text-mist" data-aws-ops-loading>@T(UiCopy.AwsOpsLoading)</p>
+    </div>
+
+    <div class="reveal mt-12 border border-line bg-panel/50 p-6">
+        <h2 class="font-display text-xl font-semibold">@T(UiCopy.AwsOpsKms)</h2>
+        <p class="mt-2 text-sm text-mist">@T(UiCopy.AwsOpsKmsHint)</p>
+        <button type="button" class="btn-ghost mt-4" data-aws-ops-kms>@T(UiCopy.AwsOpsKms)</button>
+        <pre class="arch-snippet mt-4 hidden" data-aws-ops-kms-out></pre>
+    </div>
+
+    <p class="reveal mt-10 text-sm text-mist">
+        @T(UiCopy.AwsOpsRawApi):
+        <a class="text-signal hover:underline font-mono text-xs" href="@rawApi/status" target="_blank" rel="noopener noreferrer">@rawApi/status</a>
+    </p>
+</section>
+
+<script type="application/json" data-aws-ops-i18n>@Html.Raw(System.Text.Json.JsonSerializer.Serialize(new {
+    evidence = T(UiCopy.AwsOpsEvidence),
+    failed = T(UiCopy.AwsOpsFailed),
+    loading = T(UiCopy.AwsOpsLoading),
+}))</script>

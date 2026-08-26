@@ -67,10 +67,11 @@
                 <p class="mt-4 font-mono text-xs text-signal">@lab.Proof</p>
                 @if (!string.IsNullOrWhiteSpace(lab.DocsUrl))
                 {
+                    var external = lab.DocsUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase);
                     <a class="mt-5 inline-block text-sm text-paper underline-offset-4 hover:text-signal hover:underline"
                        href="@lab.DocsUrl"
-                       target="_blank"
-                       rel="noopener noreferrer">@linkLabel</a>
+                       target="@(external ? "_blank" : null)"
+                       rel="@(external ? "noopener noreferrer" : null)">@linkLabel</a>
                 }
             </article>
         }
