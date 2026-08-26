@@ -65,7 +65,7 @@ No credentials, `.env`, or wrangler secrets were observed in public JSON.
 - `EDGE_STATUS_URL` unset on the portfolio container.
 - No Content-Security-Policy on portfolio or static demo.
 - Edge Worker does not answer `HEAD`.
-- Portfolio live deploy is CI (`push` to `main`) — this session’s ASP.NET/UI changes are in the tree until that pipeline runs.
+- Portfolio live deploy is CI (`push` to `main`). This session pushed `d0ffd4b`; **GitHub Actions failed** because `AWS_REGION` / `ECR_REPOSITORY` secrets are empty (`aws-region` required). `/Labs/aws-ops` was verified on a local Kestrel (`127.0.0.1:5198`) including `/api/aws-ops-status` and `/api/aws-ops-kms`. Production `portfolio.galasse.dev` still serves the previous image until those secrets are set and the workflow is re-run.
 
 ## Skills used
 
