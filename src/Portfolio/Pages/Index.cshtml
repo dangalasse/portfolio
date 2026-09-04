@@ -47,7 +47,12 @@
                 <a class="btn-ghost" href="/Labs">@T(UiCopy.LiveLabs)</a>
                 @if (!string.IsNullOrWhiteSpace(profile.CvPdfPath))
                 {
-                    <a class="btn-ghost" href="@profile.CvPdfPath">@T(UiCopy.DownloadCv)</a>
+                    <a class="btn-ghost"
+                       href="@profile.CvPdfPath"
+                       download="CV_Danton_Galasse.pdf"
+                       type="application/pdf"
+                       target="_blank"
+                       rel="noopener noreferrer">@T(UiCopy.DownloadCv)</a>
                 }
             </div>
         </div>
