@@ -170,22 +170,18 @@ public static class PortfolioCatalog
             Title = "Coach de erros no edge",
             TitleEn = "Edge error coach",
             Summary =
-                "Worker Cloudflare que analisa o mesmo log de erro em quatro modos (SRE, SDD, DDD, TDD) com Workers AI.",
+                "Lab Cloudflare no edge — a vitrine pública está em desenvolvimento.",
             Description =
-                "POST /analyze-error com mode=sre|sdd|ddd|tdd → Workers AI (llama fp8) ou Gemini opcional → summary, likelyCause, suggestedFix. Domínio edge.galasse.dev. API keys só via wrangler secret.",
+                "Este lab ainda não está na vitrine. A rota fica de pé para quem já tinha o endereço; o restante do portfólio continua nos outros projetos.",
             SummaryEn =
-                "Cloudflare Worker that analyzes the same error log in four modes (SRE, SDD, DDD, TDD) with Workers AI.",
+                "A Cloudflare edge lab — the public showcase is still being built.",
             DescriptionEn =
-                "POST /analyze-error with mode=sre|sdd|ddd|tdd → Workers AI (llama fp8) or optional Gemini → summary, likelyCause, suggestedFix. Domain edge.galasse.dev. API keys only via wrangler secret.",
-            Stack = ["Cloudflare Workers", "Workers AI", "TypeScript", "Gemini", "Wrangler"],
+                "This lab is off the public floor for now. The route stays for anyone who already had the address; the rest of the portfolio is in the other projects.",
+            Stack = ["Cloudflare Workers", "Workers AI", "TypeScript", "Wrangler"],
             Accent = "#8b5cf6",
-            LiveUrl = "https://edge.galasse.dev/",
-            RepoUrl = "https://github.com/dangalasse/edge-labs",
-            DemoNote =
-                "Em edge.galasse.dev o mesmo log de erro muda de ângulo nas abas SRE · SDD · DDD · TDD. A resposta JSON traz provider, model, mode e analyzedAt. Caminho normal: Workers AI (Free Tier); Gemini só se o secret existir.",
-            DemoNoteEn =
-                "At edge.galasse.dev the same error log is re-analyzed under SRE · SDD · DDD · TDD. JSON includes provider, model, mode, and analyzedAt. Default path: Workers AI (Free Tier); Gemini only if the secret is set.",
-            Featured = true,
+            Featured = false,
+            Listed = false,
+            ComingSoon = true,
         },
         new ProjectItem
         {
@@ -229,12 +225,12 @@ public static class PortfolioCatalog
             Title = "Cloudflare Edge",
             Provider = "Cloudflare",
             Description =
-                "Workers e DNS: Pipeview e o coach de erros no edge (edge.galasse.dev).",
+                "Workers e DNS: o painel da esteira em pipeview.galasse.dev.",
             DescriptionEn =
-                "Workers and DNS: Pipeview and the edge error coach (edge.galasse.dev).",
-            Proof = "pipeview.galasse.dev · edge.galasse.dev",
-            ProofEn = "pipeview.galasse.dev · edge.galasse.dev",
-            DocsUrl = "https://edge.galasse.dev/",
+                "Workers and DNS: the conveyor dashboard at pipeview.galasse.dev.",
+            Proof = "pipeview.galasse.dev",
+            ProofEn = "pipeview.galasse.dev",
+            DocsUrl = "https://pipeview.galasse.dev",
         },
         new LabIndicator
         {
@@ -305,6 +301,9 @@ public static class PortfolioCatalog
 
         return new CatalogSnapshot(profile, projects, labs);
     }
+
+    public static IReadOnlyList<ProjectItem> ListedProjects(string locale) =>
+        For(locale).Projects.Where(p => p.Listed).ToList();
 
     public static ProjectItem? FindProject(string slug, string locale) =>
         For(locale).Projects.FirstOrDefault(p =>

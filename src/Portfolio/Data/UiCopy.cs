@@ -35,8 +35,21 @@ public static class UiCopy
         "Projetos de infraestrutura, SRE e cloud com demos públicas e código aberto.",
         "Infrastructure, SRE, and cloud projects with public demos and open source.");
     public static readonly L MetaLabs = new(
-        "Labs ao vivo: Pipeview, coach de erros no edge, AWS Static, AWS Ops Labs e status probes.",
-        "Live labs: Pipeview, edge error coach, AWS Static, AWS Ops Labs, and status probes.");
+        "Labs ao vivo: Pipeview, AWS Static, AWS Ops Labs e status probes.",
+        "Live labs: Pipeview, AWS Static, AWS Ops Labs, and status probes.");
+    public static readonly L ComingSoonEyebrow = new(
+        "Lab · em desenvolvimento",
+        "Lab · under development");
+    public static readonly L ComingSoonStatus = new("Em desenvolvimento", "Under development");
+    public static readonly L ComingSoonBody = new(
+        "Este lab ainda não está na vitrine. Volta aos projetos enquanto o banco de trabalho fica pronto.",
+        "This lab is off the public floor for now. Head back to projects while the workbench is still being wired.");
+    public static readonly L BackToProjects = new("Voltar aos projetos", "Back to projects");
+    public static readonly L ErrorTitle = new("Algo falhou", "Something went wrong");
+    public static readonly L ErrorLead = new(
+        "A página não carregou. Se o problema continuar, volta ao início e tenta de novo.",
+        "This page did not load. If it keeps happening, go back to the home page and try again.");
+    public static readonly L ErrorRequestId = new("Pedido", "Request");
     public static readonly L MetaAbout = new(
         "Sobre Danton Galasse — contato, localização e mapa para recrutadores.",
         "About Danton Galasse — contact, location, and a map for recruiters.");

@@ -11,51 +11,84 @@
     // WHY: keep SERP focused on hub pages (/, /Projects, /Labs, /About) for sitelinks;
     // project details stay crawlable for internal links but out of the main result list.
     ViewData["Robots"] = "noindex, follow";
-    ViewData["Description"] = project.Summary;
+    ViewData["Description"] = project.ComingSoon
+        ? T(UiCopy.ComingSoonStatus)
+        : project.Summary;
 }
 
 <article class="mx-auto max-w-5xl px-4 py-16 md:px-6">
     <p class="reveal font-mono text-xs uppercase tracking-[0.2em] text-signal">
         <a href="/Projects" class="hover:text-paper">@T(UiCopy.NavProjects)</a> / @project.Slug
     </p>
-    <h1 class="reveal mt-4 font-display text-4xl font-bold tracking-tight md:text-5xl" style="transition-delay: 60ms">@project.Title</h1>
-    <p class="reveal mt-5 max-w-3xl text-lg text-mist leading-relaxed" style="transition-delay: 100ms">@project.Summary</p>
 
-    <div class="reveal mt-8 flex flex-wrap gap-3" style="transition-delay: 140ms">
-        @if (!string.IsNullOrWhiteSpace(project.LiveUrl))
-        {
-            <a class="btn-primary" href="@project.LiveUrl" target="@(project.LiveUrl.StartsWith("http") ? "_blank" : null)" rel="noopener noreferrer">@T(UiCopy.LiveDemo)</a>
-        }
-        @if (!string.IsNullOrWhiteSpace(project.RepoUrl))
-        {
-            <a class="btn-ghost" href="@project.RepoUrl" target="_blank" rel="noopener noreferrer">@T(UiCopy.ViewSource)</a>
-        }
-        <a class="btn-ghost" href="/Labs">Labs</a>
-    </div>
-
-    <div class="reveal mt-12 border-t border-line pt-10 space-y-6" style="transition-delay: 180ms">
-        <h2 class="font-display text-2xl font-semibold">@T(UiCopy.Context)</h2>
-        <p class="max-w-3xl text-mist leading-relaxed">@project.Description</p>
-        @if (!string.IsNullOrWhiteSpace(project.DemoNote))
-        {
-            <p class="border border-line bg-panel/60 px-4 py-3 font-mono text-sm text-paper">@project.DemoNote</p>
-        }
-    </div>
-
-    <div class="reveal mt-10" style="transition-delay: 220ms">
-        <h2 class="font-display text-2xl font-semibold">@T(UiCopy.Stack)</h2>
-        <ul class="mt-4 flex flex-wrap gap-2">
-            @foreach (var tech in project.Stack)
-            {
-                <li class="border border-line bg-ink-soft px-3 py-1.5 font-mono text-xs text-mist">@tech</li>
-            }
-        </ul>
-    </div>
-
-    @if (flow is not null)
+    @if (project.ComingSoon)
     {
-        <div class="mt-12 border-t border-line pt-10">
-            <partial name="_ArchitectureFlow" model="flow" />
+        <p class="reveal mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-mist" style="transition-delay: 40ms">
+            @T(UiCopy.ComingSoonEyebrow)
+        </p>
+        <h1 class="reveal mt-3 font-display text-4xl font-bold tracking-tight md:text-5xl" style="transition-delay: 60ms">@project.Title</h1>
+        <p class="reveal mt-4 font-display text-xl text-signal md:text-2xl" style="transition-delay: 90ms">@T(UiCopy.ComingSoonStatus)</p>
+        <p class="reveal mt-5 max-w-2xl text-lg text-mist leading-relaxed" style="transition-delay: 120ms">@T(UiCopy.ComingSoonBody)</p>
+
+        <div class="workbench reveal mt-12" style="transition-delay: 160ms" aria-hidden="true">
+            <div class="workbench-grid"></div>
+            <div class="relative flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+                <div>
+                    <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-mist">status</p>
+                    <p class="mt-2 flex items-center gap-2 font-mono text-sm text-paper">
+                        <span class="workbench-dot"></span>
+                        @T(UiCopy.ComingSoonStatus)
+                    </p>
+                </div>
+                <p class="font-mono text-xs text-mist/80">@project.Slug</p>
+            </div>
         </div>
+
+        <div class="reveal mt-10" style="transition-delay: 200ms">
+            <a class="btn-primary" href="/Projects">@T(UiCopy.BackToProjects)</a>
+        </div>
+    }
+    else
+    {
+        <h1 class="reveal mt-4 font-display text-4xl font-bold tracking-tight md:text-5xl" style="transition-delay: 60ms">@project.Title</h1>
+        <p class="reveal mt-5 max-w-3xl text-lg text-mist leading-relaxed" style="transition-delay: 100ms">@project.Summary</p>
+
+        <div class="reveal mt-8 flex flex-wrap gap-3" style="transition-delay: 140ms">
+            @if (!string.IsNullOrWhiteSpace(project.LiveUrl))
+            {
+                <a class="btn-primary" href="@project.LiveUrl" target="@(project.LiveUrl.StartsWith("http") ? "_blank" : null)" rel="noopener noreferrer">@T(UiCopy.LiveDemo)</a>
+            }
+            @if (!string.IsNullOrWhiteSpace(project.RepoUrl))
+            {
+                <a class="btn-ghost" href="@project.RepoUrl" target="_blank" rel="noopener noreferrer">@T(UiCopy.ViewSource)</a>
+            }
+            <a class="btn-ghost" href="/Labs">Labs</a>
+        </div>
+
+        <div class="reveal mt-12 border-t border-line pt-10 space-y-6" style="transition-delay: 180ms">
+            <h2 class="font-display text-2xl font-semibold">@T(UiCopy.Context)</h2>
+            <p class="max-w-3xl text-mist leading-relaxed">@project.Description</p>
+            @if (!string.IsNullOrWhiteSpace(project.DemoNote))
+            {
+                <p class="border border-line bg-panel/60 px-4 py-3 font-mono text-sm text-paper">@project.DemoNote</p>
+            }
+        </div>
+
+        <div class="reveal mt-10" style="transition-delay: 220ms">
+            <h2 class="font-display text-2xl font-semibold">@T(UiCopy.Stack)</h2>
+            <ul class="mt-4 flex flex-wrap gap-2">
+                @foreach (var tech in project.Stack)
+                {
+                    <li class="border border-line bg-ink-soft px-3 py-1.5 font-mono text-xs text-mist">@tech</li>
+                }
+            </ul>
+        </div>
+
+        @if (flow is not null)
+        {
+            <div class="mt-12 border-t border-line pt-10">
+                <partial name="_ArchitectureFlow" model="flow" />
+            </div>
+        }
     }
 </article>

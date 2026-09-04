@@ -27,7 +27,7 @@ public class DetailsModel : PageModel
         }
 
         Project = project;
-        Architecture = ArchitectureCatalog.ForProject(slug, locale);
+        Architecture = project.ComingSoon ? null : ArchitectureCatalog.ForProject(slug, locale);
         return Page();
     }
 }

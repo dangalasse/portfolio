@@ -474,4 +474,32 @@
       transform: none;
     }
   }
+
+  .workbench {
+    @apply relative overflow-hidden border border-dashed border-line bg-panel/40 p-8 md:p-10;
+  }
+
+  .workbench-grid {
+    @apply pointer-events-none absolute inset-0 opacity-40;
+    background:
+      linear-gradient(135deg, transparent 40%, color-mix(in oklab, var(--color-signal) 18%, transparent) 100%),
+      repeating-linear-gradient(90deg, transparent, transparent 24px, color-mix(in oklab, var(--color-line) 70%, transparent) 25px),
+      repeating-linear-gradient(0deg, transparent, transparent 24px, color-mix(in oklab, var(--color-line) 70%, transparent) 25px);
+  }
+
+  .workbench-dot {
+    @apply inline-block size-2 rounded-full bg-signal;
+    animation: workbench-pulse 2.4s ease-in-out infinite;
+  }
+
+  @keyframes workbench-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .workbench-dot {
+      animation: none;
+    }
+  }
 }

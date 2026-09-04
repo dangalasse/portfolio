@@ -1,26 +1,32 @@
 ﻿@page
 @model ErrorModel
+@using Portfolio.Data
+@using Portfolio.I18n
 @{
-    ViewData["Title"] = "Error";
+    var locale = Locale.Current(ViewContext.HttpContext);
+    ViewData["Title"] = UiCopy.ErrorTitle.Resolve(locale);
+    ViewData["Robots"] = "noindex, nofollow";
+    ViewData["Description"] = UiCopy.ErrorLead.Resolve(locale);
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
-
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+<article class="mx-auto max-w-3xl px-4 py-16 md:px-6">
+    <p class="reveal font-mono text-xs uppercase tracking-[0.2em] text-signal">@UiCopy.ErrorTitle.Resolve(locale)</p>
+    <h1 class="reveal mt-4 font-display text-4xl font-bold tracking-tight md:text-5xl" style="transition-delay: 60ms">
+        @UiCopy.ErrorTitle.Resolve(locale)
+    </h1>
+    <p class="reveal mt-5 max-w-xl text-lg text-mist leading-relaxed" style="transition-delay: 100ms">
+        @UiCopy.ErrorLead.Resolve(locale)
     </p>
-}
-
-<h3>Development Mode</h3>
-<p>
-    Swapping to the <strong>Development</strong> environment displays detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+    @if (Model.ShowRequestId)
+    {
+        <p class="reveal mt-8 font-mono text-xs text-mist" style="transition-delay: 140ms">
+            @UiCopy.ErrorRequestId.Resolve(locale)
+            <span class="text-line"> · </span>
+            <code class="text-paper">@Model.RequestId</code>
+        </p>
+    }
+    <div class="reveal mt-10 flex flex-wrap gap-3" style="transition-delay: 180ms">
+        <a class="btn-primary" href="/">@UiCopy.NavHome.Resolve(locale)</a>
+        <a class="btn-ghost" href="/Projects">@UiCopy.BackToProjects.Resolve(locale)</a>
+    </div>
+</article>

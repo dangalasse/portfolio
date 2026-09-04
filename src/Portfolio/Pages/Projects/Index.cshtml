@@ -4,7 +4,6 @@
 @using Portfolio.I18n
 @{
     var locale = Locale.Current(ViewContext.HttpContext);
-    var catalog = PortfolioCatalog.For(locale);
     ViewData["Title"] = UiCopy.ProjectsTitle.Resolve(locale);
     ViewData["Description"] = UiCopy.MetaProjects.Resolve(locale);
 }
@@ -15,7 +14,7 @@
         <p class="section-lead">@UiCopy.ProjectsLead.Resolve(locale)</p>
     </div>
     <div class="mt-12 grid gap-4 md:grid-cols-2">
-        @foreach (var project in catalog.Projects)
+        @foreach (var project in PortfolioCatalog.ListedProjects(locale))
         {
             <a href="/Projects/@project.Slug" class="project-tile group reveal p-6">
                 <div class="mb-6 h-1 w-12" style="background: @project.Accent"></div>

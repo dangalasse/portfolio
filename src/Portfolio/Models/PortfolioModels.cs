@@ -31,6 +31,12 @@ public sealed record ProjectItem
     public string? DemoNote { get; init; }
     public string? DemoNoteEn { get; init; }
     public bool Featured { get; init; }
+
+    /// <summary>When false, the project is omitted from / and /Projects grids.</summary>
+    public bool Listed { get; init; } = true;
+
+    /// <summary>Direct URL stays; the details page is a workbench stub, not the live lab.</summary>
+    public bool ComingSoon { get; init; }
 }
 
 public sealed record LabIndicator

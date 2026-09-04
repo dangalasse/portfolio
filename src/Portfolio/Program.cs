@@ -1,8 +1,14 @@
 using Portfolio.Data;
 using Portfolio.I18n;
 using Portfolio.Observability;
+using Portfolio.Security;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.AddServerHeader = false;
+});
 
 // WHY: OTLP → Grafana Cloud Free Tier; gated by OpenTelemetry:Enabled / env.
 builder.AddPortfolioOpenTelemetry();
@@ -12,8 +18,24 @@ builder.Services.AddHttpClient("aws-ops", client =>
 {
     client.Timeout = TimeSpan.FromSeconds(10);
 });
+builder.Services.AddHsts(options =>
+{
+    options.MaxAge = TimeSpan.FromDays(365);
+    options.IncludeSubDomains = true;
+    options.Preload = true;
+});
 
 var app = builder.Build();
+
+app.Use(async (http, next) =>
+{
+    http.Response.OnStarting(() =>
+    {
+        SecurityHeaders.Apply(http.Response);
+        return Task.CompletedTask;
+    });
+    await next();
+});
 
 if (!app.Environment.IsDevelopment())
 {
